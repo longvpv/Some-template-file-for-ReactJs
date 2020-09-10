@@ -22,9 +22,6 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-  textFieldHeight: {
-    height: "40px",
-  },
 }));
 
 function JWTLoginTab(props) {
@@ -61,11 +58,11 @@ function JWTLoginTab(props) {
   }
 
   function handleSubmit(model) {
-    dispatch(authActions.submitLogin(model));
+    console.log(model);
   }
 
   return (
-    <div className="pt-5">
+    <div className="pt-5 w-50">
       <Formsy
         onValidSubmit={handleSubmit}
         onValid={enableButton}
@@ -76,18 +73,14 @@ function JWTLoginTab(props) {
         <Typography variant="subtitle2" gutterBottom className="pb-5">
           IP : {ip}
         </Typography>
-        <TextField
+        <TextFieldFormsy
           className="mb-5 w-100"
           type="text"
           name="database"
           label="Database"
           InputProps={{
-            endAdornment: (
-              <InputAdornment
-                position="end"
-                className="h-full"
-              ></InputAdornment>
-            ),
+            style: { height: "45px" },
+            endAdornment: <InputAdornment position="end"></InputAdornment>,
           }}
           variant="outlined"
         />
@@ -104,6 +97,7 @@ function JWTLoginTab(props) {
             minLength: "Min character length is 4",
           }}
           InputProps={{
+            style: { height: "45px" },
             endAdornment: <InputAdornment position="end"></InputAdornment>,
           }}
           variant="outlined"
@@ -122,6 +116,7 @@ function JWTLoginTab(props) {
             minLength: "Min character length is 4",
           }}
           InputProps={{
+            style: { height: "45px" },
             endAdornment: <InputAdornment position="end"></InputAdornment>,
           }}
           variant="outlined"

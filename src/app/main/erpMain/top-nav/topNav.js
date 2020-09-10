@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     display: "none",
+    fontSize: "14px",
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
@@ -181,10 +182,14 @@ function TopNav(props) {
   //====================================================
   return (
     <div>
-      <div className={classes.grow} style={{ height: "70px" }}>
-        <AppBar position="static" className="bg-white">
+      <div className={classes.grow}>
+        <AppBar
+          position="static"
+          className="bg-white"
+          style={{ boxShadow: "none" }}
+        >
           <Toolbar>
-            <img src="static\VVlogo.png" className="pr-2" />
+            <img src="static\VVlogo.png" className="pr-5" />
             <IconButton
               edge="start"
               className={classes.menuButton}
@@ -193,12 +198,7 @@ function TopNav(props) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography
-              className={classes.title}
-              variant="h6"
-              noWrap
-              color="primary"
-            >
+            <Typography className={classes.title} noWrap color="primary">
               Công ty VV Solutions
             </Typography>
 
@@ -231,14 +231,14 @@ function TopNav(props) {
                 <Badge color="secondary">
                   <HelpIcon />
                 </Badge>
-                <Typography
-                  className={classes.accName}
-                  variant="subtitle1"
-                  color="primary"
-                >
-                  Hỗ trợ
-                </Typography>
               </IconButton>
+              <Typography
+                className={classes.accName}
+                variant="subtitle1"
+                color="primary"
+              >
+                Hỗ trợ
+              </Typography>
 
               <IconButton
                 aria-label="show 17 new notifications"

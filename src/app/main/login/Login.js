@@ -1,5 +1,5 @@
 import { FuseAnimate } from "@fuse";
-import { Card, CardContent } from "@material-ui/core";
+import { Card, CardContent, Typography, Box } from "@material-ui/core";
 import { darken } from "@material-ui/core/styles/colorManipulator";
 import { makeStyles } from "@material-ui/styles";
 import React, { useState } from "react";
@@ -47,7 +47,11 @@ function Login() {
       <FuseAnimate animation={{ translateX: [0, "100%"] }}>
         <Card className="d-flex align-items-center pt-5 w-100 h-100 col-md-7">
           <CardContent className="d-flex flex-column align-items-center justify-content-center w-100 my-auto">
-            <h2 className="py-20">Đăng nhập vào tài khoản ERP của bạn</h2>
+            <Typography variant="h5">
+              <Box fontWeight={600} m={1}>
+                Đăng nhập vào tài khoản ERP của bạn
+              </Box>
+            </Typography>
             <JWTLoginTab />
           </CardContent>
         </Card>
