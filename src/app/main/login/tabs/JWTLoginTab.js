@@ -73,7 +73,7 @@ function JWTLoginTab(props) {
         <Typography variant="subtitle2" gutterBottom className="pb-5">
           IP : {ip}
         </Typography>
-        <TextFieldFormsy
+        {/* <TextFieldFormsy
           className="mb-5 w-100"
           type="text"
           name="database"
@@ -83,7 +83,7 @@ function JWTLoginTab(props) {
             endAdornment: <InputAdornment position="end"></InputAdornment>,
           }}
           variant="outlined"
-        />
+        /> */}
 
         <TextFieldFormsy
           className="mb-5 w-100"
