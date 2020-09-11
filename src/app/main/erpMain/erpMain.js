@@ -9,7 +9,7 @@ function ErpMain(props) {
       <TopNav />
       <div className="container-fruid" style={{ overflow: "hidden" }}>
         <div className="row">
-          <div className="col-md-2 h-screen">
+          <div className="col-md-2 h-screen bg-white">
             <SideBar />
           </div>
           <div className="col-md-10" style={{ backgroundColor: "#E5E5E5" }}>
