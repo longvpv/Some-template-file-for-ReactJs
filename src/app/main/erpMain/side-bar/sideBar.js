@@ -18,9 +18,9 @@ function SideBar(props) {
   const [key, setKey] = useState(1);
   const classes = useStyles();
   return (
-    <div className="container">
+    <div className="container p-0">
       <div className="row h-full bg-white">
-        <div className="col-md-2 d-flex justify-content-start align-items-start p-0">
+        <div className="col-md-2 d-flex justify-content-start align-items-start pr-0">
           <div
             className="h-full d-flex flex-column justify-content-start align-items-center pt-2 "
             style={{
@@ -122,7 +122,7 @@ function SideBar(props) {
             </a>
           </div>
         </div>
-        <div className="col-md-10">
+        <div className="col-md-10 pr-0">
           <Typography className={classes.title}>
             {key === 1 && "Quản trị hệ thống"}
             {key === 2 && "Bán lẻ POS"}

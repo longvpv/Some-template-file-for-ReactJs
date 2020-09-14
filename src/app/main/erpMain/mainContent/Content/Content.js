@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Typography, InputAdornment } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import Formsy from "formsy-react";
-import { TextFieldFormsy } from "@fuse";
+import { FuseScrollbars, TextFieldFormsy } from "@fuse";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -22,7 +22,7 @@ function Content() {
   };
 
   return (
-    <div>
+    <FuseScrollbars>
       <div className="d-flex justify-content-between align-items-center">
         <p className={classes.title}>Thông tin công ty</p>
         <div className="d-flex justify-content-around align-items-center w-25">
@@ -243,7 +243,7 @@ function Content() {
           </Button>
         </Formsy>
       </div>
-    </div>
+    </FuseScrollbars>
   );
 }
 

@@ -13,6 +13,8 @@ import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import StarBorder from "@material-ui/icons/StarBorder";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import { Typography } from "@material-ui/core";
+import CachedIcon from "@material-ui/icons/Cached";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,12 +22,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   nested: {
-    paddingLeft: theme.spacing(4),
+    paddingLeft: theme.spacing(1),
   },
   itemText: {
     fontFamily: "Quicksand",
-    fontWeight: "600",
-    fontSize: "14px",
+    fontSize: "12px",
   },
 }));
 
@@ -37,6 +38,7 @@ function QuanTriHeThong() {
   const [open4, setOpen4] = React.useState(false);
   const [open5, setOpen5] = React.useState(false);
   const [open6, setOpen6] = React.useState(false);
+  const [open7, setOpen7] = React.useState(false);
 
   const handleClick = (number) => {
     number === 1 && setOpen1(!open1);
@@ -45,6 +47,7 @@ function QuanTriHeThong() {
     number === 4 && setOpen4(!open4);
     number === 5 && setOpen5(!open5);
     number === 6 && setOpen6(!open6);
+    number === 7 && setOpen7(!open7);
   };
   return (
     <div className="w-full">
@@ -64,36 +67,39 @@ function QuanTriHeThong() {
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon />
-              <ListItemText
-                className={classes.itemText}
-                primary="Công ty / Chi nhánh"
-              />
+              <Typography className={classes.itemText}>
+                SYS005 - Công ty / Chi nhánh
+              </Typography>
             </ListItem>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon />
-              <ListItemText className={classes.itemText} primary="Phòng ban" />
+              <Typography className={classes.itemText}>
+                SYS006 - Phòng ban
+              </Typography>
             </ListItem>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon />
-              <ListItemText className={classes.itemText} primary="Ngân hàng" />
+              <Typography className={classes.itemText}>
+                SYS506 - Ngân hàng
+              </Typography>
             </ListItem>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon />
-              <ListItemText className={classes.itemText} primary="Máy chủ" />
+              <Typography className={classes.itemText}>
+                SYS022 - Máy chủ
+              </Typography>
             </ListItem>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon />
-              <ListItemText
-                className={classes.itemText}
-                primary="Quy đỏi đơn vị tiền tệ"
-              />
+              <Typography className={classes.itemText}>
+                SYS509 - Quy đỏi đơn vị tiền tệ
+              </Typography>
             </ListItem>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon />
-              <ListItemText
-                className={classes.itemText}
-                primary="Ngày nghỉ của công ty"
-              />
+              <Typography className={classes.itemText}>
+                SYS520 - Ngày nghỉ của công ty
+              </Typography>
             </ListItem>
           </List>
         </Collapse>
@@ -101,21 +107,177 @@ function QuanTriHeThong() {
           <ListItemText primary="Phân quyền nhân viên" />
           {open2 ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Collapse in={open2} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS010 - Quản lý nhân viên
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS009 - Lớp người dùng
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS008 - Thiết lập nhân viên vào lớp người dùng
+              </Typography>
+            </ListItem>
+          </List>
+        </Collapse>
         <ListItem button onClick={() => handleClick(3)}>
-          <ListItemText primary="Thiết lập mã hệ thống" />
+          <ListItemText primary="Phân quyền dữ liệu" />
           {open3 ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Collapse in={open3} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS504 - Chỉ định nhân viên vào phòng ban
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS503 - Xem kết cấu của doanh nghiệp
+              </Typography>
+            </ListItem>
+          </List>
+        </Collapse>
         <ListItem button onClick={() => handleClick(4)}>
-          <ListItemText primary="Tiện ích" />
+          <ListItemText primary="Thiết lập mã hệ thống" />
           {open4 ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Collapse in={open4} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS302 - Mã hệ thống chính
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS501 - Tạo mã chặn
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS601 - Tạo mã phí
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS602 - Nội dung phí
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS502 - Thiết lập lớp người dùng đc xóa stop
+              </Typography>
+            </ListItem>
+          </List>
+        </Collapse>
         <ListItem button onClick={() => handleClick(5)}>
-          <ListItemText primary="Thông tin hệ thống" />
+          <ListItemText primary="Tiện ích" />
           {open5 ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
+        <Collapse in={open5} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS600 - Dịch ngôn ngữ
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS703 - Tạo Thành phố
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS704 - Tạo Quận, Huyện
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS705 - Tạo Phường, Xã
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS025 - Kiểm tra hoạt động
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS020 - Thiết lập hoạt động người dùng
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS012 - Thay đổi mật khẩu
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS150 - Location setting
+              </Typography>
+            </ListItem>
+          </List>
+        </Collapse>
         <ListItem button onClick={() => handleClick(6)}>
-          <ListItemText primary="Cập nhật mới" />
+          <ListItemText primary="Thông tin hệ thống" />
           {open6 ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={open6} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS811 - Ghi chú phát hành tính năng mới
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS812 - Quy trình công ty
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                -License Information
+              </Typography>
+            </ListItem>
+            <ListItem button className={classes.nested}>
+              <ArrowRightIcon />
+              <Typography className={classes.itemText}>
+                SYS888 - System Intergrity Management
+              </Typography>
+            </ListItem>
+          </List>
+        </Collapse>
+        <ListItem button onClick={() => handleClick(7)}>
+          <ListItemText primary="Cập nhật mới" />
+          <img src="static/icon/Sync.png"></img>
         </ListItem>
       </List>
     </div>

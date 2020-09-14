@@ -1,3 +1,4 @@
+import { FuseScrollbars } from "@fuse";
 import React from "react";
 import Breadcrumb from "./Breadcrumbs/Breadcrumbs";
 import Content from "./Content/Content";
