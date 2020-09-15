@@ -1,0 +1,6 @@
+{
+  "tokenName": ".rosterspot.authorization",
+  "jwtSecretKey": "jYHfzP9WfE2BU1qSoOjxQQ==",
+  "authHeaderName": "Authorization",
+  "cookiesDomain": "localhost"
+}
