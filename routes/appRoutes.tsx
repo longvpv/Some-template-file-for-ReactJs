@@ -79,7 +79,15 @@ const appRoutes = {
   blockList: {
     path: '/profile/block-list',
     asPath: null
-  }
+  },
+  CongTyChiNhanh: {
+    path: '/QuanTriHeThong/ThietLapHeThong/CongTyChiNhanh',
+    asPath: '/QuanTriHeThong/ThietLapHeThong/CongTyChiNhanh'
+  },
+  PhongBan: {
+    path: '/QuanTriHeThong/ThietLapHeThong/PhongBan',
+    asPath: '/QuanTriHeThong/ThietLapHeThong/PhongBan'
+  },
 }
 
 export default appRoutes;

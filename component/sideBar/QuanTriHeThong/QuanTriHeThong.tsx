@@ -1,10 +1,8 @@
 import { Typography } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
-import { green } from "@material-ui/core/colors";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles';
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CachedIcon from "@material-ui/icons/Cached";
 import ExpandLess from "@material-ui/icons/ExpandLess";
@@ -18,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
   },
   nested: {
     paddingLeft: theme.spacing(1),
+  },
+  titleText: {
+    fontFamily: "Quicksand",
+    fontSize: "14px",
+    fontWeight: "bold",
   },
   itemText: {
     fontFamily: "Quicksand",
@@ -45,17 +48,16 @@ function QuanTriHeThong() {
     number === 7 && setOpen7(!open7);
   };
   return (
-    <div className="w-full">
+    <div className="w-100">
       <List
         component="nav"
         aria-labelledby="nested-list-subheader"
         className={classes.root}
       >
-        <ListItem button onClick={() => handleClick(1)}>
-          <ListItemText
-            className={classes.itemText}
-            primary="Thiết lập hệ thống"
-          />
+        <ListItem button onClick={() => handleClick(1)} className="d-flex justify-content-between">
+          <Typography className={classes.titleText}>
+            Thiết Lập Hệ Thống
+          </Typography>
           {open1 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
@@ -102,8 +104,11 @@ function QuanTriHeThong() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => handleClick(2)}>
-          <ListItemText primary="Phân quyền nhân viên" />
+        <ListItem button onClick={() => handleClick(2)} className="d-flex justify-content-between">
+
+          <Typography className={classes.titleText}>
+            Phân quyền nhân viên
+          </Typography>
           {open2 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
@@ -132,8 +137,10 @@ function QuanTriHeThong() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => handleClick(3)}>
-          <ListItemText primary="Phân quyền dữ liệu" />
+        <ListItem button onClick={() => handleClick(3)} className="d-flex justify-content-between">
+          <Typography className={classes.titleText}>
+            Phân quyền dữ liệu
+          </Typography>
           {open3 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
@@ -156,8 +163,10 @@ function QuanTriHeThong() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => handleClick(4)}>
-          <ListItemText primary="Thiết lập mã hệ thống" />
+        <ListItem button onClick={() => handleClick(4)} className="d-flex justify-content-between">
+          <Typography className={classes.titleText}>
+            Thiết lập mã hệ thống
+          </Typography>
           {open4 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
@@ -198,8 +207,10 @@ function QuanTriHeThong() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => handleClick(5)}>
-          <ListItemText primary="Tiện ích" />
+        <ListItem button onClick={() => handleClick(5)} className="d-flex justify-content-between">
+          <Typography className={classes.titleText}>
+            Tiện ích
+          </Typography>
           {open5 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
@@ -258,8 +269,10 @@ function QuanTriHeThong() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => handleClick(6)}>
-          <ListItemText primary="Thông tin hệ thống" />
+        <ListItem button onClick={() => handleClick(6)} className="d-flex justify-content-between">
+          <Typography className={classes.titleText}>
+            Thông tin hệ thống
+          </Typography>
           {open6 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
@@ -294,8 +307,10 @@ function QuanTriHeThong() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => handleClick(7)}>
-          <ListItemText primary="Cập nhật mới" />
+        <ListItem button onClick={() => handleClick(7)} className="d-flex justify-content-between">
+          <Typography className={classes.titleText}>
+            Cập nhật mới
+          </Typography>
           <CachedIcon style={{ color: '#4EEFA2' }} />
         </ListItem>
       </List>

@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { IconButton, Badge, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { makeStyles } from '@material-ui/core/styles';
 import QuanTriHeThong from "./QuanTriHeThong/QuanTriHeThong";
-// import QuanTriHeThong from "./QuanTriHeThong/QuanTriHeThong";
 
 const useStyles = makeStyles({
-  root: {},
   title: {
     fontFamily: "Quicksand",
     fontSize: "16px",
     fontWeight: 'bold',
     color: "#2FAAFC",
     paddingLeft: "6px",
+    margin: '0'
   },
 });
 
@@ -19,11 +18,11 @@ function SideBar(props) {
   const [key, setKey] = useState(1);
   const classes = useStyles();
   return (
-    <div className="container p-0">
-      <div className="row h-full bg-white">
-        <div className="col-md-2 d-flex justify-content-start align-items-start pr-0">
+    <div className="container pr-0">
+      <div className="d-flex bg-white ">
+        <div className="d-flex justify-content-start align-items-start pr-0">
           <div
-            className="h-full d-flex flex-column justify-content-start align-items-center pt-2 "
+            className=" d-flex flex-column justify-content-start align-items-center pt-2 "
             style={{
               backgroundColor: "#2FAAFC",
               width: "52px",
@@ -99,23 +98,128 @@ function SideBar(props) {
 
           </div>
         </div>
-        <div className="col-md-10 pr-0">
-          <Typography className={classes.title}>
+        <div style={{ width: 'calc(100% - 60px)', paddingLeft: '8px' }}>
+          {key === 1 &&
+            <div>
+              <p className={classes.title}>
+                QUẢN TRỊ HỆ THỐNG
+              </p>
+              <QuanTriHeThong />
+            </div>
+          }
+          {key === 2 &&
+            <div>
+              <p className={classes.title}>
+                BÁN LẺ POS
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 3 &&
+            <div>
+              <p className={classes.title}>
+                CÔNG VIỆC
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 4 &&
+            <div>
+              <p className={classes.title}>
+                BÁO CÁO
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 5 &&
+            <div>
+              <p className={classes.title}>
+                NHÂN SỰ
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 6 &&
+            <div>
+              <p className={classes.title}>
+                KẾ TOÁN
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 7 &&
+            <div>
+              <p className={classes.title}>
+                KHÁCH HÀNG &amp; BÁN HÀNG
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 8 &&
+            <div>
+              <p className={classes.title}>
+                SẢN PHẨM
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 9 &&
+            <div>
+              <p className={classes.title}>
+                BÁO GIÁ
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 10 &&
+            <div>
+              <p className={classes.title}>
+                QUẢN LÝ KHO
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 11 &&
+            <div>
+              <p className={classes.title}>
+                THU MUA
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 12 &&
+            <div>
+              <p className={classes.title}>
+                DASHBOARD
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {key === 13 &&
+            <div>
+              <p className={classes.title}>
+                IMPORT/EXPORT
+            </p>
+              {/* <QuanTriHeThong /> */}
+            </div>
+          }
+          {/* <Typography className={classes.title}>
             {key === 1 && "QUẢN TRỊ HỆ THỐNG"}
-            {key === 2 && "Bán lẻ POS"}
-            {key === 3 && "Công việc"}
-            {key === 4 && "Báo cáo"}
-            {key === 5 && "Nhân sự"}
-            {key === 6 && "Kế toán"}
-            {key === 7 && "Khách hàng & bán hàng"}
-            {key === 8 && "Sản phẩm"}
-            {key === 9 && "Báo giá"}
-            {key === 10 && "Quản lý kho"}
-            {key === 11 && "Thu mua"}
-            {key === 12 && "Dashboard"}
-            {key === 13 && "Import/Export"}
+            {key === 2 && "BÁN LẺ POS"}
+            {key === 3 && "CÔNG VIỆC"}
+            {key === 4 && "BÁO CÁO"}
+            {key === 5 && "NHÂN SỰ"}
+            {key === 6 && "KẾ TOÁN"}
+            {key === 7 && "KHÁCH HÀNG & BÁN HÀNG"}
+            {key === 8 && "SẢN PHẨM"}
+            {key === 9 && "BÁO GIÁ"}
+            {key === 10 && "QUẢN LÝ KHO"}
+            {key === 11 && "THU MUA"}
+            {key === 12 && "DASHBOARD"}
+            {key === 13 && "IMPORT/EXPORT"}
           </Typography>
-          <QuanTriHeThong />
+          <QuanTriHeThong /> */}
+
         </div>
       </div>
     </div>

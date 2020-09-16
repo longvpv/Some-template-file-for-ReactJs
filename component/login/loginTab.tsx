@@ -2,13 +2,14 @@ import {
   TextField
 } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
-import { withStyles } from "@material-ui/styles";
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Formsy from "formsy-react";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const CssTextField = withStyles({
+
   root: {
     '& label.Mui-focused': {
       color: 'grey',
@@ -25,15 +26,6 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-const ColorButton = withStyles({
-  root: {
-    color: '#FFF',
-    backgroundColor: '#2FAAFC',
-    '&:hover': {
-      backgroundColor: '#2FAAFC',
-    },
-  },
-})(Button);
 
 function LoginTab(props) {
   const dispatch = useDispatch();
@@ -42,16 +34,6 @@ function LoginTab(props) {
   const [isFormValid, setIsFormValid] = useState(false);
   const formRef = useRef(null);
 
-
-
-  // useEffect(() => {
-  //   if (login.error && (login.error.email || login.error.password)) {
-  //     formRef.current.updateInputsWithError({
-  //       ...login.error,
-  //     });
-  //     disableButton();
-  //   }
-  // }, [login.error]);
 
   function disableButton() {
     setIsFormValid(false);
@@ -97,18 +79,17 @@ function LoginTab(props) {
         />
 
 
-        <ColorButton
+        <Button
           type="submit"
           variant="contained"
-          className="w-100 mx-auto mt-16 normal-case bg-blue"
+          className="w-100 mx-auto normal-case"
           aria-label="LOG IN"
-        // disabled={!isFormValid}
-        // value="legacy"
+          style={{ backgroundColor: "#2FAAFC", color: "#FFF", borderColor: '#2FAAFC', fontSize: "16px", fontWeight: 'bold' }}
         >
           ĐĂNG NHẬP
-        </ColorButton>
+        </Button>
         <div
-          className="d-flex align-items-center justify-content-between w-100 pt-5"
+          className="d-flex align-items-center justify-content-between w-100 pt-3"
           style={{ fontSize: 16 }}
         >
           <Link href="/register">Quên mật khẩu</Link>

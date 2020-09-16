@@ -180,7 +180,7 @@ function TopNav(props) {
                 aria-label="show 17 new notifications"
                 color="primary"
               >
-                <Badge badgeContent={17} color="secondary">
+                <Badge badgeContent={17} color="error">
                   <NotificationsIcon style={{ color: '#5A5A5A' }} />
                 </Badge>
               </IconButton>

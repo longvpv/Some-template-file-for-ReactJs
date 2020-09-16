@@ -40,7 +40,6 @@ const Login: LayoutFunctionComponent = (props) => {
               <CardContent className="d-flex flex-column align-items-center justify-content-center w-100 my-auto">
                 <h2>Đăng nhập vào tài khoản ERP của bạn</h2>
 
-
                 <LoginTab />
               </CardContent>
             </Card>
