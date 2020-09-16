@@ -1,5 +1,5 @@
 {
-  "tokenName": ".rosterspot.authorization",
+  "tokenName": ".vvs.erp.authorization",
   "jwtSecretKey": "jYHfzP9WfE2BU1qSoOjxQQ==",
   "authHeaderName": "Authorization",
   "cookiesDomain": "localhost"

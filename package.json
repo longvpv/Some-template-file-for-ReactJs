@@ -4,13 +4,16 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "dev": "next -p 8082",
+    "dev": "next -p 8081",
     "build": "next build",
-    "start": "next start -p 8082",
+    "start": "next start -p 8081",
     "typecheck": "tsc"
   },
   "dependencies": {
     "@babel/runtime-corejs2": "^7.9.2",
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/styles": "^4.10.0",
     "@types/classnames": "^2.2.10",
     "@types/es6-promisify": "^6.0.0",
     "@types/js-cookie": "^2.2.6",
@@ -35,6 +38,7 @@
     "es6-promise": "^4.2.8",
     "es6-promisify": "^6.1.1",
     "express": "^4.17.1",
+    "formsy-react": "^2.2.1",
     "immutability-helper": "^3.0.1",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^2.2.0",

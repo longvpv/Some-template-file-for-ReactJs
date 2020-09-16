@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import handleAuthSSR from '../libs/auth';
+import '../public/css/index.css'
 
 
 export default class StoriiDocument extends Document {
@@ -18,6 +19,7 @@ export default class StoriiDocument extends Document {
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport" />
           <meta name="robots" content="index, follow" />
+          <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet" />
         </Head>
         <body>
           <Main />

@@ -10,6 +10,7 @@ import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import 'animate.css'
+import '../public/css/index.css'
 
 Router.events.on('routeChangeComplete', () => window.scrollTo(0, 0));
 Router.events.on('routeChangeError', () => NProgress.done());

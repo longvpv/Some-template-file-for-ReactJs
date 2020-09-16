@@ -1,8 +1,6 @@
+import React from 'react';
 import LayoutFunctionComponent from "../@types/layoutTypes/layoutFunctionComponent";
-import AuthLayout from "../layouts/authLayout";
-import React from 'react'
-import Link from "next/link";
-import appRoutes from "../routes/appRoutes";
+import MainLayout from "../layouts/mainLayout";
 
 const SignUp: LayoutFunctionComponent = props => {
   return (
@@ -12,5 +10,5 @@ const SignUp: LayoutFunctionComponent = props => {
   )
 }
 
-SignUp.Layout = AuthLayout;
+SignUp.Layout = MainLayout;
 export default SignUp;
