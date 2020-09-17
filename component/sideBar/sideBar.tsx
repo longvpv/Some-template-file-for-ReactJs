@@ -18,7 +18,7 @@ function SideBar(props) {
   const [key, setKey] = useState(1);
   const classes = useStyles();
   return (
-    <div className="container pr-0">
+    <div className="container pr-0" >
       <div className="d-flex bg-white ">
         <div className="d-flex justify-content-start align-items-start pr-0">
           <div
@@ -99,6 +99,7 @@ function SideBar(props) {
           </div>
         </div>
         <div style={{ width: 'calc(100% - 60px)', paddingLeft: '8px' }}>
+
           {key === 1 &&
             <div>
               <p className={classes.title}>
@@ -203,22 +204,8 @@ function SideBar(props) {
               {/* <QuanTriHeThong /> */}
             </div>
           }
-          {/* <Typography className={classes.title}>
-            {key === 1 && "QUẢN TRỊ HỆ THỐNG"}
-            {key === 2 && "BÁN LẺ POS"}
-            {key === 3 && "CÔNG VIỆC"}
-            {key === 4 && "BÁO CÁO"}
-            {key === 5 && "NHÂN SỰ"}
-            {key === 6 && "KẾ TOÁN"}
-            {key === 7 && "KHÁCH HÀNG & BÁN HÀNG"}
-            {key === 8 && "SẢN PHẨM"}
-            {key === 9 && "BÁO GIÁ"}
-            {key === 10 && "QUẢN LÝ KHO"}
-            {key === 11 && "THU MUA"}
-            {key === 12 && "DASHBOARD"}
-            {key === 13 && "IMPORT/EXPORT"}
-          </Typography>
-          <QuanTriHeThong /> */}
+
+
 
         </div>
       </div>

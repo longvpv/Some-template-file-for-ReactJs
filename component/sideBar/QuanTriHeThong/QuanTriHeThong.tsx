@@ -7,12 +7,14 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CachedIcon from "@material-ui/icons/Cached";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import Link from "next/link";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     backgroundColor: theme.palette.background.paper,
+    overflow: 'auto'
   },
   nested: {
     paddingLeft: theme.spacing(1),
@@ -66,42 +68,54 @@ function QuanTriHeThong() {
         </ListItem>
         <Collapse in={open1} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
-              <ArrowRightIcon fontSize="small" color="disabled" />
-              <Typography className={classes.itemText}>
-                SYS005 - Công ty / Chi nhánh
+            <Link href="/QuanTriHeThong/ThietLapHeThong/CongTyChiNhanh">
+              <ListItem button className={classes.nested}>
+                <ArrowRightIcon fontSize="small" color="disabled" />
+                <Typography className={classes.itemText}>
+                  SYS005 - Công ty / Chi nhánh
               </Typography>
-            </ListItem>
-            <ListItem button className={classes.nested}>
-              <ArrowRightIcon fontSize="small" color="disabled" />
-              <Typography className={classes.itemText}>
-                SYS006 - Phòng ban
+              </ListItem>
+            </Link>
+            <Link href="/QuanTriHeThong/ThietLapHeThong/PhongBan">
+              <ListItem button className={classes.nested}>
+                <ArrowRightIcon fontSize="small" color="disabled" />
+                <Typography className={classes.itemText}>
+                  SYS006 - Phòng ban
               </Typography>
-            </ListItem>
-            <ListItem button className={classes.nested}>
-              <ArrowRightIcon fontSize="small" color="disabled" />
-              <Typography className={classes.itemText}>
-                SYS506 - Ngân hàng
+              </ListItem>
+            </Link>
+            <Link href="/QuanTriHeThong/ThietLapHeThong/NganHang">
+              <ListItem button className={classes.nested}>
+                <ArrowRightIcon fontSize="small" color="disabled" />
+                <Typography className={classes.itemText}>
+                  SYS506 - Ngân hàng
               </Typography>
-            </ListItem>
-            <ListItem button className={classes.nested}>
-              <ArrowRightIcon fontSize="small" color="disabled" />
-              <Typography className={classes.itemText}>
-                SYS022 - Máy chủ
+              </ListItem>
+            </Link>
+            <Link href="/QuanTriHeThong/ThietLapHeThong/MayChu">
+              <ListItem button className={classes.nested}>
+                <ArrowRightIcon fontSize="small" color="disabled" />
+                <Typography className={classes.itemText}>
+                  SYS022 - Máy chủ
               </Typography>
-            </ListItem>
-            <ListItem button className={classes.nested}>
-              <ArrowRightIcon fontSize="small" color="disabled" />
-              <Typography className={classes.itemText}>
-                SYS509 - Quy đỏi đơn vị tiền tệ
+              </ListItem>
+            </Link>
+            <Link href="/QuanTriHeThong/ThietLapHeThong/QuyDoiDonViTienTe">
+              <ListItem button className={classes.nested}>
+                <ArrowRightIcon fontSize="small" color="disabled" />
+                <Typography className={classes.itemText}>
+                  SYS509 - Quy đỏi đơn vị tiền tệ
               </Typography>
-            </ListItem>
-            <ListItem button className={classes.nested}>
-              <ArrowRightIcon fontSize="small" color="disabled" />
-              <Typography className={classes.itemText}>
-                SYS520 - Ngày nghỉ của công ty
+              </ListItem>
+            </Link>
+            <Link href="/QuanTriHeThong/ThietLapHeThong/NgayNghiCongTy">
+              <ListItem button className={classes.nested}>
+                <ArrowRightIcon fontSize="small" color="disabled" />
+                <Typography className={classes.itemText}>
+                  SYS520 - Ngày nghỉ của công ty
               </Typography>
-            </ListItem>
+              </ListItem>
+            </Link>
           </List>
         </Collapse>
         <ListItem button onClick={() => handleClick(2)} className="d-flex justify-content-between">
@@ -117,12 +131,14 @@ function QuanTriHeThong() {
         </ListItem>
         <Collapse in={open2} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItem button className={classes.nested}>
-              <ArrowRightIcon fontSize="small" color="disabled" />
-              <Typography className={classes.itemText}>
-                SYS010 - Quản lý nhân viên
+            <Link href="/QuanTriHeThong/PhanQuyenNhanVien/QuanLyNhanVien">
+              <ListItem button className={classes.nested}>
+                <ArrowRightIcon fontSize="small" color="disabled" />
+                <Typography className={classes.itemText}>
+                  SYS010 - Quản lý nhân viên
               </Typography>
-            </ListItem>
+              </ListItem>
+            </Link>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon fontSize="small" color="disabled" />
               <Typography className={classes.itemText}>

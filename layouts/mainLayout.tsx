@@ -1,7 +1,7 @@
 import React from "react";
 import Breadcrumb from "../component/breadcrumb/Breadcrumb";
-import SideBar from "../component/sideBar/sideBar";
-import TopNav from "../component/topNav/topnav";
+import SideBar from "../component/sideBar/SideBar";
+import TopNav from "../component/topNav/TopNav";
 
 export default class MainLayout extends React.Component {
   render() {

@@ -2,14 +2,17 @@ import {
   TextField
 } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
-import Formsy from "formsy-react";
+import { withStyles } from '@material-ui/core/styles';
 import Link from "next/link";
-import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { connect, useDispatch } from "react-redux";
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import { bindActionCreators } from "redux";
+import { login } from "../../redux/login/actions";
+import LoginInputModel from "../../@types/users/loginInputModel";
 
 const CssTextField = withStyles({
-
   root: {
     '& label.Mui-focused': {
       color: 'grey',
@@ -26,35 +29,30 @@ const CssTextField = withStyles({
   },
 })(TextField);
 
-
 function LoginTab(props) {
   const dispatch = useDispatch();
-  // const login = useSelector(({ auth }) => auth.login);
 
-  const [isFormValid, setIsFormValid] = useState(false);
-  const formRef = useRef(null);
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      isPersistent: true
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Required'),
+    }),
+    onSubmit: (values: LoginInputModel) => {
+      // console.log(values);
+      dispatch(login(values));
 
-
-  function disableButton() {
-    setIsFormValid(false);
-  }
-
-  function enableButton() {
-    setIsFormValid(true);
-  }
-
-  function handleSubmit(model) {
-    console.log(model);
-  }
-
+    },
+  });
 
   return (
     <div className="pt-5 w-50">
-      <Formsy
-        onValidSubmit={handleSubmit}
-        // onValid={enableButton}
-        // onInvalid={disableButton}
-        ref={formRef}
+      <form onSubmit={formik.handleSubmit}
         className="d-flex flex-column justify-content-center align-items-center w-100"
       >
         <CssTextField
@@ -64,26 +62,27 @@ function LoginTab(props) {
           label="Tài khoản"
           size="small"
           variant="outlined"
+          helperText={formik.touched.email && formik.errors.email ? formik.errors.email : null}
+          onChange={formik.handleChange}
+          value={formik.values.email}
         />
-
-
-
         <CssTextField
           className="mb-5 w-100"
           type="password"
           name="password"
           label="Mật khẩu"
           size="small"
+          helperText={formik.touched.password && formik.errors.password ? formik.errors.password : null}
           variant="outlined"
-
+          onChange={formik.handleChange}
+          value={formik.values.password}
         />
-
-
         <Button
           type="submit"
           variant="contained"
           className="w-100 mx-auto normal-case"
           aria-label="LOG IN"
+
           style={{ backgroundColor: "#2FAAFC", color: "#FFF", borderColor: '#2FAAFC', fontSize: "16px", fontWeight: 'bold' }}
         >
           ĐĂNG NHẬP
@@ -95,9 +94,9 @@ function LoginTab(props) {
           <Link href="/register">Quên mật khẩu</Link>
           <Link href="/">Đăng ký</Link>
         </div>
-      </Formsy>
+      </form>
     </div>
   );
 }
 
-export default LoginTab;
+export default (LoginTab);

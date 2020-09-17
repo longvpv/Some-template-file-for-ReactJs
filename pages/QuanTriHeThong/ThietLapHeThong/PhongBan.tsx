@@ -1,6 +1,7 @@
 import React from 'react'
-import { Button, TextField, Typography, withStyles } from "@material-ui/core";
-import { makeStyles } from '@material-ui/core/styles';
+import SearchIcon from '@material-ui/icons/Search';
+import { Button, InputBase, TextField, Typography, withStyles } from "@material-ui/core";
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Formsy from "formsy-react";
 
 const CustomTextField = withStyles({
@@ -15,98 +16,52 @@ const CustomTextField = withStyles({
     },
     '& .MuiFilledInput-root': {
       backgroundColor: '#FFF',
-      height: '48px',
 
+    }, '& .MuiFilledInput-underline:before': {
+      borderBottomColor: 'white',
     },
 
     '& .MuiFilledInput-underline:after': {
-      borderBottomColor: 'grey',
+      borderBottomColor: 'white',
     },
 
   },
 })(TextField);
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   title: {
     fontFamily: "Quicksand",
     fontWeight: "bold",
     fontSize: "24px",
+    padding: '24px',
+    margin: '0',
   },
   buttonSave: {
-    borderRadius: "32px",
+    borderRadius: "8px",
     width: "120px",
     margin: "12px",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#F2F2F2",
     color: "#2FAAFC",
     borderColor: '#2FAAFC',
+    fontWeight: 'bold'
   },
   buttonCreate: {
-    borderRadius: "32px",
+    borderRadius: "8px",
     width: "120px",
     margin: "12px",
     backgroundColor: "#2FAAFC",
     color: "#FFF",
-    borderColor: '#2FAAFC'
+    borderColor: '#2FAAFC',
+    fontWeight: 'bold'
   },
   buttonDelete: {
-    borderRadius: "32px",
+    borderRadius: "8px",
     width: "120px",
     margin: "12px",
-    backgroundColor: "#FDABAB", color: "#FFFFFF"
+    backgroundColor: "#FDABAB", color: "#FFFFFF",
+    fontWeight: 'bold'
   },
 
-  avatar: {
-    display: "flex",
-    width: "180px",
-    height: "180px",
-
-    background: "#FFFFFF",
-  },
-  avatarLabel: {
-    width: "80px",
-    height: "24px",
-
-    "font-family": "Quicksand",
-    "font-style": "normal",
-    "font-weight": "normal",
-    "font-size": "14px",
-    "line-height": "24px",
-
-    "align-items": "center",
-    "text-align": "center",
-
-    color: "#4E4E4E",
-  },
-  btnUploadAvatar: {
-    width: "120px",
-    height: "40px",
-    marginTop: "12px",
-
-    background: "#2FAAFC",
-    "border-radius": "20px",
-  },
-  btnViewCV: {
-    width: "180px",
-    height: "40px",
-
-    background: "#DBF1FF",
-    "border-radius": "4px",
-    "margin-top": "30px",
-  },
-  btnUpdatePassword: {
-    width: "180px",
-    height: "40px",
-
-    background: "#E9E9E9",
-    "border-radius": "4px",
-    "margin-top": "20px",
-  },
-  btnFunction: {
-    width: "100%",
-    height: "48px",
-    "border-radius": "6px",
-    margin: "15px 10px",
-  },
   formGroup: {
     display: "flex",
     margin: "3px",
@@ -116,12 +71,44 @@ const useStyles = makeStyles({
     margin: "3px 3px",
     backgroundColor: "#FFFFFF",
   },
-  btnFunctionRow: {
-    display: "flex",
+
+  search: {
+    position: "relative",
+    borderRadius: "16px",
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
     width: "100%",
-    "padding-right": "20px",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(3),
+      width: "auto",
+    },
   },
-});
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: '#101010',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
+    },
+  },
+}));
 
 function PhongBan() {
   const classes = useStyles();
@@ -170,6 +157,7 @@ function PhongBan() {
                       label="Công ty chi nhánh"
                       required
                       variant="filled"
+                      size="small"
                     />
                   </div>
                   <div className={classes.formGroup}>
@@ -180,6 +168,7 @@ function PhongBan() {
                       label="Tên bộ phận"
                       required
                       variant="filled"
+                      size="small"
                     />
                   </div>
 
@@ -191,6 +180,7 @@ function PhongBan() {
                       label="Địa Chỉ"
                       required
                       variant="filled"
+                      size="small"
                     />
                   </div>
                 </div>
@@ -202,6 +192,7 @@ function PhongBan() {
                       name="BoPhanGoc"
                       label="Bộ phận gốc"
                       variant="filled"
+                      size="small"
                     />
                   </div>
                   <div className={classes.formGroup}>
@@ -211,6 +202,7 @@ function PhongBan() {
                       name="DienGiai"
                       label="Diễn giải"
                       variant="filled"
+                      size="small"
                     />
                   </div>
                 </div>
@@ -220,7 +212,23 @@ function PhongBan() {
         </Formsy>
       </div>
       <div className="d-flex justify-content-between align-items-center pr-5">
-        <p className={classes.title}>Dữ liệu</p>
+        <div className="d-flex justify-content-center align-items-center">
+          <p className={classes.title}>Dữ liệu</p>
+          <div className={classes.search} style={{ background: "#FFF" }}>
+            <div className={classes.searchIcon}>
+              <SearchIcon style={{ color: '#2FAAFC' }} />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              inputProps={{ "aria-label": "search" }}
+            />
+          </div>
+        </div>
+
         <div>
           <Button
             variant="contained"

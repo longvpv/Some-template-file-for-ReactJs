@@ -1,5 +1,6 @@
 {
-  "tokenName": ".vvs.erp.authorization",
+  "tokenName": ".vvs.erp.access.token",
+  "refreshToken": ".vvs.erp.refresh.token",
   "jwtSecretKey": "jYHfzP9WfE2BU1qSoOjxQQ==",
   "authHeaderName": "Authorization",
   "cookiesDomain": "localhost"

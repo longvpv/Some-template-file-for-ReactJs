@@ -3,7 +3,7 @@ import jsCookie from "js-cookie";
 import authenticateSettings from "../fileSettings/authenticateSettings.json";
 import _ from "lodash";
 const httpClient = axios.create({
-  baseURL: "http://localhost:5000/mobile/v2",
+  baseURL: "https://erp-api-dev.vvs.vn",
 });
 
 httpClient.interceptors.request.use(
@@ -11,7 +11,7 @@ httpClient.interceptors.request.use(
     if (typeof document !== "undefined") {
       const auToken = jsCookie.get(authenticateSettings.tokenName);
       if (auToken)
-        config.headers.common["Authorization"] = jsCookie.get(
+        config.headers.common["Authorization"] = 'Bearer ' + jsCookie.get(
           authenticateSettings.tokenName
         );
     }
