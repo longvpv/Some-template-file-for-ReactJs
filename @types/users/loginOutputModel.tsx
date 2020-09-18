@@ -1,4 +1,3 @@
-import { BaseResultModel } from "../appTypes/baseModel";
 
 export default interface LoginOutputModel {
   accessToken: string,

@@ -3,14 +3,13 @@ import {
 } from "@material-ui/core";
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import { useFormik } from 'formik';
 import Link from "next/link";
 import React from "react";
-import { connect, useDispatch } from "react-redux";
-import { useFormik } from 'formik';
+import { useDispatch } from "react-redux";
 import * as Yup from 'yup';
-import { bindActionCreators } from "redux";
-import { login } from "../../redux/login/actions";
 import LoginInputModel from "../../@types/users/loginInputModel";
+import { login } from "../../redux/login/actions";
 
 const CssTextField = withStyles({
   root: {
@@ -44,7 +43,6 @@ function LoginTab(props) {
         .required('Required'),
     }),
     onSubmit: (values: LoginInputModel) => {
-      // console.log(values);
       dispatch(login(values));
 
     },
@@ -82,7 +80,7 @@ function LoginTab(props) {
           variant="contained"
           className="w-100 mx-auto normal-case"
           aria-label="LOG IN"
-
+          href="/"
           style={{ backgroundColor: "#2FAAFC", color: "#FFF", borderColor: '#2FAAFC', fontSize: "16px", fontWeight: 'bold' }}
         >
           ĐĂNG NHẬP

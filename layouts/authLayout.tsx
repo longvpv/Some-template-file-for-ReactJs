@@ -17,7 +17,6 @@ export default class AuthLayout extends Component {
         <style jsx>{`
           .auth-wrapper{
             
-            min-height: 100vh;
           }
           
         `}</style>

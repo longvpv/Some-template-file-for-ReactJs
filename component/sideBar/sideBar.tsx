@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { IconButton, Badge, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import QuanTriHeThong from "./QuanTriHeThong/QuanTriHeThong";
+import NhanSu from "./NhanSu/NhanSu";
 
 const useStyles = makeStyles({
+  root: {
+    overflow: 'auto'
+  },
   title: {
     fontFamily: "Quicksand",
     fontSize: "16px",
@@ -12,6 +16,7 @@ const useStyles = makeStyles({
     paddingLeft: "6px",
     margin: '0'
   },
+
 });
 
 function SideBar(props) {
@@ -19,10 +24,10 @@ function SideBar(props) {
   const classes = useStyles();
   return (
     <div className="container pr-0" >
-      <div className="d-flex bg-white ">
+      <div className="d-flex bg-white">
         <div className="d-flex justify-content-start align-items-start pr-0">
           <div
-            className=" d-flex flex-column justify-content-start align-items-center pt-2 "
+            className=" d-flex flex-column justify-content-start align-items-center pt-2 sticky"
             style={{
               backgroundColor: "#2FAAFC",
               width: "52px",
@@ -111,9 +116,9 @@ function SideBar(props) {
           {key === 2 &&
             <div>
               <p className={classes.title}>
-                BÁN LẺ POS
+                NHÂN SỰ
             </p>
-              {/* <QuanTriHeThong /> */}
+              <NhanSu />
             </div>
           }
           {key === 3 &&
@@ -204,9 +209,6 @@ function SideBar(props) {
               {/* <QuanTriHeThong /> */}
             </div>
           }
-
-
-
         </div>
       </div>
     </div>

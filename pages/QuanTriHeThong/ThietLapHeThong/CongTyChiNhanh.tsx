@@ -1,5 +1,7 @@
 import {
   Button,
+  Checkbox,
+  CircularProgress,
   InputBase,
   MenuItem,
   Switch,
@@ -9,9 +11,12 @@ import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createCompany } from "../../../redux/systemsManagement/company/actions";
+import { Upload, message } from 'antd';
+import { values } from "lodash";
+import CongTyChiNhanhData from "./CongTyChiNhanh-Data";
 
 const CustomTextField = withStyles({
   root: {
@@ -152,15 +157,33 @@ const useStyles = makeStyles((theme) => ({
     color: "#FFF",
     borderColor: '#2FAAFC',
     fontWeight: 'bold',
-    position: 'absolute',
-    bottom: '20px'
   }
 
 }));
 
 
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+
+function beforeUpload(file) {
+  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  if (!isJpgOrPng) {
+    message.error('You can only upload JPG/PNG file!');
+  }
+  const isLt2M = file.size / 1024 / 1024 < 2;
+  if (!isLt2M) {
+    message.error('Image must smaller than 2MB!');
+  }
+  return isJpgOrPng && isLt2M;
+}
+
 function CongtyChiNhanh() {
   const dispatch = useDispatch();
+  const [imgUrl, setImgUrl] = useState('');
+  const [loading, setLoading] = useState(false)
   const classes = useStyles();
   const formik = useFormik({
     initialValues: {
@@ -198,17 +221,17 @@ function CongtyChiNhanh() {
       companyAddress: Yup.string()
         .max(200, 'Must be 200 characters or less')
         .required('Required'),
-      companyPhone: Yup.number()
-        .max(20, 'Must be 20 characters or less')
+      companyPhone: Yup.string()
+        .max(64, 'Must be 64 characters or less')
         .required('Required'),
       addressToPrintReport: Yup.string()
-        .max(200, 'Must be 200 characters or less')
+        .max(100, 'Must be 100 characters or less')
         .required('Required'),
       orderDocPrefix: Yup.string()
-        .max(200, 'Must be 200 characters or less')
+        .max(3, 'Must be 3 characters or less')
         .required('Required'),
       companySupportEmail: Yup.string()
-        .max(200, 'Must be 200 characters or less')
+        .max(64, 'Must be 64 characters or less')
         .required('Required'),
       nameToPrintReport: Yup.string()
         .max(200, 'Must be 200 characters or less')
@@ -240,6 +263,40 @@ function CongtyChiNhanh() {
       label: '3',
     },
   ];
+
+  const handleChange = info => {
+    if (info.file.status === 'uploading') {
+      setLoading(true)
+      return;
+    }
+    if (info.file.status === 'done') {
+      // Get this url from response in real world.
+      getBase64(info.file.originFileObj, imageUrl => {
+        setImgUrl(imageUrl);
+        setLoading(false);
+        formik.setFieldValue('companyLogo', imageUrl)
+      }
+      );
+    }
+  };
+  const uploadButton = (
+    <div>
+
+      {loading ? <CircularProgress /> :
+
+        <Button
+          variant="contained"
+          className={classes.buttonAbsolute}
+          component="span"
+          aria-label="add"
+        >
+          <span>Chọn logo</span>
+        </Button>
+
+      }
+
+    </div>
+  );
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center">
@@ -268,19 +325,33 @@ function CongtyChiNhanh() {
         >
           <div className="row w-100">
             <div className="col-md-2 d-flex flex-column justify-content-start align-items-center p-0 mt-5">
-              <div className={classes.avatar}>
-                <div className="text-center m-auto">
-                  <span className={classes.avatarLabel}>No Image Data</span>
-                </div>
-                <Button
-                  variant="contained"
-                  className={classes.buttonAbsolute}
-                >
-                  <span>Chọn logo</span>
-                </Button>
-              </div>
+              <Upload
+                name="avatar"
+                listType="picture-card"
+                className={classes.avatar}
+                showUploadList={false}
+                action="https://erp-api-dev.vvs.vn/api/Upload"
+                beforeUpload={beforeUpload}
+                onChange={handleChange}
+              >
+                {imgUrl ? <img src={imgUrl} alt="avatar" style={{ width: '100%' }} /> :
+                  <div className="d-flex flex-column justify-content-center align-items-center ">
+                    No Image Data
+                  {uploadButton}
+                  </div>
+                }
+              </Upload>
+
               <div className="d-flex align-items-center pt-3 w-100">
-                <img src="/images/icon/Checked.png" className="pl-3"></img>
+                <Checkbox
+                  checked={formik.values.active}
+                  onChange={formik.handleChange}
+                  name="active"
+                  color="primary"
+                  size="small"
+                />
+
+
                 <Typography className="pl-1">Công ty đang hoạt động</Typography>
               </div>
               <div className="d-flex pt-3 w-100">
@@ -374,39 +445,64 @@ function CongtyChiNhanh() {
                   <div className={classes.formGroup}>
                     <CustomTextField
                       className={classes.formControl}
-                      type="text"
-                      name="companyRegistration"
-                      label="MST/Số ĐKKD"
+                      select
+                      name="posDefaultPrinter"
+                      label="Thành phố"
                       variant="filled"
                       size="small"
                       onChange={formik.handleChange}
-                      value={formik.values.companyRegistration}
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="nameToPrintReport"
-                      label="Tên để in"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.nameToPrintReport && formik.errors.nameToPrintReport ? formik.errors.nameToPrintReport : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.nameToPrintReport}
-                    />
+                      value={formik.values.posDefaultPrinter}
+                    >
+                      {valueText.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}</CustomTextField><CustomTextField
+                        className={classes.formControl}
+                        select
+                        name="posDefaultPrinter"
+                        label="Quận/Huyện"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.posDefaultPrinter}
+                      >
+                      {valueText.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}</CustomTextField>
                   </div>
-
                   <div className={classes.formGroup}>
                     <CustomTextField
                       className={classes.formControl}
-                      type="text"
-                      name="addressToPrintReport"
-                      label="Địa chỉ để in"
+                      select
+                      name="posDefaultPrinter"
+                      label="Phường/Xã"
                       variant="filled"
                       size="small"
-                      helperText={formik.touched.addressToPrintReport && formik.errors.addressToPrintReport ? formik.errors.addressToPrintReport : null}
                       onChange={formik.handleChange}
-                      value={formik.values.addressToPrintReport}
-                    />
+                      value={formik.values.posDefaultPrinter}
+                    >
+                      {valueText.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}</CustomTextField><CustomTextField
+                        className={classes.formControl}
+                        select
+                        name="posDefaultPrinter"
+                        label="Quốc gia"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.posDefaultPrinter}
+                      >
+                      {valueText.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}</CustomTextField>
                   </div>
                 </div>
                 <div className="col-md-6">
@@ -494,8 +590,6 @@ function CongtyChiNhanh() {
                           {option.label}
                         </MenuItem>
                       ))}</CustomTextField>
-                  </div>
-                  <div className={classes.formGroup}>
                     <CustomTextField
                       className={classes.formControl}
                       select
@@ -511,6 +605,29 @@ function CongtyChiNhanh() {
                           {option.label}
                         </MenuItem>
                       ))}</CustomTextField>
+                  </div>
+                  <div className={classes.formGroup}>
+                    <CustomTextField
+                      className={classes.formControl}
+                      type="text"
+                      name="companyRegistration"
+                      label="MST/Số ĐKKD"
+                      variant="filled"
+                      size="small"
+                      onChange={formik.handleChange}
+                      value={formik.values.companyRegistration}
+                    />
+                    <CustomTextField
+                      className={classes.formControl}
+                      type="text"
+                      name="nameToPrintReport"
+                      label="Tên để in"
+                      variant="filled"
+                      size="small"
+                      helperText={formik.touched.nameToPrintReport && formik.errors.nameToPrintReport ? formik.errors.nameToPrintReport : null}
+                      onChange={formik.handleChange}
+                      value={formik.values.nameToPrintReport}
+                    />
                   </div>
                   <div className={classes.formGroup}>
                     <CustomTextField
@@ -561,6 +678,10 @@ function CongtyChiNhanh() {
           </Button>
         </div>
       </div>
+      <div className="p-2">
+        <CongTyChiNhanhData />
+      </div>
+
     </div>
   );
 }

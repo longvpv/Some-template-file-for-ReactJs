@@ -85,10 +85,12 @@ const useStyles = makeStyles((theme) => ({
 
   formGroup: {
     display: "flex",
+    alignItems: 'center',
     margin: "3px",
   },
   formControl: {
     width: "100%",
+    height: "100%",
     margin: "3px 3px",
     backgroundColor: "#FFFFFF",
   },
@@ -278,8 +280,8 @@ function QuanLyNhanVien() {
                       <FormControl component="fieldset" size="small" >
                         <FormLabel className="mb-0 pl-1 pt-1" component="legend">Giới tính</FormLabel>
                         <RadioGroup row aria-label="gender" name="gender1" >
-                          <FormControlLabel className="pl-3" value="male" control={<Radio color="primary" />} label="Nam" />
-                          <FormControlLabel value="female" control={<Radio color="primary" />} label="Nữ" />
+                          <FormControlLabel className="pl-3" value="male" control={<Radio color="primary" size="small" />} label="Nam" />
+                          <FormControlLabel value="female" control={<Radio color="primary" size="small" />} label="Nữ" />
                         </RadioGroup>
                       </FormControl>
                     </div>

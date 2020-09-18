@@ -16,9 +16,22 @@ function* createCompany(action: { type: string, createCompanyModal: Object }) {
   }
 }
 
+function* uploadLogo(action: { type: string, file }) {
+  const file = action.file;
+  try {
+    const result = yield httpClient.post('/api/Upload', file);
+    console.log({ result });
+
+  } catch (e) {
+
+  } finally {
+  }
+}
+
 
 export default function* companyWatcher() {
   yield all([
     takeLatest(actionTypes.CREAT_COMPANY, createCompany),
+    takeLatest(actionTypes.UPLOAD_LOGO, uploadLogo),
   ])
 }

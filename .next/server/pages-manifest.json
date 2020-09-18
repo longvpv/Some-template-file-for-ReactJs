@@ -2,6 +2,6 @@
   "/_app": "pages/_app.js",
   "/_document": "pages/_document.js",
   "/_error": "pages/_error.js",
-  "/login": "pages/login.js",
-  "/main": "pages/main.js"
+  "/QuanTriHeThong/ThietLapHeThong/PhongBan": "pages/QuanTriHeThong/ThietLapHeThong/PhongBan.js",
+  "/QuanTriHeThong/ThietLapHeThong/CongTyChiNhanh": "pages/QuanTriHeThong/ThietLapHeThong/CongTyChiNhanh.js"
 }
