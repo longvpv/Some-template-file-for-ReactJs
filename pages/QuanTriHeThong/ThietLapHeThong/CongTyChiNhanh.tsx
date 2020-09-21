@@ -1,4 +1,5 @@
 import {
+  Breadcrumbs,
   Button,
   Checkbox,
   CircularProgress,
@@ -11,12 +12,14 @@ import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from "formik";
 import * as Yup from 'yup';
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { createCompany } from "../../../redux/systemsManagement/company/actions";
 import { Upload, message } from 'antd';
-import { values } from "lodash";
 import CongTyChiNhanhData from "./CongTyChiNhanh-Data";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import _ from "lodash";
+import AppState from "../../../@types/appTypes/appState";
 
 const CustomTextField = withStyles({
   root: {
@@ -181,10 +184,34 @@ function beforeUpload(file) {
 }
 
 function CongtyChiNhanh() {
+  const classes = useStyles();
   const dispatch = useDispatch();
   const [imgUrl, setImgUrl] = useState('');
-  const [loading, setLoading] = useState(false)
-  const classes = useStyles();
+  const [loading, setLoading] = useState(false);
+  const [stateCityId, setStateCityId] = useState('');
+  const [stateDistrictId, setStateDistrictId] = useState('')
+
+
+
+  const valueText = [
+    {
+      value: null,
+      label: '0',
+    },
+    {
+      value: '1',
+      label: '1',
+    },
+    {
+      value: '2',
+      label: '2',
+    },
+    {
+      value: '3',
+      label: '3',
+    },
+  ];
+
   const formik = useFormik({
     initialValues: {
       companyName: '',
@@ -240,29 +267,25 @@ function CongtyChiNhanh() {
     onSubmit: (values) => {
       console.log({ values });
       dispatch(createCompany(values));
-
     },
   });
 
+  const locations = useSelector((state: AppState) => state.dynamicState.locations);
+  const cityName: Array<any> = locations.map(location => {
+    const result = {
+      value: location.id,
+      label: location.name
+    }
+    return result
+  })
+  const districtName: Array<any> = locations.filter(location => location.id === stateCityId).map(key => locations[key]).map(location => {
+    const result = {
+      value: location.id,
+      label: location.name
+    }
+    return result
+  })
 
-  const valueText = [
-    {
-      value: null,
-      label: '0',
-    },
-    {
-      value: '1',
-      label: '1',
-    },
-    {
-      value: '2',
-      label: '2',
-    },
-    {
-      value: '3',
-      label: '3',
-    },
-  ];
 
   const handleChange = info => {
     if (info.file.status === 'uploading') {
@@ -299,6 +322,11 @@ function CongtyChiNhanh() {
   );
   return (
     <div>
+      <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
+        <Typography color="textSecondary">Quản trị hệ thống</Typography>
+        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
+        <Typography color="textPrimary">Công ty / Chi Nhánh</Typography>
+      </Breadcrumbs>
       <div className="d-flex justify-content-between align-items-center">
         <p className={classes.title}>Thông Tin Công Ty / Chi Nhánh</p>
         <div className="d-flex justify-content-end align-items-center w-25 pr-5">
@@ -385,7 +413,7 @@ function CongtyChiNhanh() {
                       value={formik.values.parentId}
                     >
                       {valueText.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <MenuItem key={option.value} value={option.value} onClick={() => setStateCityId(option.value)}>
                           {option.label}
                         </MenuItem>
                       ))}</CustomTextField>
@@ -453,8 +481,8 @@ function CongtyChiNhanh() {
                       onChange={formik.handleChange}
                       value={formik.values.posDefaultPrinter}
                     >
-                      {valueText.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                      {cityName.map((option) => (
+                        <MenuItem key={option.value} value={option.value} onClick={() => setStateCityId(option.value)}>
                           {option.label}
                         </MenuItem>
                       ))}</CustomTextField><CustomTextField
@@ -467,7 +495,7 @@ function CongtyChiNhanh() {
                         onChange={formik.handleChange}
                         value={formik.values.posDefaultPrinter}
                       >
-                      {valueText.map((option) => (
+                      {districtName.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
@@ -498,11 +526,11 @@ function CongtyChiNhanh() {
                         onChange={formik.handleChange}
                         value={formik.values.posDefaultPrinter}
                       >
-                      {valueText.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {
+                        <MenuItem key={'VietNam'} value={'VietNam'}>
+                          Việt Nam
                         </MenuItem>
-                      ))}</CustomTextField>
+                      }</CustomTextField>
                   </div>
                 </div>
                 <div className="col-md-6">

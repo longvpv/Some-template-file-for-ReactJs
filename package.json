@@ -61,6 +61,7 @@
     "react": "^16.13.1",
     "react-async": "^9.0.0",
     "react-cookie": "^4.0.1",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",
     "react-gesture-responder": "^2.1.0",
     "react-hamburger-menu": "^1.2.1",

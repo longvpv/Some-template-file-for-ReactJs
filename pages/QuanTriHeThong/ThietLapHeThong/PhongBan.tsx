@@ -1,8 +1,9 @@
 import React from 'react'
 import SearchIcon from '@material-ui/icons/Search';
-import { Button, InputBase, TextField, Typography, withStyles } from "@material-ui/core";
+import { Button, InputBase, TextField, Typography, withStyles, Breadcrumbs } from "@material-ui/core";
 import { fade, makeStyles } from '@material-ui/core/styles';
 import Formsy from "formsy-react";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 const CustomTextField = withStyles({
   root: {
@@ -117,6 +118,12 @@ function PhongBan() {
   };
   return (
     <div>
+
+      <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
+        <Typography color="textSecondary">Quản trị hệ thống</Typography>
+        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
+        <Typography color="textPrimary">Phòng ban</Typography>
+      </Breadcrumbs>
       <div className="d-flex justify-content-between align-items-center">
         <p className={classes.title}>Thông Tin Phòng Ban</p>
         <div className="d-flex justify-content-end align-items-center w-25 pr-5">

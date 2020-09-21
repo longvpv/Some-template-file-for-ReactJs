@@ -4,19 +4,15 @@ import {
   CircularProgress,
   InputBase,
   MenuItem,
-  Switch,
-  TextField, Typography
+  TextField
 } from "@material-ui/core";
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import { DropzoneArea } from 'material-ui-dropzone';
 import { useFormik } from "formik";
-import * as Yup from 'yup';
+import { DropzoneArea } from 'material-ui-dropzone';
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createCompany } from "../../../redux/systemsManagement/company/actions";
-import { Upload, message } from 'antd';
-import { values } from "lodash";
+import * as Yup from 'yup';
 
 const CustomTextField = withStyles({
   root: {

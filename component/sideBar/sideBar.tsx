@@ -3,6 +3,7 @@ import { IconButton, Badge, Typography } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
 import QuanTriHeThong from "./QuanTriHeThong/QuanTriHeThong";
 import NhanSu from "./NhanSu/NhanSu";
+import Scrollbars from 'react-custom-scrollbars';
 
 const useStyles = makeStyles({
   root: {
@@ -103,6 +104,9 @@ function SideBar(props) {
 
           </div>
         </div>
+
+
+
         <div style={{ width: 'calc(100% - 60px)', paddingLeft: '8px' }}>
 
           {key === 1 &&
@@ -110,7 +114,13 @@ function SideBar(props) {
               <p className={classes.title}>
                 QUẢN TRỊ HỆ THỐNG
               </p>
-              <QuanTriHeThong />
+              <React.Fragment>
+                <Scrollbars style={{ height: '90vh' }}>
+                  <QuanTriHeThong />
+                </Scrollbars>
+              </React.Fragment>
+
+
             </div>
           }
           {key === 2 &&
@@ -210,6 +220,8 @@ function SideBar(props) {
             </div>
           }
         </div>
+
+
       </div>
     </div>
   );

@@ -14,15 +14,15 @@
     "static/development/_ssgManifest.js"
   ],
   "pages": {
+    "/": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/chunks/pages/index.js"
+    ],
     "/QuanTriHeThong/ThietLapHeThong/CongTyChiNhanh": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/chunks/pages/QuanTriHeThong/ThietLapHeThong/CongTyChiNhanh.js"
-    ],
-    "/QuanTriHeThong/ThietLapHeThong/PhongBan": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/QuanTriHeThong/ThietLapHeThong/PhongBan.js"
     ],
     "/_app": [
       "static/chunks/main.js",

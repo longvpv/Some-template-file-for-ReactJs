@@ -4,3 +4,7 @@ export default interface LoginOutputModel {
   refreshToken: string,
   expires: Date
 }
+
+export interface LoginState {
+  loginModal: string
+}

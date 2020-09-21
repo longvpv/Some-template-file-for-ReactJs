@@ -1,28 +1,36 @@
 import React from "react";
-import Breadcrumb from "../component/breadcrumb/Breadcrumb";
 import SideBar from "../component/sideBar/sideBar";
 import TopNav from "../component/topNav/topnav";
+import { Scrollbars } from 'react-custom-scrollbars';
 
 export default class MainLayout extends React.Component {
 
   render() {
     return (
-      <div id="app-wrapper">
+      <div className="app-wrapper">
         <div className="sticky-top">
           <TopNav />
         </div>
         <div className="row">
-          <div className="col-md-2 p-0 "><SideBar /></div>
-          <div className="col-md-10 pt-2" style={{ backgroundColor: '#F2F2F2' }}>
+          <div className="col-md-2 p-0 ">
+            <SideBar />
 
-            <Breadcrumb />
-            <div className="mt-2">
-              {this.props.children}
-            </div>
+          </div>
+          <div className="col-md-10 pt-2" style={{ backgroundColor: '#F2F2F2' }}>
+            <React.Fragment>
+              <Scrollbars style={{ height: '90vh' }}>
+                {this.props.children}
+              </Scrollbars>
+            </React.Fragment>
           </div>
         </div>
-
+        <style jsx>
+          {`
+          
+          `}
+        </style>
       </div>
+
     );
   }
 }

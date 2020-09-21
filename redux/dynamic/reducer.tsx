@@ -1,9 +1,11 @@
+import { SystemsCompanyState } from "../../@types/company/createCompany";
 import DynamicState from "../../@types/dynamic/dynamicState";
 
 import { actionTypes } from './actions'
 
 const initializeState: DynamicState = {
-  dynamicLoading: {}
+  dynamicLoading: {},
+  locations: []
 }
 
 export default function reducer(state = initializeState, action: any) {
@@ -16,6 +18,11 @@ export default function reducer(state = initializeState, action: any) {
           ...dynamicLoading,
           [action.field]: action.loading
         }
+      }
+    case actionTypes.SET_LOCATIONS:
+      return {
+        ...state,
+        locations: action.locations
       }
 
     default:

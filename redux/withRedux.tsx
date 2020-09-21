@@ -23,7 +23,8 @@ export function configureStore(initialState: any = {}): any {
     key: '.rosterspot.localstorage.app.key',
     storage,
     whitelist: [
-      'userProfileState'
+      'userProfileState',
+      'locationState'
     ],
   }
 

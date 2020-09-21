@@ -26,3 +26,7 @@ export default interface createCompanyModal {
   id: number
 
 };
+
+export interface SystemsCompanyState {
+  createCompanyModal: Object
+}

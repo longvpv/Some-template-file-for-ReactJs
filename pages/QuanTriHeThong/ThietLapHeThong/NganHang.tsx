@@ -6,6 +6,8 @@ import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Formsy from "formsy-react";
 import React from 'react';
+import { Breadcrumbs, Typography } from "@material-ui/core";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 const CustomTextField = withStyles({
   root: {
     '&.MuiFormControl-root': {
@@ -121,6 +123,12 @@ function NganHang() {
   };
   return (
     <div>
+
+      <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
+        <Typography color="textSecondary">Quản trị hệ thống</Typography>
+        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
+        <Typography color="textPrimary">Ngân hàng</Typography>
+      </Breadcrumbs>
       <div className="d-flex justify-content-between align-items-center">
         <p className={classes.title}>Thiết Lập Ngân Hàng</p>
         <div className="d-flex justify-content-end align-items-center w-25 pr-5">

@@ -10,11 +10,14 @@ import {
   Radio,
   RadioGroup,
   Switch,
-  TextField, Typography
+  TextField
 } from "@material-ui/core";
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import Formsy from "formsy-react";
+import { Breadcrumbs, Typography } from "@material-ui/core";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+
 
 
 const CustomTextField = withStyles({
@@ -181,6 +184,11 @@ function QuanLyNhanVien() {
   ];
   return (
     <div>
+      <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
+        <Typography color="textSecondary">Quản trị hệ thống</Typography>
+        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
+        <Typography color="textPrimary">Quản lý nhân viên</Typography>
+      </Breadcrumbs>
       <div className="d-flex justify-content-between align-items-center">
         <p className={classes.title}>Thông Tin Nhân Viên</p>
         <div className="d-flex justify-content-end align-items-center w-25 pr-5">
@@ -372,21 +380,7 @@ function QuanLyNhanVien() {
                       className={classes.formControl}
                       select
                       name="CongTyMe"
-                      label="Phường"
-                      required
-                      variant="filled"
-                      size="small"
-                    >
-                      {currencies.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="CongTyMe"
-                      label="Xã"
+                      label="Phường/Xã"
                       required
                       variant="filled"
                       size="small"
@@ -401,6 +395,20 @@ function QuanLyNhanVien() {
                       select
                       name="CongTyMe"
                       label="Quận/Huyện"
+                      required
+                      variant="filled"
+                      size="small"
+                    >
+                      {currencies.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}</CustomTextField>
+                    <CustomTextField
+                      className={classes.formControl}
+                      select
+                      name="CongTyMe"
+                      label="Thành Phố"
                       required
                       variant="filled"
                       size="small"

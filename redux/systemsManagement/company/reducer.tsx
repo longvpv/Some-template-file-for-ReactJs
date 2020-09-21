@@ -1,8 +1,9 @@
+import { SystemsCompanyState } from '../../../@types/company/createCompany';
 // import DynamicState from "../../@types/dynamic/dynamicState";
 
 import { actionTypes } from './actions'
 
-const initializeState = {
+const initializeState: SystemsCompanyState = {
   createCompanyModal: {}
 }
 

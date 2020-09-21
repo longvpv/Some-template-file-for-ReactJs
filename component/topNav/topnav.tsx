@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+  fullwidth: {
+    width: '100vw'
+  },
   companyTitle: {
     color: '#101010',
     fontSize: "16px",
@@ -105,19 +108,9 @@ function TopNav(props) {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
-
-  const menuId = "primary-search-account-menu";
 
   return (
-    <div>
+    <div className={classes.fullwidth}>
       <div className={classes.grow}>
         <AppBar
           position="static"

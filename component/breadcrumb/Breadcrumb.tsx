@@ -10,16 +10,8 @@ function Breadcrumb() {
   return (
     <div>
       <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
-        <Link color="inherit" href="/" onClick={handleClick}>
-          Quản trị hệ thống
-        </Link>
-        <Link
-          color="inherit"
-          href="/getting-started/installation/"
-          onClick={handleClick}
-        >
-          Thiết lập hệ thống
-        </Link>
+        <Typography color="textSecondary">Quản trị hệ thống</Typography>
+        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
         <Typography color="textPrimary">Công ty / Chi Nhánh</Typography>
       </Breadcrumbs>
     </div>

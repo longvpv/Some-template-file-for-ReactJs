@@ -1,7 +1,8 @@
 
+import { LoginState } from '../../@types/users/loginOutputModel';
 import { actionTypes } from './actions'
 
-const initializeState = {
+const initializeState: LoginState = {
   loginModal: '',
 }
 

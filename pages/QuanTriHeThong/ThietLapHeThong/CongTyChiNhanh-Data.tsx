@@ -83,6 +83,21 @@ function createData(
         nameToPrintReport: 7,
         addressToPrintReport: 7,
       },
+      {
+        companyName: 'Leonal Messi',
+        companyEnglishName: 10,
+        companyAddress: 10,
+        companyRegistration: 10,
+        companyTitle: 10,
+        companyPhone: 10,
+        companyFax: 10,
+        companyHotline: 10,
+        companySaleEmail: 10,
+        companySupportEmail: 10,
+        website: 10,
+        nameToPrintReport: 10,
+        addressToPrintReport: 10,
+      },
     ],
   };
 }
@@ -117,7 +132,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <TableCell align="right">{row.addressToPrintReport}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={13}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={15}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={0}>
 
