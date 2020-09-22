@@ -8,7 +8,8 @@ export const actionTypes = {
   GET_COMPANY_LIST: 'GET_COMPANY_LIST',
   SET_COMPANY_LIST: 'SET_COMPANY_LIST',
   DELETE_COMPANY: 'DELETE_COMPANY',
-  SET_PRINTER: 'SET_PRINTER'
+  SET_PRINTER: 'SET_PRINTER',
+  CHANGE_COMPANY: 'CHANGE_COMPANY'
 
 }
 
@@ -16,6 +17,12 @@ export function createCompany(createCompanyModal: createCompanyModal) {
   return {
     type: actionTypes.CREAT_COMPANY,
     createCompanyModal,
+  }
+}
+export function changeCompany(changeCompanyModal: CompanyProps) {
+  return {
+    type: actionTypes.CHANGE_COMPANY,
+    changeCompanyModal,
   }
 }
 

@@ -16,8 +16,8 @@ function* login(action: { type: string, loginModal: LoginInputModel }) {
     const result: LoginOutputModel = yield httpClient.post('/Account/SystemAccount/Login', loginModal);
     if (!_.isEmpty(result.accessToken) && !_.isEmpty(result.refreshToken)) {
       authorizationService.setCookies(result.accessToken, result.refreshToken);
+      window.location.href = '/';
     }
-    console.log(result);
 
   } catch (e) {
 

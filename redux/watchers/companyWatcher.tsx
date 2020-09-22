@@ -15,6 +15,19 @@ function* createCompany(action: { type: string, createCompanyModal: CompanyProps
   }
 }
 
+function* changeCompany(action: { type: string, changeCompanyModal: CompanyProps }) {
+
+  const changeCompanyModal = action.changeCompanyModal;
+  try {
+    const result = yield httpClient.put(`/SystemsManagement/Company`, changeCompanyModal);
+
+  } catch (e) {
+
+  } finally {
+  }
+}
+
+
 function* uploadLogo(action: { type: string, file }) {
   const file = action.file;
   try {
@@ -67,6 +80,7 @@ function* deleteCompany(action: { type: string, companyId }) {
 export default function* companyWatcher() {
   yield all([
     takeLatest(actionTypes.CREAT_COMPANY, createCompany),
+    takeLatest(actionTypes.CHANGE_COMPANY, changeCompany),
     takeLatest(actionTypes.UPLOAD_LOGO, uploadLogo),
     takeLatest(actionTypes.GET_COMPANY_LIST, getCompanyList),
     takeLatest(actionTypes.GET_COMPANY, getCompany),

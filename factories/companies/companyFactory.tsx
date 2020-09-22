@@ -31,7 +31,8 @@ export const prepareEmptyCompanyModel = () => {
     countryId: null,
     districtId: null,
     provinceId: null,
-    wardId: null
+    wardId: null,
+    companyCode: ''
   }
 
   return company;

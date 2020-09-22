@@ -29,6 +29,8 @@ export default interface createCompanyModal {
   districtId?: number;
   wardId?: number;
 
+  companyCode: string
+
 };
 
 export interface CompanyData {
@@ -71,7 +73,8 @@ export interface CompanyProps {
   stampDefaultPrinter: number;
   numberGroupSeparator: number;
   active: boolean;
-  parentId: number
+  parentId: number,
+  companyCode: string
 }
 
 export interface PrinterProps {

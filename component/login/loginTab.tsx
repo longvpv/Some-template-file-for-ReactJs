@@ -44,7 +44,6 @@ function LoginTab(props) {
     }),
     onSubmit: (values: LoginInputModel) => {
       dispatch(login(values));
-
     },
   });
 
@@ -80,7 +79,6 @@ function LoginTab(props) {
           variant="contained"
           className="w-100 mx-auto normal-case"
           aria-label="LOG IN"
-          href="/"
           style={{ backgroundColor: "#2FAAFC", color: "#FFF", borderColor: '#2FAAFC', fontSize: "16px", fontWeight: 'bold' }}
         >
           ĐĂNG NHẬP

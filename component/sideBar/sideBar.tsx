@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { IconButton, Badge, Typography } from "@material-ui/core";
+import { Badge, IconButton } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
-import QuanTriHeThong from "./QuanTriHeThong/QuanTriHeThong";
-import NhanSu from "./NhanSu/NhanSu";
+import React, { useState } from "react";
 import Scrollbars from 'react-custom-scrollbars';
+import NhanSu from "./NhanSu/NhanSu";
+import SystemsManagement from "./SystemsManagement/SystemsManagement";
 
 const useStyles = makeStyles({
   root: {
@@ -15,6 +15,7 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
     color: "#2FAAFC",
     paddingLeft: "6px",
+    paddingTop: "12px",
     margin: '0'
   },
 
@@ -116,7 +117,7 @@ function SideBar(props) {
               </p>
               <React.Fragment>
                 <Scrollbars style={{ height: '90vh' }}>
-                  <QuanTriHeThong />
+                  <SystemsManagement />
                 </Scrollbars>
               </React.Fragment>
 
