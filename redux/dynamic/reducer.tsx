@@ -5,7 +5,6 @@ import { actionTypes } from './actions'
 
 const initializeState: DynamicState = {
   dynamicLoading: {},
-  locations: []
 }
 
 export default function reducer(state = initializeState, action: any) {
@@ -19,11 +18,7 @@ export default function reducer(state = initializeState, action: any) {
           [action.field]: action.loading
         }
       }
-    case actionTypes.SET_LOCATIONS:
-      return {
-        ...state,
-        locations: action.locations
-      }
+
 
     default:
       return state;

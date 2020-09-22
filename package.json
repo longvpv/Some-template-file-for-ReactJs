@@ -38,6 +38,7 @@
     "es6-promise": "^4.2.8",
     "es6-promisify": "^6.1.1",
     "express": "^4.17.1",
+    "form-data": "^3.0.0",
     "formik": "^2.1.5",
     "formsy-react": "^2.2.1",
     "immutability-helper": "^3.0.1",

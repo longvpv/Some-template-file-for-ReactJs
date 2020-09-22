@@ -9,20 +9,31 @@ import {
   TextField, Typography
 } from "@material-ui/core";
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
+import { TramRounded } from "@material-ui/icons";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SearchIcon from '@material-ui/icons/Search';
+import { message, Upload } from 'antd';
+import Axios from "axios";
 import { useFormik } from "formik";
-import * as Yup from 'yup';
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createCompany } from "../../../redux/systemsManagement/company/actions";
-import { Upload, message } from 'antd';
-import CongTyChiNhanhData from "./CongTyChiNhanh-Data";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import _ from "lodash";
+import * as Yup from 'yup';
 import AppState from "../../../@types/appTypes/appState";
+import { DistrictProps, LocationsProps } from "../../../@types/appTypes/locationState";
+import { createCompany, deleteCompany, setCompany, setPrinter } from "../../../redux/systemsManagement/company/actions";
+import httpClient from "../../../services/httpService";
+import CongTyChiNhanhData from "./CongTyChiNhanh-Data";
+import * as companyFactory from '../../../factories/companies/companyFactory'
+import { PrinterProps } from "../../../@types/company/createCompany";
+const FormData = require('form-data');
+
 
 const CustomTextField = withStyles({
   root: {
+    '& .MuiInputBase-input': {
+      fontSize: "14px",
+    },
+
     '& .MuiFormControl-root': {
       margin: "3px 3px",
     },
@@ -165,82 +176,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
-}
 
 function CongtyChiNhanh() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [imgUrl, setImgUrl] = useState('');
-  const [loading, setLoading] = useState(false);
   const [stateCityId, setStateCityId] = useState('');
-  const [stateDistrictId, setStateDistrictId] = useState('')
+  const [stateDistrictId, setStateDistrictId] = useState('');
 
+  const preparePrinter = async () => {
+    const printer: Array<PrinterProps> = await httpClient.get(`SystemsManagement/Printer/SelectList`)
+    dispatch(setPrinter(printer));
+  }
+  useEffect(() => {
+    preparePrinter()
+  }, [])
+  const company = useSelector((state: AppState) => state.systemsCompanyState.company);
+  const [imgUrl, setImgUrl] = useState(company.companyLogo);
 
-
-  const valueText = [
-    {
-      value: null,
-      label: '0',
-    },
-    {
-      value: '1',
-      label: '1',
-    },
-    {
-      value: '2',
-      label: '2',
-    },
-    {
-      value: '3',
-      label: '3',
-    },
-  ];
 
   const formik = useFormik({
-    initialValues: {
-      companyName: '',
-      companyAddress: '',
-      companyPhone: '',
-      addressToPrintReport: '',
-      orderDocPrefix: '',
-      companySupportEmail: '',
-      nameToPrintReport: '',
-      companyEnglishName: '',
-      companyRegistration: '',
-      companyTitle: '',
-      companyFax: '',
-      companyHotline: '',
-      companySaleEmail: '',
-      website: '',
-      visiblePOSMobileApp: false,
-      companyLogo: '',
-      posCustomerBill: 0,
-      posSavedBill: 0,
-      posWarehouseBill: 0,
-      posDefaultPrinter: 0,
-      stampDefaultPrinter: 0,
-      numberGroupSeparator: 0,
-      active: true,
-      parentId: 0,
-      id: 0
-
-    },
+    enableReinitialize: true,
+    initialValues: company.id ? company : companyFactory.prepareEmptyCompanyModel(),
     validationSchema: Yup.object({
       companyName: Yup.string()
         .max(200, 'Must be 200 characters or less')
@@ -264,64 +220,46 @@ function CongtyChiNhanh() {
         .max(200, 'Must be 200 characters or less')
         .required('Required'),
     }),
+
     onSubmit: (values) => {
-      console.log({ values });
       dispatch(createCompany(values));
     },
   });
 
-  const locations = useSelector((state: AppState) => state.dynamicState.locations);
-  const cityName: Array<any> = locations.map(location => {
-    const result = {
-      value: location.id,
-      label: location.name
+  const cityLocations = useSelector((state: AppState) => state.locationState.locations);
+  const districtLocation = Object.values(((cityLocations.filter((location: LocationsProps) => location.id === stateCityId)[0] || {}).district) || {});
+  const wardLocation = Object.values(((districtLocation.filter((location: DistrictProps) => location.id === stateDistrictId)[0] || {}).ward) || {});
+
+
+  const parentList = useSelector((state: AppState) => state.systemsCompanyState.companyData.data);
+  const PrinterList = useSelector((state: AppState) => state.systemsCompanyState.printer);
+
+  const handleDeleteButton = () => {
+    const name = formik.initialValues.companyName;
+    const companyId = formik.initialValues.id || null;
+    const r = confirm(`Are you sure wanna delete ${name} company ,Id ${companyId}`);
+    if (r) {
+      dispatch(deleteCompany(companyId))
     }
-    return result
-  })
-  const districtName: Array<any> = locations.filter(location => location.id === stateCityId).map(key => locations[key]).map(location => {
-    const result = {
-      value: location.id,
-      label: location.name
-    }
-    return result
-  })
+  }
 
+  const handleUploadLogo = async (e) => {
 
-  const handleChange = info => {
-    if (info.file.status === 'uploading') {
-      setLoading(true)
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => {
-        setImgUrl(imageUrl);
-        setLoading(false);
-        formik.setFieldValue('companyLogo', imageUrl)
-      }
-      );
-    }
-  };
-  const uploadButton = (
-    <div>
+    const form_data = new FormData();
+    form_data.append("file", e.target.files[0]);
+    const request_config = {
+      headers: {
+        "Content-Type": "form-data"
+      },
+    };
+    const uploadResult = await httpClient.post(`Api/Upload`, form_data, request_config);
+    const imgUrl = uploadResult[0].filePath;
+    setImgUrl(imgUrl);
+    formik.setFieldValue('companyLogo', imgUrl)
+  }
 
-      {loading ? <CircularProgress /> :
-
-        <Button
-          variant="contained"
-          className={classes.buttonAbsolute}
-          component="span"
-          aria-label="add"
-        >
-          <span>Chọn logo</span>
-        </Button>
-
-      }
-
-    </div>
-  );
   return (
-    <div>
+    <div key={company.id}>
       <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
         <Typography color="textSecondary">Quản trị hệ thống</Typography>
         <Typography color="textSecondary">Thiết lập hệ thống</Typography>
@@ -341,6 +279,7 @@ function CongtyChiNhanh() {
           <Button
             variant="contained"
             className={classes.buttonCreate}
+            onClick={() => formik.resetForm()}
           >
             Tạo mới
           </Button>
@@ -353,22 +292,31 @@ function CongtyChiNhanh() {
         >
           <div className="row w-100">
             <div className="col-md-2 d-flex flex-column justify-content-start align-items-center p-0 mt-5">
-              <Upload
-                name="avatar"
-                listType="picture-card"
-                className={classes.avatar}
-                showUploadList={false}
-                action="https://erp-api-dev.vvs.vn/api/Upload"
-                beforeUpload={beforeUpload}
-                onChange={handleChange}
-              >
+
+              <input
+                style={{ display: 'none' }}
+                id="companyLogo"
+                name="companyLogo"
+                type="file"
+                onChange={handleUploadLogo}
+              />
+              <label htmlFor="companyLogo" className={classes.avatar}>
                 {imgUrl ? <img src={imgUrl} alt="avatar" style={{ width: '100%' }} /> :
                   <div className="d-flex flex-column justify-content-center align-items-center ">
                     No Image Data
-                  {uploadButton}
+                    <Button
+                      variant="contained"
+                      className={classes.buttonAbsolute}
+                      component="span"
+                      aria-label="add"
+                    >
+                      <span>Chọn logo</span>
+                    </Button>
                   </div>
                 }
-              </Upload>
+
+
+              </label>
 
               <div className="d-flex align-items-center pt-3 w-100">
                 <Checkbox
@@ -412,9 +360,9 @@ function CongtyChiNhanh() {
                       onChange={formik.handleChange}
                       value={formik.values.parentId}
                     >
-                      {valueText.map((option) => (
-                        <MenuItem key={option.value} value={option.value} onClick={() => setStateCityId(option.value)}>
-                          {option.label}
+                      {parentList.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.companyName}
                         </MenuItem>
                       ))}</CustomTextField>
                   </div>
@@ -474,63 +422,80 @@ function CongtyChiNhanh() {
                     <CustomTextField
                       className={classes.formControl}
                       select
-                      name="posDefaultPrinter"
+                      name="countryId"
+                      label="Quốc gia"
+                      variant="filled"
+                      size="small"
+                      onChange={formik.handleChange}
+                      value={formik.values.countryId}
+                    >
+                      {
+                        <MenuItem key={'1'} value={'1'}>
+                          Việt Nam
+                        </MenuItem>
+                      }</CustomTextField>
+                    <CustomTextField
+                      className={classes.formControl}
+                      select
+                      name="provinceId"
                       label="Thành phố"
                       variant="filled"
                       size="small"
                       onChange={formik.handleChange}
-                      value={formik.values.posDefaultPrinter}
+                      value={formik.values.provinceId}
                     >
-                      {cityName.map((option) => (
-                        <MenuItem key={option.value} value={option.value} onClick={() => setStateCityId(option.value)}>
-                          {option.label}
-                        </MenuItem>
-                      ))}</CustomTextField><CustomTextField
-                        className={classes.formControl}
-                        select
-                        name="posDefaultPrinter"
-                        label="Quận/Huyện"
-                        variant="filled"
-                        size="small"
-                        onChange={formik.handleChange}
-                        value={formik.values.posDefaultPrinter}
-                      >
-                      {districtName.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {cityLocations.map((city) => (
+                        <MenuItem key={city.id} value={city.id} onClick={() => setStateCityId(city.id)}>
+                          {city.nameWithType}
                         </MenuItem>
                       ))}</CustomTextField>
+
                   </div>
                   <div className={classes.formGroup}>
                     <CustomTextField
                       className={classes.formControl}
                       select
-                      name="posDefaultPrinter"
+                      name="districtId"
+                      label="Quận/Huyện"
+                      variant="filled"
+                      size="small"
+                      onChange={formik.handleChange}
+                      value={formik.values.districtId}
+                    >
+                      {districtLocation.map((district: DistrictProps) => (
+                        <MenuItem key={district.id} value={district.id} onClick={() => setStateDistrictId(district.id)}>
+                          {district.nameWithType}
+                        </MenuItem>
+                      ))}</CustomTextField>
+                    <CustomTextField
+                      className={classes.formControl}
+                      select
+                      name="wardId"
                       label="Phường/Xã"
                       variant="filled"
                       size="small"
                       onChange={formik.handleChange}
-                      value={formik.values.posDefaultPrinter}
+                      value={formik.values.wardId}
                     >
-                      {valueText.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                      {wardLocation.map((ward) => (
+                        <MenuItem key={ward.id} value={ward.id}>
+                          {ward.nameWithType}
                         </MenuItem>
-                      ))}</CustomTextField><CustomTextField
-                        className={classes.formControl}
-                        select
-                        name="posDefaultPrinter"
-                        label="Quốc gia"
-                        variant="filled"
-                        size="small"
-                        onChange={formik.handleChange}
-                        value={formik.values.posDefaultPrinter}
-                      >
-                      {
-                        <MenuItem key={'VietNam'} value={'VietNam'}>
-                          Việt Nam
-                        </MenuItem>
-                      }</CustomTextField>
+                      ))}</CustomTextField>
+
+                  </div>
+                  <div className={classes.formGroup}>
+                    <CustomTextField
+                      className={classes.formControl}
+                      type="text"
+                      name="addressToPrintReport"
+                      label="Địa Chỉ Để in"
+                      variant="filled"
+                      size="small"
+                      helperText={formik.touched.addressToPrintReport && formik.errors.addressToPrintReport ? formik.errors.addressToPrintReport : null}
+                      onChange={formik.handleChange}
+                      value={formik.values.addressToPrintReport}
+                    />
                   </div>
                 </div>
                 <div className="col-md-6">
@@ -613,9 +578,9 @@ function CongtyChiNhanh() {
                       onChange={formik.handleChange}
                       value={formik.values.posDefaultPrinter}
                     >
-                      {valueText.map((option) => (
+                      {PrinterList.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                          {option.text}
                         </MenuItem>
                       ))}</CustomTextField>
                     <CustomTextField
@@ -628,9 +593,9 @@ function CongtyChiNhanh() {
                       onChange={formik.handleChange}
                       value={formik.values.stampDefaultPrinter}
                     >
-                      {valueText.map((option) => (
+                      {PrinterList.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
-                          {option.label}
+                          {option.text}
                         </MenuItem>
                       ))}</CustomTextField>
                   </div>
@@ -701,6 +666,7 @@ function CongtyChiNhanh() {
           <Button
             variant="contained"
             className={classes.buttonDelete}
+            onClick={handleDeleteButton}
           >
             Xóa
           </Button>
@@ -710,7 +676,7 @@ function CongtyChiNhanh() {
         <CongTyChiNhanhData />
       </div>
 
-    </div>
+    </div >
   );
 }
 

@@ -1,6 +1,6 @@
 import {
   Button,
-  InputBase, TextField
+  InputBase, MenuItem, TextField
 } from "@material-ui/core";
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
@@ -8,12 +8,22 @@ import Formsy from "formsy-react";
 import React from 'react';
 import { Breadcrumbs, Typography } from "@material-ui/core";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { useFormik } from "formik";
+import * as companyFactory from '../../../factories/companies/companyFactory';
+import * as Yup from 'yup';
 const CustomTextField = withStyles({
   root: {
-    '&.MuiFormControl-root': {
+    '& .MuiInputBase-input': {
+      fontSize: "14px",
+    },
 
+    '& .MuiFormControl-root': {
       margin: "3px 3px",
     },
+    '& p.MuiFormHelperText-root': {
+      color: '#dc3545',
+    },
+
     '& label.Mui-focused': {
       color: '#2FAAFC',
 
@@ -118,9 +128,58 @@ const useStyles = makeStyles((theme) => ({
 
 function NganHang() {
   const classes = useStyles();
-  const handleSubmit = (model) => {
-    console.log(model);
-  };
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: companyFactory.prepareEmptyCompanyBankModel(),
+    validationSchema: Yup.object({
+      bankCode: Yup.string()
+        .max(45, 'Must be 45 characters or less')
+        .required('Required'),
+      bankName: Yup.string()
+        .max(100, 'Must be 100 characters or less')
+        .required('Required'),
+      bankAddress: Yup.string()
+        .max(100, 'Must be 100 characters or less')
+        .required('Required'),
+      bankAccountName: Yup.string()
+        .max(50, 'Must be 50 characters or less')
+        .required('Required'),
+      bankAccountNumber: Yup.string()
+        .max(50, 'Must be 50 characters or less')
+        .required('Required'),
+      accountingCodeId: Yup.number()
+        .required('Required'),
+    }),
+
+    onSubmit: (values) => {
+      console.log({ values });
+
+      // dispatch(createCompany(values));
+    },
+  })
+  const valueText = [
+    {
+      value: '0',
+      label: '0',
+    },
+
+    {
+      value: '1',
+      label: '1',
+    },
+    {
+      value: '2',
+      label: '2',
+    },
+    {
+      value: '3',
+      label: '3',
+    },
+    {
+      value: '5',
+      label: '5',
+    },
+  ];
   return (
     <div>
 
@@ -135,20 +194,22 @@ function NganHang() {
           <Button
             variant="outlined"
             className={classes.buttonSave}
+            type='submit'
+            onClick={() => formik.handleSubmit()}
           >
             Lưu
           </Button>
           <Button
             variant="contained"
             className={classes.buttonCreate}
+            onClick={() => formik.resetForm()}
           >
             Tạo mới
           </Button>
         </div>
       </div>
       <div>
-        <Formsy
-          onValidSubmit={handleSubmit}
+        <form
           className="d-flex flex-column justify-content-center align-items-center w-100"
         >
           <div className="row w-100">
@@ -157,19 +218,29 @@ function NganHang() {
               <div className={classes.formGroup}>
                 <CustomTextField
                   className={classes.formControl}
-                  type="text"
-                  name="LoaiNganHang"
+                  select
+                  name="id"
                   label="Loại Ngân Hàng"
                   variant="filled"
                   size="small"
-                />
+
+                  onChange={formik.handleChange}
+                  value={formik.values.id}
+                >
+                  {valueText.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}</CustomTextField>
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="MaNganHang"
+                  name="bankCode"
                   label="Mã Ngân Hàng"
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.bankCode}
 
                 />
               </div>
@@ -177,22 +248,26 @@ function NganHang() {
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="TenNganHang"
+                  name="bankName"
                   label="Tên Ngân Hàng"
                   required
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.bankName}
                 />
               </div>
               <div className={classes.formGroup}>
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="DiaChi"
+                  name="bankAddress"
                   label="Địa chỉ"
                   required
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.bankAddress}
                 />
               </div>
 
@@ -201,18 +276,22 @@ function NganHang() {
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="ChuThe"
+                  name="bankAccountName"
                   label="Chủ Thẻ"
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.bankAccountName}
                 />
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="SoThe"
+                  name="bankAccountNumber"
                   label="Số thẻ"
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.bankAccountNumber}
 
                 />
               </div>
@@ -224,22 +303,26 @@ function NganHang() {
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="TKPaypal"
+                  name="paypalAccount"
                   label="Tài khoản paypal"
                   required
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.paypalAccount}
                 />
               </div>
               <div className={classes.formGroup}>
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="SoThanhToan"
+                  name="paypalNumber"
                   label="Số thanh toán"
                   required
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.paypalNumber}
                 />
               </div>
 
@@ -252,14 +335,18 @@ function NganHang() {
                   label="CSV"
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.bankCode}
                 />
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="MaCIF"
+                  name="cifCode"
                   label="Mã CIF"
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.cifCode}
 
                 />
               </div>
@@ -267,10 +354,12 @@ function NganHang() {
                 <CustomTextField
                   className={classes.formControl}
                   type="text"
-                  name="MaTruyCapIEB"
+                  name="iebCode"
                   label="Mã truy cập IEB"
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.iebCode}
                 />
                 <CustomTextField
                   className={classes.formControl}
@@ -279,13 +368,15 @@ function NganHang() {
                   label="Mã Tài Khoản Liên Quan"
                   variant="filled"
                   size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.bankCode}
 
                 />
               </div>
             </div>
 
           </div>
-        </Formsy>
+        </form>
       </div>
       <div className="d-flex justify-content-between align-items-center pr-5">
         <div className="d-flex justify-content-center align-items-center">
