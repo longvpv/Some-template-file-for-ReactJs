@@ -4,17 +4,8 @@ import { SystemsCompanyState } from '../../../@types/company/createCompany';
 import { actionTypes } from './actions'
 
 const initializeState: SystemsCompanyState = {
-  createCompanyModal: {},
-  companyData: {
-    data: [],
-    recordsFiltered: 0,
-    recordsTotal: 0,
-    total: 0,
-    totalPages: 0,
-    pageSize: 0,
-    page: 0,
-    hasNextPage: false
-  },
+  createCompanyModal: null,
+  companyData: [],
   company: {
     id: 0,
     companyName: '',
@@ -44,7 +35,8 @@ const initializeState: SystemsCompanyState = {
     stampDefaultPrinter: 0,
     numberGroupSeparator: 0,
     active: true,
-    parentId: 0
+    parentId: 0,
+    companyCode: null
 
   },
   printer: []

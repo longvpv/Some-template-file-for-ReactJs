@@ -1,12 +1,9 @@
-import React, { useEffect, Dispatch } from "react";
-import MainLayout from "../layouts/mainLayout";
-import LayoutFunctionComponent from "../@types/layoutTypes/layoutFunctionComponent";
-import * as locationService from "../services/locationService";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import LayoutFunctionComponent from "../@types/layoutTypes/layoutFunctionComponent";
+import MainLayout from "../layouts/mainLayout";
 import { setLocations } from "../redux/location/actions";
-import httpClient from "../services/httpService";
-import { setPrinter } from "../redux/systemsManagement/company/actions";
-import { PrinterProps } from "../@types/company/createCompany";
+import * as locationService from "../services/locationService";
 
 const Index: LayoutFunctionComponent = () => {
   const dispatch = useDispatch()
@@ -19,8 +16,9 @@ const Index: LayoutFunctionComponent = () => {
     prepareLocations();
   }, [])
   return (
-    <div>
-
+    <div style={{ width: '100%', height: '100%' }} className='d-flex flex-column justify-content-center align-items-center'>
+      <h1>Welcome to VVS ERP</h1>
+      <h2>Will be have tutorial here later !!!</h2>
     </div>
   );
 };

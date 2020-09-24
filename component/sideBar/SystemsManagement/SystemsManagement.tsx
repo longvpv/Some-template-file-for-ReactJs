@@ -1,4 +1,4 @@
-import { TableContainer, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -7,9 +7,9 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CachedIcon from "@material-ui/icons/Cached";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
+import HelpIcon from '@material-ui/icons/Help';
 import Link from "next/link";
 import React from "react";
-import Paper from '@material-ui/core/Paper';
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -131,7 +131,7 @@ function SystemsManagement() {
         </ListItem>
         <Collapse in={open2} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <Link href="/SystemsManagement/Staff/QuanLyNhanVien">
+            <Link href="/SystemsManagement/Staff/StaffManagement">
               <ListItem button className={classes.nested}>
                 <ArrowRightIcon fontSize="small" color="disabled" />
                 <Typography className={classes.itemText}>
@@ -323,11 +323,17 @@ function SystemsManagement() {
             </ListItem>
           </List>
         </Collapse>
-        <ListItem button onClick={() => handleClick(7)} className="d-flex justify-content-between">
-          <Typography className={classes.titleText} style={{ fontWeight: (open7 ? 'bold' : 'normal') }}>
+        <ListItem button className="d-flex justify-content-between">
+          <Typography className={classes.titleText} >
             Cập nhật mới
           </Typography>
           <CachedIcon style={{ color: '#4EEFA2' }} />
+        </ListItem>
+        <ListItem button className="d-flex justify-content-between">
+          <Typography className={classes.titleText} >
+            Hỗ trợ
+          </Typography>
+          <HelpIcon style={{ color: '#2FAAFC' }} />
         </ListItem>
       </List>
     </div>

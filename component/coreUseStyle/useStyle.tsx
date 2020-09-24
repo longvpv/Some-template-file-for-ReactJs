@@ -1,6 +1,37 @@
 import { fade, makeStyles } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => ({
+
+  buttonStyled: {
+    borderRadius: "8px",
+    width: "200px",
+    height: "48px",
+    margin: "6px",
+    fontWeight: 'bold'
+  },
+
+  avatar: {
+    display: "flex",
+    width: "180px",
+    height: "180px",
+
+    background: "#FFFFFF",
+  },
+  avatarLabel: {
+    width: "80px",
+    height: "24px",
+
+    "font-family": "Quicksand",
+    "font-style": "normal",
+    "font-weight": "normal",
+    "font-size": "14px",
+    "line-height": "24px",
+
+    "align-items": "center",
+    "text-align": "center",
+
+    color: "#4E4E4E",
+  },
   title: {
     fontFamily: "Quicksand",
     fontWeight: "bold",
@@ -36,10 +67,12 @@ const useStyle = makeStyles((theme) => ({
 
   formGroup: {
     display: "flex",
+    alignItems: 'center',
     margin: "3px",
   },
   formControl: {
     width: "100%",
+    height: "100%",
     margin: "3px 3px",
     backgroundColor: "#FFFFFF",
   },
@@ -79,29 +112,6 @@ const useStyle = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       width: "20ch",
     },
-  },
-  avatar: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: 'center',
-    width: "180px",
-    height: "180px",
-
-    background: "#FFFFFF",
-
-    position: 'relative'
-  },
-  avatarLabel: {
-    width: "80px",
-    height: "24px",
-
-    "font-family": "Quicksand",
-    "font-style": "normal",
-    "font-weight": "normal",
-    "font-size": "14px",
-    "line-height": "24px",
-
-    color: "#4E4E4E",
   },
   buttonDefault: {
     borderRadius: "8px",

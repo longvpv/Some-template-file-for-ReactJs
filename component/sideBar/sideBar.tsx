@@ -38,67 +38,64 @@ function SideBar(props) {
           >
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(1)}>
               <Badge color="primary">
-                <img src="/images/icon/icon1.png" />
+                {key === 1 ? <img src="/images/icon/icon1active.png" /> : <img src="/images/icon/icon1.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(2)}>
               <Badge color="primary">
-                <img src="/images/icon/icon2.png" />
+                {key === 2 ? <img src="/images/icon/icon2active.png" /> : <img src="/images/icon/icon2.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(3)}>
               <Badge color="primary">
-                <img src="/images/icon/icon3.png" />
+                {key === 3 ? <img src="/images/icon/icon3active.png" /> : <img src="/images/icon/icon3.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(4)}>
               <Badge color="primary">
-                <img src="/images/icon/icon4.png" />
+                {key === 4 ? <img src="/images/icon/icon4active.png" /> : <img src="/images/icon/icon4.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(5)}>
               <Badge color="primary">
-                <img src="/images/icon/icon5.png" />
+                {key === 5 ? <img src="/images/icon/icon5active.png" /> : <img src="/images/icon/icon5.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(6)}>
               <Badge color="primary">
-                <img src="/images/icon/icon6.png" />
+                {key === 6 ? <img src="/images/icon/icon6active.png" /> : <img src="/images/icon/icon6.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(7)}>
               <Badge color="primary">
-                <img src="/images/icon/icon7.png" />
-              </Badge>
+                {key === 7 ? <img src="/images/icon/icon7active.png" /> : <img src="/images/icon/icon7.png" />}              </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(8)}>
               <Badge color="primary">
-                <img src="/images/icon/icon8.png" />
-              </Badge>
+                {key === 8 ? <img src="/images/icon/icon8active.png" /> : <img src="/images/icon/icon8.png" />}              </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(9)}>
               <Badge color="primary">
-                <img src="/images/icon/icon9.png" />
-              </Badge>
+                {key === 9 ? <img src="/images/icon/icon9active.png" /> : <img src="/images/icon/icon9.png" />}              </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(10)}>
               <Badge color="primary">
-                <img src="/images/icon/icon10.png" />
+                {key === 10 ? <img src="/images/icon/icon10active.png" /> : <img src="/images/icon/icon10.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(11)}>
               <Badge color="primary">
-                <img src="/images/icon/icon11.png" />
+                {key === 11 ? <img src="/images/icon/icon11active.png" /> : <img src="/images/icon/icon11.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(12)}>
               <Badge color="primary">
-                <img src="/images/icon/icon12.png" />
+                {key === 12 ? <img src="/images/icon/icon12active.png" /> : <img src="/images/icon/icon12.png" />}
               </Badge>
             </IconButton>
             <IconButton aria-label="show" color="primary" style={{ width: "52px", height: "52px" }} onClick={() => setKey(13)}>
               <Badge color="primary">
-                <img src="/images/icon/icon13.png" />
+                {key === 13 ? <img src="/images/icon/icon13active.png" /> : <img src="/images/icon/icon13.png" />}
               </Badge>
             </IconButton>
 
@@ -151,7 +148,7 @@ function SideBar(props) {
           {key === 5 &&
             <div>
               <p className={classes.title}>
-                NHÂN SỰ
+                BÁN LẺ POS
             </p>
               {/* <QuanTriHeThong /> */}
             </div>

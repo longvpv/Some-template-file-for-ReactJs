@@ -43,7 +43,8 @@ function* uploadLogo(action: { type: string, file }) {
 function* getCompanyList(action: { type: string }) {
   try {
     const result = yield httpClient.get('SystemsManagement/Company');
-    yield put(setCompanyList(result))
+    const companyList: Array<CompanyProps> = result.data;
+    yield put(setCompanyList(companyList))
 
   } catch (e) {
 
@@ -51,11 +52,10 @@ function* getCompanyList(action: { type: string }) {
   }
 }
 
-function* getCompany(action: { type: string, companyId }) {
+function* getCompany(action: { type: string, companyId: number }) {
   const companyId = action.companyId
   try {
     const result: CompanyProps = yield httpClient.get(`SystemsManagement/Company/${companyId}`);
-    console.log(result);
     yield put(setCompany(result))
 
   } catch (e) {
@@ -64,7 +64,7 @@ function* getCompany(action: { type: string, companyId }) {
   }
 }
 
-function* deleteCompany(action: { type: string, companyId }) {
+function* deleteCompany(action: { type: string, companyId: number }) {
   const companyId = action.companyId
   console.log(companyId);
   try {

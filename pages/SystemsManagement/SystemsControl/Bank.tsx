@@ -1,14 +1,20 @@
 import {
   Breadcrumbs, Button,
-  InputBase, MenuItem, TextField, Typography
+  InputBase, MenuItem, TableCell, TextField, Typography
 } from "@material-ui/core";
 import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from "formik";
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from 'yup';
+import AppState from "../../../@types/appTypes/appState";
+import { CompanyProps } from "../../../@types/company/createCompany";
 import * as companyFactory from '../../../factories/companies/companyFactory';
+import { getCompanyList } from "../../../redux/systemsManagement/company/actions";
+import { createCompanyBank, getBankType, getCompanyBankInfo } from "../../../redux/systemsManagement/companyBank/actions";
+import BankData from "./BankData";
 const CustomTextField = withStyles({
   root: {
     '& .MuiInputBase-input': {
@@ -125,10 +131,17 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Bank() {
+  const dispatch = useDispatch()
   const classes = useStyles();
+  useEffect(() => {
+    dispatch(getCompanyList());
+    dispatch(getCompanyBankInfo());
+    dispatch(getBankType());
+  }, []);
+  const bankInfo = useSelector((state: AppState) => state.companyBankState.bankInfo);
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: companyFactory.prepareEmptyCompanyBankModel(),
+    initialValues: bankInfo.id ? bankInfo : companyFactory.prepareEmptyCompanyBankModel(),
     validationSchema: Yup.object({
       bankCode: Yup.string()
         .max(45, 'Must be 45 characters or less')
@@ -152,18 +165,13 @@ function Bank() {
     onSubmit: (values) => {
       console.log({ values });
 
-      // dispatch(createCompany(values));
+      dispatch(createCompanyBank(values));
     },
   })
   const valueText = [
     {
-      value: '0',
-      label: '0',
-    },
-
-    {
       value: '1',
-      label: '1',
+      label: '1'
     },
     {
       value: '2',
@@ -178,6 +186,8 @@ function Bank() {
       label: '5',
     },
   ];
+  const companyList = useSelector((state: AppState) => state.systemsCompanyState.companyData);
+  const bankType = useSelector((state: AppState) => state.companyBankState.bankType);
   return (
     <div>
 
@@ -217,6 +227,24 @@ function Bank() {
                 <CustomTextField
                   className={classes.formControl}
                   select
+                  name="companyId"
+                  label="Công ty"
+                  variant="filled"
+                  size="small"
+                  onChange={formik.handleChange}
+                  value={formik.values.companyId}
+                >
+                  {companyList.map(company => (
+                    <MenuItem key={company.id} value={company.id}>
+                      {company.companyName}
+                    </MenuItem>
+                  ))}
+                </CustomTextField>
+              </div>
+              <div className={classes.formGroup}>
+                <CustomTextField
+                  className={classes.formControl}
+                  select
                   name="accountingCodeId"
                   label="Loại Ngân Hàng"
                   variant="filled"
@@ -224,9 +252,10 @@ function Bank() {
                   onChange={formik.handleChange}
                   value={formik.values.accountingCodeId}
                 >
-                  {valueText.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
+                  {bankType.map((option) => (
+                    <MenuItem key={option.id} value={option.id}>
+                      <TableCell align="center" style={{ width: '100%' }}>{option.systemCodeId}</TableCell>
+                      <TableCell align="center" style={{ width: '100%' }}>{option.name}</TableCell>
                     </MenuItem>
                   ))}</CustomTextField>
                 <CustomTextField
@@ -331,8 +360,8 @@ function Bank() {
                   label="CSV"
                   variant="filled"
                   size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.bankCode}
+                // onChange={formik.handleChange}
+                // value={formik.values.bankCode}
                 />
                 <CustomTextField
                   className={classes.formControl}
@@ -365,8 +394,8 @@ function Bank() {
                   label="Mã Tài Khoản Liên Quan"
                   variant="filled"
                   size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.bankCode}
+                // onChange={formik.handleChange}
+                // value={formik.values.bankCode}
 
                 />
               </div>
@@ -401,6 +430,9 @@ function Bank() {
             Xóa
           </Button>
         </div>
+      </div>
+      <div>
+        <BankData />
       </div>
     </div>
   )

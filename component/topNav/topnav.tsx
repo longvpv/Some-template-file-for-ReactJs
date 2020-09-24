@@ -118,7 +118,7 @@ function TopNav(props) {
           style={{ boxShadow: "none" }}
         >
           <Toolbar>
-            <img src="\images\VVlogo.png" className="pr-5" />
+            <img src="\images\VVlogo1.png" className="px-5" />
             <IconButton
               edge="start"
               className={classes.menuButton}

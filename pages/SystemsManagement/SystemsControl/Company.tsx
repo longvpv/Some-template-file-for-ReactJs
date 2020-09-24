@@ -2,13 +2,12 @@ import {
   Breadcrumbs,
   Button,
   Checkbox,
-
   InputBase,
   MenuItem,
   Switch,
   TextField, Typography
 } from "@material-ui/core";
-import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
+import { createStyles, fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from "formik";
@@ -19,7 +18,7 @@ import AppState from "../../../@types/appTypes/appState";
 import { DistrictProps, LocationsProps } from "../../../@types/appTypes/locationState";
 import { PrinterProps } from "../../../@types/company/createCompany";
 import * as companyFactory from '../../../factories/companies/companyFactory';
-import { changeCompany, createCompany, deleteCompany, setPrinter } from "../../../redux/systemsManagement/company/actions";
+import { changeCompany, createCompany, deleteCompany, getCompanyList, setPrinter } from "../../../redux/systemsManagement/company/actions";
 import httpClient from "../../../services/httpService";
 import CompanyData from "./CompanyData";
 const FormData = require('form-data');
@@ -57,7 +56,20 @@ const CustomTextField = withStyles({
 })(TextField);
 
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => createStyles({
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   title: {
     fontFamily: "Quicksand",
     fontWeight: "bold",
@@ -185,7 +197,10 @@ function Company() {
     dispatch(setPrinter(printer));
   }
   useEffect(() => {
+    dispatch(getCompanyList())
     preparePrinter()
+
+
   }, [])
   const company = useSelector((state: AppState) => state.systemsCompanyState.company);
   const [imgUrl, setImgUrl] = useState(company.companyLogo);
@@ -219,6 +234,7 @@ function Company() {
     }),
 
     onSubmit: (values) => {
+      confirm('Sure wanna change this ?')
       company.id
         ? dispatch(changeCompany(values))
         : dispatch(createCompany(values));
@@ -230,7 +246,7 @@ function Company() {
   const wardLocation = Object.values(((districtLocation.filter((location: DistrictProps) => location.id === stateDistrictId)[0] || {}).ward) || {});
 
 
-  const parentList = useSelector((state: AppState) => state.systemsCompanyState.companyData.data);
+  const parentList = useSelector((state: AppState) => state.systemsCompanyState.companyData);
   const PrinterList = useSelector((state: AppState) => state.systemsCompanyState.printer);
 
   const handleDeleteButton = () => {
@@ -366,7 +382,8 @@ function Company() {
                         <MenuItem key={option.id} value={option.id}>
                           {option.companyName}
                         </MenuItem>
-                      ))}</CustomTextField>
+                      ))}
+                    </CustomTextField>
                   </div>
                   <div className={classes.formGroup}>
                     <CustomTextField

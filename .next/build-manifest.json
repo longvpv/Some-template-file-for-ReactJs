@@ -14,15 +14,10 @@
     "static/development/_ssgManifest.js"
   ],
   "pages": {
-    "/SystemsManagement/Staff/QuanLyNhanVien": [
+    "/SystemsManagement/SystemsControl/Bank": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/SystemsManagement/Staff/QuanLyNhanVien.js"
-    ],
-    "/SystemsManagement/SystemsControl/Company": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/SystemsManagement/SystemsControl/Company.js"
+      "static/chunks/pages/SystemsManagement/SystemsControl/Bank.js"
     ],
     "/_app": [
       "static/chunks/main.js",
@@ -35,6 +30,11 @@
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
+    ],
+    "/login": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/chunks/pages/login.js"
     ]
   },
   "ampFirstPages": []

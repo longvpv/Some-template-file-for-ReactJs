@@ -1,3 +1,4 @@
+import { CompanyBankState } from "../company/companyBank";
 import { SystemsCompanyState } from "../company/createCompany";
 import DynamicState from "../dynamic/dynamicState";
 import { LoginState } from "../users/loginOutputModel";
@@ -8,4 +9,5 @@ export default interface AppState {
   loginState: LoginState,
   systemsCompanyState: SystemsCompanyState,
   locationState: LocationState
+  companyBankState: CompanyBankState
 }

@@ -9,8 +9,9 @@ import { NextSeo } from 'next-seo';
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import 'animate.css'
-import '../public/css/index.css'
+import 'animate.css';
+import '../public/css/index.css';
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 
 Router.events.on('routeChangeComplete', () => window.scrollTo(0, 0));
 Router.events.on('routeChangeError', () => NProgress.done());
@@ -20,16 +21,29 @@ const ERPApp: FunctionComponent = (props: any) => {
   const AppLayout = Component.Layout || MainLayout;
   const persistor = persistStore(store);
 
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: '#2FAAFC',
+      },
+      secondary: {
+        main: '#d32f2f',
+      },
+    },
+  });
+
   return (
     <React.Fragment>
       <NextSeo title="ERP Web Application" />
-      <Provider store={store}>
-        <PersistGate loading={<Component {...pageProps} />} persistor={persistor}>
-          <AppLayout {...pageProps}>
-            <Component {...pageProps} />
-          </AppLayout>
-        </PersistGate>
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <PersistGate loading={<Component {...pageProps} />} persistor={persistor}>
+            <AppLayout {...pageProps}>
+              <Component {...pageProps} />
+            </AppLayout>
+          </PersistGate>
+        </Provider>
+      </ThemeProvider>
     </React.Fragment>
   )
 }

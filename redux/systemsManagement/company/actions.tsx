@@ -45,7 +45,7 @@ export const setCompany = (company: CompanyProps) => ({
   company
 })
 
-export function setCompanyList(companyData: any) {
+export function setCompanyList(companyData: Array<CompanyProps>) {
   return {
     type: actionTypes.SET_COMPANY_LIST,
     companyData,

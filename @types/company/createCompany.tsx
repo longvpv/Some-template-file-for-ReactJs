@@ -28,21 +28,9 @@ export default interface createCompanyModal {
   provinceId?: number;
   districtId?: number;
   wardId?: number;
-
   companyCode: string
 
 };
-
-export interface CompanyData {
-  data: Array<any>;
-  recordsFiltered: number;
-  recordsTotal: number;
-  total: number;
-  totalPages: number;
-  pageSize: number;
-  page: number;
-  hasNextPage: boolean
-}
 
 export interface CompanyProps {
   id: number;
@@ -85,9 +73,11 @@ export interface PrinterProps {
   value: number
 }
 
+
+
 export interface SystemsCompanyState {
-  createCompanyModal: Object;
-  companyData: CompanyData;
+  createCompanyModal: createCompanyModal;
   company: CompanyProps;
-  printer: Array<PrinterProps>
+  printer: Array<PrinterProps>;
+  companyData: Array<CompanyProps>
 }
