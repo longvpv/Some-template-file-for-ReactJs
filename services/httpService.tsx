@@ -3,7 +3,7 @@ import jsCookie from "js-cookie";
 import authenticateSettings from "../fileSettings/authenticateSettings.json";
 import _ from "lodash";
 const httpClient = axios.create({
-  baseURL: "https://erp-api-dev.vvs.vn",
+  baseURL: "http://erp-api-dev.vvs.vn",
 });
 
 httpClient.interceptors.request.use(

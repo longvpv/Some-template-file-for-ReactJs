@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import LayoutFunctionComponent from "../@types/layoutTypes/layoutFunctionComponent";
 import AuthLayout from "../layouts/authLayout";
-import { makeStyles } from "@material-ui/styles";
-import { Card, CardContent, Typography, Box } from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import LoginTab from "../component/login/loginTab";
-
-
-
 
 const Login: LayoutFunctionComponent = (props) => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -27,12 +23,7 @@ const Login: LayoutFunctionComponent = (props) => {
         <div className="row w-100">
           <div className="col-md-5 p-0 m-0">
             <div className="d-flex justify-content-center align-items-center h-100 relative p-0 m-0">
-              {/* <img
-                className="absolute w-100"
-                src="/images/loginBackground.png"
-                alt="background"
-              /> */}
-              <img className="m-auto" src="/images/login.png" alt="logo" />
+              <img className="m-auto" src={"login.png".staticImage()} alt="VV Solutions" />
             </div>
           </div>
           <div className="col-md-7 p-0 m-0">
