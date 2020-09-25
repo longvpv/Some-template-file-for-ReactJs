@@ -2,6 +2,7 @@ import { CompanyBankProps, CreateCompanyBankProps } from "../../../@types/compan
 
 export const actionTypes = {
   CREAT_COMPANY_BANK: 'CREAT_COMPANY_BANK',
+  CHANGE_COMPANY_BANK: 'CHANGE_COMPANY_BANK',
   GET_COMPANY_BANK_INFO: 'GET_COMPANY_BANK_INFO',
   SET_COMPANY_BANK_INFO: 'SET_COMPANY_BANK_INFO',
   GET_BANK_INFO: 'GET_BANK_INFO',
@@ -14,6 +15,13 @@ export function createCompanyBank(createCompanyBankModal: CreateCompanyBankProps
   return {
     type: actionTypes.CREAT_COMPANY_BANK,
     createCompanyBankModal,
+  }
+}
+
+export function changeCompanyBank(changeCompanyBankModal: CompanyBankProps) {
+  return {
+    type: actionTypes.CHANGE_COMPANY_BANK,
+    changeCompanyBankModal
   }
 }
 

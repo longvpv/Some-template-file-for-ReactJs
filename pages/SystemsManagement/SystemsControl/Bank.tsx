@@ -6,14 +6,14 @@ import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from "formik";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from 'yup';
 import AppState from "../../../@types/appTypes/appState";
 import { CompanyProps } from "../../../@types/company/createCompany";
 import * as companyFactory from '../../../factories/companies/companyFactory';
 import { getCompanyList } from "../../../redux/systemsManagement/company/actions";
-import { createCompanyBank, getBankType, getCompanyBankInfo } from "../../../redux/systemsManagement/companyBank/actions";
+import { changeCompanyBank, createCompanyBank, getBankType, getCompanyBankInfo } from "../../../redux/systemsManagement/companyBank/actions";
 import BankData from "./BankData";
 const CustomTextField = withStyles({
   root: {
@@ -131,7 +131,8 @@ const useStyles = makeStyles((theme) => ({
 
 
 function Bank() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const [state, setstate] = useState(0)
   const classes = useStyles();
   useEffect(() => {
     dispatch(getCompanyList());
@@ -165,7 +166,12 @@ function Bank() {
     onSubmit: (values) => {
       console.log({ values });
 
-      dispatch(createCompanyBank(values));
+      // dispatch(createCompanyBank(values));
+      confirm('Sure wanna change this ?')
+      bankInfo.id
+        ? dispatch(changeCompanyBank(values))
+        : dispatch(createCompanyBank(values));
+      setstate(state + 1)
     },
   })
   const valueText = [

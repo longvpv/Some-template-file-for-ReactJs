@@ -14,10 +14,10 @@
     "static/development/_ssgManifest.js"
   ],
   "pages": {
-    "/SystemsManagement/SystemsControl/Bank": [
+    "/SystemsManagement/SystemsControl/Company": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/SystemsManagement/SystemsControl/Bank.js"
+      "static/chunks/pages/SystemsManagement/SystemsControl/Company.js"
     ],
     "/_app": [
       "static/chunks/main.js",
@@ -30,11 +30,6 @@
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
-    ],
-    "/login": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/login.js"
     ]
   },
   "ampFirstPages": []

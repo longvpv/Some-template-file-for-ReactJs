@@ -1,4 +1,4 @@
-import { Button, Modal } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -158,20 +158,28 @@ export default function CompanyData(props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Modal
+      <Dialog
         open={open}
         onClose={() => setOpen(false)}
-        className={classes.modal}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <div className={classes.paper}>
-          <p>Bạn có chắc chắn muốn sửa thông tin công ty này không zậy?</p>
-          <div className="d-flex justify-content-center align-items-center">
-            <Button onClick={handleYesButtonModal}>Có</Button>
-            <Button onClick={() => setOpen(false)}>Không</Button>
-          </div>
+        <DialogTitle id="alert-dialog-title">{"Change information of this company ?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc chắn muốn thay đổi thông tin công ty này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleYesButtonModal} color="primary">
+            Agree
+          </Button>
+          <Button onClick={() => setOpen(false)} color="primary" autoFocus>
+            Disagree
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-        </div>
-      </Modal>
     </>
   );
 }

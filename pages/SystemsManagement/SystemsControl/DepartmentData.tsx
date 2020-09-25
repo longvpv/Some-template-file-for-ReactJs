@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,7 +12,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import AppState from '../../../@types/appTypes/appState';
 import { getCompany, getCompanyList } from '../../../redux/systemsManagement/company/actions';
 import { getBankInfo, getBankType, getCompanyBankInfo } from '../../../redux/systemsManagement/companyBank/actions';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal } from '@material-ui/core';
+import { Button, Modal } from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme) => createStyles({
   paper: {
@@ -40,6 +42,7 @@ const useStyles = makeStyles((theme) => createStyles({
 
 }));
 
+
 function createData(
   id: number,
   paypalAccount: string,
@@ -50,9 +53,6 @@ function createData(
   bankAccountName: string,
   bankAccountNumber: string,
   cifCode: string,
-  iebCode: string,
-  companyId,
-  accountingCodeId
 ) {
   return {
     id,
@@ -64,13 +64,11 @@ function createData(
     bankAccountName,
     bankAccountNumber,
     cifCode,
-    iebCode,
-    companyId,
-    accountingCodeId
   };
 }
 
-function BankData() {
+
+function DepartmentData() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -93,9 +91,6 @@ function BankData() {
     info.bankAccountName,
     info.bankAccountNumber,
     info.cifCode,
-    info.iebCode,
-    info.companyId,
-    info.accountingCodeId
   ))
   const handleBankAccountClick = (row) => {
     console.log(row.id);
@@ -114,17 +109,14 @@ function BankData() {
         <Table className={classes.table} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow className={classes.rowTitle}>
-              <TableCell className={classes.cellWidth} align="center">Tài khoản paypal</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Số thanh toán paypal</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Mã Ngân hàng</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Tên Ngân hàng</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Địa chỉ Ngân hàng</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Chủ thẻ</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Số thẻ</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Mã CIF</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Mã truy cấp IEB</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Công ty</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Loại Ngân hàng</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Tên bộ phận</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Địa chỉ bộ phận</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Tiêu đề công ty</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Tên công ty</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Mô tả</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Bộ phận đang hoạt động</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Người khởi tạo</TableCell>
+              <TableCell className={classes.cellWidth} align="center">Department ID1</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -140,40 +132,30 @@ function BankData() {
                 <TableCell align="right">{row.bankAccountName}</TableCell>
                 <TableCell align="right">{row.bankAccountNumber}</TableCell>
                 <TableCell align="right">{row.cifCode}</TableCell>
-                <TableCell align="right">{row.iebCode}</TableCell>
-                <TableCell align="right">{row.companyId}</TableCell>
-                <TableCell align="right">{row.accountingCodeId}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog
+      <Modal
         open={open}
         onClose={() => setOpen(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        className={classes.modal}
       >
-        <DialogTitle id="alert-dialog-title">{"Change information of this company bank ?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Bạn có chắc chắn muốn thay đổi thông tin ngân hàng này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleYesButtonModal} color="primary">
-            Agree
-          </Button>
-          <Button onClick={() => setOpen(false)} color="primary" autoFocus>
-            Disagree
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <div className={classes.paper}>
+          <p>Bạn có chắc chắn muốn sửa thông tin ngân hàng này không zậy?</p>
+          <div className="d-flex justify-content-center align-items-center">
+            <Button onClick={handleYesButtonModal}>Có</Button>
+            <Button onClick={() => setOpen(false)}>Không</Button>
+          </div>
+
+        </div>
+      </Modal>
     </>
   );
 }
 
-export default BankData
+export default DepartmentData
 
 
 

@@ -1,6 +1,7 @@
 import { all, put, takeLatest } from 'redux-saga/effects';
 import { CompanyBankProps, CreateCompanyBankProps } from '../../@types/company/companyBank';
 import httpClient from '../../services/httpService';
+import { changeCompany } from '../systemsManagement/company/actions';
 import { actionTypes, setBankInfo, setBankType, setCompanyBankInfo } from '../systemsManagement/companyBank/actions';
 
 function* createCompanyBank(action: { type: string, createCompanyBankModal: CreateCompanyBankProps }) {
@@ -15,6 +16,20 @@ function* createCompanyBank(action: { type: string, createCompanyBankModal: Crea
   } finally {
   }
 }
+
+
+function* changeCompanyBank(action: { type: string, changeCompanyBankModal: CompanyBankProps }) {
+
+  const changeCompanyBankModal = action.changeCompanyBankModal;
+  try {
+    const result = yield httpClient.put(`/SystemsManagement/CompanyBank`, changeCompanyBankModal);
+
+  } catch (e) {
+
+  } finally {
+  }
+}
+
 function* getBankType(action: { type: string }) {
   try {
     const result = yield httpClient.get('/SystemsManagement/CompanyBankType');
@@ -51,6 +66,7 @@ function* getBankInfo(action: { type: string, bankId: number }) {
 export default function* companyBankWatcher() {
   yield all([
     takeLatest(actionTypes.CREAT_COMPANY_BANK, createCompanyBank),
+    takeLatest(actionTypes.CHANGE_COMPANY_BANK, changeCompanyBank),
     takeLatest(actionTypes.GET_COMPANY_BANK_INFO, getCompanyBankInfo),
     takeLatest(actionTypes.GET_BANK_INFO, getBankInfo),
     takeLatest(actionTypes.GET_BANK_TYPE, getBankType)

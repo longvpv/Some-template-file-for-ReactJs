@@ -4,6 +4,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import SearchIcon from '@material-ui/icons/Search';
 import Formsy from "formsy-react";
 import React from 'react';
+import DepartmentData from "./DepartmentData";
 
 const CustomTextField = withStyles({
   root: {
@@ -244,6 +245,9 @@ function Department() {
             Xóa
           </Button>
         </div>
+      </div>
+      <div>
+        <DepartmentData />
       </div>
     </div>
   )
