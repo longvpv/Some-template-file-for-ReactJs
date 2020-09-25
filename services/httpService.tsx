@@ -4,7 +4,10 @@ import authenticateSettings from "../fileSettings/authenticateSettings.json";
 import _ from "lodash";
 const httpClient = axios.create({
   baseURL: "http://erp-api-dev.vvs.vn",
+<<<<<<< HEAD
   // baseURL: "http://192.168.1.21",
+=======
+>>>>>>> 01ffaecd65c30d12ec8f5fceef40221a4d27a469
 });
 
 httpClient.interceptors.request.use(
