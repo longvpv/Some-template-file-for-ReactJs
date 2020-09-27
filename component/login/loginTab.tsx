@@ -31,6 +31,7 @@ const CssTextField = withStyles({
 function LoginTab(props) {
   const dispatch = useDispatch();
 
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -87,8 +88,8 @@ function LoginTab(props) {
           className="d-flex align-items-center justify-content-between w-100 pt-3"
           style={{ fontSize: 16 }}
         >
-          <Link href="/register">Quên mật khẩu</Link>
-          <Link href="/">Đăng ký</Link>
+          <Link href="/forgot-password">Quên mật khẩu</Link>
+          <Link href="/register">Đăng ký</Link>
         </div>
       </form>
     </div>
