@@ -3,6 +3,7 @@ import LayoutFunctionComponent from "../@types/layoutTypes/layoutFunctionCompone
 import AuthLayout from "../layouts/authLayout";
 import { Card, CardContent } from "@material-ui/core";
 import LoginTab from "../component/login/loginTab";
+import { useRouter } from "next/router";
 
 const Login: LayoutFunctionComponent = (props) => {
   const [selectedTab, setSelectedTab] = useState(0);

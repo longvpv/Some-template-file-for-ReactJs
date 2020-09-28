@@ -1,21 +1,71 @@
-import React, { useState } from "react";
-import AuthLayout from "../layouts/authLayout";
-import appRoutes from "../routes/appRoutes";
-import Link from "next/link";
-import httpClient from "../services/httpService";
+import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, TextField, withStyles } from "@material-ui/core";
+import { TransitionProps } from "@material-ui/core/transitions/transition";
+import { useFormik } from "formik";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
+import * as Yup from 'yup';
 import LayoutFunctionComponent from "../@types/layoutTypes/layoutFunctionComponent";
-import { Button, Card, CardContent, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from "@material-ui/core";
+import AuthLayout from "../layouts/authLayout";
+
+const CssTextField = withStyles({
+  root: {
+    '& .MuiFormControl-root': {
+      width: '500px',
+    },
+    '& label.Mui-focused': {
+      color: 'grey',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: 'grey',
+    },
+    '& .MuiOutlinedInput-root': {
+
+      '&.Mui-focused fieldset': {
+        borderColor: 'grey',
+      },
+    },
+  },
+})(TextField);
 
 const ForgotPassword: LayoutFunctionComponent = () => {
+  const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & { children?: React.ReactElement<any, any> },
+    ref: React.Ref<unknown>,
+  ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [resetPasswordModal, setResetPasswordModal] = useState(false);
 
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      code: '',
+      newPassword: ''
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email('Invalid email address')
+        .required('Required'),
+    }),
+    onSubmit: (values) => {
+      // dispatch(login(values));
+      console.log(values);
+      setOpenModal(true);
+
+      setTimeout(() => {
+        router.reload()
+      }, 300000)
+    },
+  })
 
   const handleSendEmail = () => {
     setOpenModal(true);
-    setTimeout(() => { setOpenModal(false) }, 3000)
+
+    setTimeout(() => {
+      router.reload()
+    }, 300000)
   };
   const handleSendCode = () => {
     setOpenModal(false);
@@ -43,35 +93,57 @@ const ForgotPassword: LayoutFunctionComponent = () => {
             </div>
           </div>
           <div className="col-md-7 p-0 m-0">
+
             <Card className="d-flex align-items-center pt-5 w-100 h-100 ">
               <CardContent className="d-flex flex-column align-items-center justify-content-center w-100 my-auto">
                 <h2>-----Forgot Password-----</h2>
                 <p>Enter your e-mail address and we'll send you a code to reset your password</p>
-                <TextField id="standard-basic" label="Email address" style={{ width: "498px" }} />
+                <form onSubmit={formik.handleSubmit}>
+                  <CssTextField
+                    type="text"
+                    name="email"
+                    label="Email address"
+                    size="small"
+                    variant="outlined"
+                    style={{ width: "500px" }}
+                    helperText={formik.touched.email && formik.errors.email ? formik.errors.email : null}
+                    onChange={formik.handleChange}
+                    value={formik.values.email}
+                  />
+                </form>
                 <Button
                   variant="contained"
                   color='primary'
-                  aria-label="LOG IN"
                   style={{ color: "#FFF", marginTop: '24px' }}
-                  onClick={handleSendEmail}
+                  onClick={() => formik.handleSubmit()}
                 >
                   SEND CODE TO MY EMAIL
                 </Button>
+
               </CardContent>
             </Card>
+
           </div>
-          <Dialog open={openModal} onClose={() => setOpenModal(false)} aria-labelledby="form-dialog-title">
+          <Dialog
+            TransitionComponent={Transition}
+            keepMounted
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            aria-labelledby="form-dialog-title"
+          >
             <DialogTitle id="form-dialog-title">Reset password</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 Enter the code we was send to your email for reset password.
           </DialogContentText>
-              <TextField
+              <CssTextField
                 autoFocus
                 margin="dense"
                 label="Code"
                 type="text"
                 fullWidth
+                size="small"
+                variant="outlined"
               />
             </DialogContent>
             <DialogActions>
@@ -84,27 +156,36 @@ const ForgotPassword: LayoutFunctionComponent = () => {
             </DialogActions>
           </Dialog>
 
-          <Dialog open={resetPasswordModal} onClose={() => setResetPasswordModal(false)} aria-labelledby="form-dialog-title">
+          <Dialog
+            TransitionComponent={Transition}
+            keepMounted
+            open={resetPasswordModal}
+            onClose={() => setResetPasswordModal(false)}
+            aria-labelledby="form-dialog-title"
+          >
+
             <DialogTitle id="form-dialog-title">Reset password</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 Enter your new password.
           </DialogContentText>
-              <TextField
+              <CssTextField
                 autoFocus
                 margin="dense"
                 label="New password"
                 type="text"
-                variant="filled"
                 fullWidth
+                size="small"
+                variant="outlined"
               />
-              <TextField
+              <CssTextField
                 autoFocus
                 margin="dense"
                 label="Retype password"
                 type="text"
                 fullWidth
-                variant="filled"
+                size="small"
+                variant="outlined"
               />
             </DialogContent>
             <DialogActions>

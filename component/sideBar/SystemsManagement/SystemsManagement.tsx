@@ -32,22 +32,10 @@ const useStyles = makeStyles((theme) => ({
 
 function SystemsManagement() {
   const classes = useStyles();
-  const [open1, setOpen1] = React.useState(false);
-  const [open2, setOpen2] = React.useState(false);
-  const [open3, setOpen3] = React.useState(false);
-  const [open4, setOpen4] = React.useState(false);
-  const [open5, setOpen5] = React.useState(false);
-  const [open6, setOpen6] = React.useState(false);
-  const [open7, setOpen7] = React.useState(false);
+  const [open, setOpen] = React.useState(0);
 
   const handleClick = (number) => {
-    number === 1 && setOpen1(!open1);
-    number === 2 && setOpen2(!open2);
-    number === 3 && setOpen3(!open3);
-    number === 4 && setOpen4(!open4);
-    number === 5 && setOpen5(!open5);
-    number === 6 && setOpen6(!open6);
-    number === 7 && setOpen7(!open7);
+    if (open === number) { setOpen(null) } else setOpen(number)
   };
   return (
     <div className="w-100">
@@ -56,17 +44,24 @@ function SystemsManagement() {
         aria-labelledby="nested-list-subheader"
         className={classes.root}
       >
+        <Link href="/SystemsManagement/SystemsControl/Process">
+          <ListItem onClick={() => handleClick(0)} button className="d-flex justify-content-between">
+            <Typography className={classes.titleText} style={{ fontWeight: (open === 0 ? 'bold' : 'normal') }}>
+              Quy Trình
+          </Typography>
+          </ListItem>
+        </Link>
         <ListItem button onClick={() => handleClick(1)} className="d-flex justify-content-between">
-          <Typography className={classes.titleText} style={{ fontWeight: (open1 ? 'bold' : 'normal') }}>
+          <Typography className={classes.titleText} style={{ fontWeight: (open === 1 ? 'bold' : 'normal') }}>
             Thiết Lập Hệ Thống
           </Typography>
-          {open1 ? (
+          {open === 1 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
               <ExpandMore fontSize="small" color="disabled" />
             )}
         </ListItem>
-        <Collapse in={open1} timeout="auto" unmountOnExit>
+        <Collapse in={open === 1} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <Link href="/SystemsManagement/SystemsControl/Company">
               <ListItem button className={classes.nested}>
@@ -120,16 +115,16 @@ function SystemsManagement() {
         </Collapse>
         <ListItem button onClick={() => handleClick(2)} className="d-flex justify-content-between">
 
-          <Typography className={classes.titleText} style={{ fontWeight: (open2 ? 'bold' : 'normal') }}>
+          <Typography className={classes.titleText} style={{ fontWeight: (open === 2 ? 'bold' : 'normal') }}>
             Phân quyền nhân viên
           </Typography>
-          {open2 ? (
+          {open === 2 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
               <ExpandMore fontSize="small" color="disabled" />
             )}
         </ListItem>
-        <Collapse in={open2} timeout="auto" unmountOnExit>
+        <Collapse in={open === 2} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <Link href="/SystemsManagement/Staff/StaffManagement">
               <ListItem button className={classes.nested}>
@@ -154,16 +149,16 @@ function SystemsManagement() {
           </List>
         </Collapse>
         <ListItem button onClick={() => handleClick(3)} className="d-flex justify-content-between">
-          <Typography className={classes.titleText} style={{ fontWeight: (open3 ? 'bold' : 'normal') }}>
+          <Typography className={classes.titleText} style={{ fontWeight: (open === 3 ? 'bold' : 'normal') }}>
             Phân quyền dữ liệu
           </Typography>
-          {open3 ? (
+          {open === 3 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
               <ExpandMore fontSize="small" color="disabled" />
             )}
         </ListItem>
-        <Collapse in={open3} timeout="auto" unmountOnExit>
+        <Collapse in={open === 3} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon fontSize="small" color="disabled" />
@@ -180,16 +175,16 @@ function SystemsManagement() {
           </List>
         </Collapse>
         <ListItem button onClick={() => handleClick(4)} className="d-flex justify-content-between">
-          <Typography className={classes.titleText} style={{ fontWeight: (open4 ? 'bold' : 'normal') }}>
+          <Typography className={classes.titleText} style={{ fontWeight: (open === 4 ? 'bold' : 'normal') }}>
             Thiết lập mã hệ thống
           </Typography>
-          {open4 ? (
+          {open === 4 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
               <ExpandMore fontSize="small" color="disabled" />
             )}
         </ListItem>
-        <Collapse in={open4} timeout="auto" unmountOnExit>
+        <Collapse in={open === 4} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon fontSize="small" color="disabled" />
@@ -224,16 +219,16 @@ function SystemsManagement() {
           </List>
         </Collapse>
         <ListItem button onClick={() => handleClick(5)} className="d-flex justify-content-between">
-          <Typography className={classes.titleText} style={{ fontWeight: (open5 ? 'bold' : 'normal') }}>
+          <Typography className={classes.titleText} style={{ fontWeight: (open === 5 ? 'bold' : 'normal') }}>
             Tiện ích
           </Typography>
-          {open5 ? (
+          {open === 5 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
               <ExpandMore fontSize="small" color="disabled" />
             )}
         </ListItem>
-        <Collapse in={open5} timeout="auto" unmountOnExit>
+        <Collapse in={open === 5} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon fontSize="small" color="disabled" />
@@ -286,16 +281,16 @@ function SystemsManagement() {
           </List>
         </Collapse>
         <ListItem button onClick={() => handleClick(6)} className="d-flex justify-content-between">
-          <Typography className={classes.titleText} style={{ fontWeight: (open6 ? 'bold' : 'normal') }}>
+          <Typography className={classes.titleText} style={{ fontWeight: (open === 6 ? 'bold' : 'normal') }}>
             Thông tin hệ thống
           </Typography>
-          {open6 ? (
+          {open === 6 ? (
             <ExpandLess fontSize="small" color="disabled" />
           ) : (
               <ExpandMore fontSize="small" color="disabled" />
             )}
         </ListItem>
-        <Collapse in={open6} timeout="auto" unmountOnExit>
+        <Collapse in={open === 6} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem button className={classes.nested}>
               <ArrowRightIcon fontSize="small" color="disabled" />
@@ -329,12 +324,7 @@ function SystemsManagement() {
           </Typography>
           <CachedIcon style={{ color: '#4EEFA2' }} />
         </ListItem>
-        <ListItem button className="d-flex justify-content-between">
-          <Typography className={classes.titleText} >
-            Hỗ trợ
-          </Typography>
-          <HelpIcon style={{ color: '#2FAAFC' }} />
-        </ListItem>
+
       </List>
     </div>
 

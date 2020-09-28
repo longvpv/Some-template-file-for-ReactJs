@@ -1,4 +1,4 @@
-import { Badge, InputBase, Menu, MenuItem } from "@material-ui/core";
+import { Badge, InputBase, List, ListItem, Menu, MenuItem } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
 import { fade, makeStyles } from "@material-ui/core/styles";
@@ -13,6 +13,10 @@ import SearchIcon from '@material-ui/icons/Search';
 import HelpIcon from '@material-ui/icons/Help';
 import MoreIcon from '@material-ui/icons/More';
 import React from "react";
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import { Button } from "@material-ui/core";
+import { Popover } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -181,7 +185,7 @@ function TopNav(props) {
               >
                 Account Name
               </Typography>
-              <IconButton
+              {/* <IconButton
                 edge="end"
                 aria-label="account of current user"
                 aria-haspopup="true"
@@ -189,12 +193,56 @@ function TopNav(props) {
                 color="primary"
               >
                 <AccountCircle style={{ color: '#5A5A5A' }} />
-              </IconButton>
+              </IconButton> */}
+              <PopupState variant="popover" popupId="demo-popup-popover">
+                {(popupState) => (
+                  <div>
+                    <IconButton
+                      edge="end"
+                      aria-label="account of current user"
+                      aria-haspopup="true"
+                      onClick={handleProfileMenuOpen}
+                      color="primary"
+                      {...bindTrigger(popupState)}
+                    >
+                      <AccountCircle style={{ color: '#5A5A5A' }} />
+                    </IconButton>
+
+                    <Popover
+                      {...bindPopover(popupState)}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'center',
+                      }}
+                    >
+
+                      <List
+                        component="nav"
+                        aria-labelledby="nested-list-subheader"
+                        className={classes.root}
+                      >
+                        <ListItem button className="d-flex justify-content-between">
+                          <Typography>User Information</Typography>
+                        </ListItem>
+                        <ListItem button className="d-flex justify-content-between">
+                          <Typography>Log out</Typography>
+                        </ListItem>
+
+                      </List>
+                    </Popover>
+                  </div>
+                )}
+              </PopupState>
             </div>
 
           </Toolbar>
         </AppBar>
       </div>
+
     </div>
   );
 }

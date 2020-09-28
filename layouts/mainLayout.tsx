@@ -15,7 +15,7 @@ export default class MainLayout extends React.Component {
           <div className="col-md-2 p-0 ">
             <SideBar />
           </div>
-          <div className="col-md-10 pt-2" style={{ backgroundColor: '#F2F2F2' }}>
+          <div className="col-md-10 p-0 pt-2" style={{ backgroundColor: '#F2F2F2' }}>
 
             <React.Fragment>
               <Scrollbars style={{ height: '90vh' }}>

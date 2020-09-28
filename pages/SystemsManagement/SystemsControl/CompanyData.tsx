@@ -1,19 +1,29 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Modal } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import React, { useEffect, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Popover } from '@material-ui/core';
+import { createStyles, makeStyles, withStyles } from '@material-ui/core/styles';
+import { ColDef, DataGrid } from '@material-ui/data-grid';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AppState from '../../../@types/appTypes/appState';
-import { getCompany, getCompanyList } from '../../../redux/systemsManagement/company/actions';
+import { getCompany } from '../../../redux/systemsManagement/company/actions';
+
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    root: {
+      "& .MuiDataGrid-root": {
+        borderRadius: "25px"
+      },
+      "& .MuiDataGrid-colCellWrapper": {
+        backgroundColor: "#E9F6FF",
+
+      },
+      "& .MuiDataGrid-colCellTitle": {
+        fontWeight: "bold"
+      },
+      "& .MuiDataGrid-window": {
+        backgroundColor: "#FFF"
+      }
+    },
     paper: {
       position: 'absolute',
       width: 400,
@@ -40,6 +50,23 @@ const useStyles = makeStyles((theme) =>
     },
   }),
 );
+
+const columns: ColDef[] = [
+  { field: 'id', headerName: 'ID', width: 50 },
+  { field: 'companyName', headerName: 'Tên công ty', width: 150 },
+  { field: 'companyEnglishName', headerName: 'Tên tiếng anh', width: 150 },
+  { field: 'companyAddress', headerName: 'Địa chỉ', width: 150 },
+  { field: 'companyRegistration', headerName: 'Đăng ký kinh doanh', width: 150 },
+  { field: 'companyTitle', headerName: 'Tên viết tắt', width: 150 },
+  { field: 'companyPhone', headerName: 'Số điện thoại', width: 150 },
+  { field: 'companyFax', headerName: 'Số fax', width: 150 },
+  { field: 'companyHotline', headerName: 'Hotline', width: 150 },
+  { field: 'companySaleEmail', headerName: 'Email kinh doanh', width: 150 },
+  { field: 'companySupportEmail', headerName: 'Email', width: 150 },
+  { field: 'website', headerName: 'Website', width: 150 },
+  { field: 'nameToPrintReport', headerName: 'Tên để in', width: 150 },
+  { field: 'addressToPrintReport', headerName: 'Địa chỉ để in', width: 150 },
+];
 
 
 function createData(
@@ -73,23 +100,20 @@ function createData(
     website,
     nameToPrintReport,
     addressToPrintReport,
-
   };
 }
-
-
 
 export default function CompanyData(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [companyId, setCompanyId] = useState(0)
+  const [companyId, setCompanyId] = useState(null)
   const dispatch = useDispatch();
 
   const results = useSelector((state: AppState) => state.systemsCompanyState.companyData);
-  const handleResultClick = (row) => {
-    const companyId = row.id;
-    setCompanyId(row.id)
+  const handleResultClick = (id) => {
+    setCompanyId(id)
     setOpen(true)
+    console.log(companyId)
   }
   const handleYesButtonModal = () => {
     dispatch(getCompany(companyId));
@@ -115,56 +139,29 @@ export default function CompanyData(props) {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table">
-          <TableHead>
-            <TableRow className={classes.rowTitle}>
-              <TableCell className={classes.cellWidth} align="center">Tên công ty</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Tên tiếng anh</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Địa chỉ</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Đăng ký kinh doanh</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Tên viết tắt</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Số điện thoại</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Số fax</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Hotline</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Email kinh doanh</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Email</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Website</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Tên để in</TableCell>
-              <TableCell className={classes.cellWidth} align="center">Địa chỉ để in</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id} >
-
-                <TableCell style={{ cursor: 'pointer' }} className={classes.cellWidth} component="th" scope="row" onClick={() => handleResultClick(row)}>
-                  {row.companyName}
-                </TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companyEnglishName}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companyAddress}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companyRegistration}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companyTitle}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companyPhone}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companyFax}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companyHotline}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companySaleEmail}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.companySupportEmail}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.website}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.nameToPrintReport}</TableCell>
-                <TableCell className={classes.cellWidth} align="right">{row.addressToPrintReport}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <div className="d-flex justify-content-center">
+        <div style={{ height: 700, width: '95%' }}>
+          <DataGrid className={classes.root}
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            checkboxSelection
+            hideFooter
+            disableSelectionOnClick
+            onCellClick={(params) => {
+              if (params.field === "companyName") { handleResultClick(params.data.id) }
+            }}
+            onSelectionChange={(params) => console.log(params)}
+          />
+        </div>
+      </div>
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Change information of this company ?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Thay đổi thông tin công ty ?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Bạn có chắc chắn muốn thay đổi thông tin công ty này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
@@ -172,10 +169,10 @@ export default function CompanyData(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleYesButtonModal} color="primary">
-            Agree
+            Đồng ý
           </Button>
           <Button onClick={() => setOpen(false)} color="primary" autoFocus>
-            Disagree
+            Hủy
           </Button>
         </DialogActions>
       </Dialog>

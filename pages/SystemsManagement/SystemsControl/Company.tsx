@@ -1,14 +1,18 @@
 import {
-  Breadcrumbs,
   Button,
   Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   InputBase,
   MenuItem,
   Switch,
   TextField, Typography
 } from "@material-ui/core";
 import { createStyles, fade, makeStyles, withStyles } from '@material-ui/core/styles';
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { ColDef, DataGrid } from "@material-ui/data-grid";
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
@@ -16,14 +20,63 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from 'yup';
 import AppState from "../../../@types/appTypes/appState";
 import { DistrictProps, LocationsProps } from "../../../@types/appTypes/locationState";
-import { PrinterProps } from "../../../@types/company/createCompany";
 import * as companyFactory from '../../../factories/companies/companyFactory';
-import { changeCompany, createCompany, deleteCompany, getCompanyList, setPrinter } from "../../../redux/systemsManagement/company/actions";
+import { changeCompany, createCompany, deleteCompany, getCompany, getCompanyList } from "../../../redux/systemsManagement/company/actions";
 import httpClient from "../../../services/httpService";
-import CompanyData from "./CompanyData";
 const FormData = require('form-data');
 
 
+const columns: ColDef[] = [
+  { field: 'id', headerName: 'ID', width: 50 },
+  { field: 'companyName', headerName: 'Tên công ty', width: 150 },
+  { field: 'companyEnglishName', headerName: 'Tên tiếng anh', width: 150 },
+  { field: 'companyAddress', headerName: 'Địa chỉ', width: 150 },
+  { field: 'companyRegistration', headerName: 'Đăng ký kinh doanh', width: 150 },
+  { field: 'companyTitle', headerName: 'Tên viết tắt', width: 150 },
+  { field: 'companyPhone', headerName: 'Số điện thoại', width: 150 },
+  { field: 'companyFax', headerName: 'Số fax', width: 150 },
+  { field: 'companyHotline', headerName: 'Hotline', width: 150 },
+  { field: 'companySaleEmail', headerName: 'Email kinh doanh', width: 150 },
+  { field: 'companySupportEmail', headerName: 'Email', width: 150 },
+  { field: 'website', headerName: 'Website', width: 150 },
+  { field: 'nameToPrintReport', headerName: 'Tên để in', width: 150 },
+  { field: 'addressToPrintReport', headerName: 'Địa chỉ để in', width: 150 },
+];
+
+
+function createData(
+  id: number,
+  companyName: string,
+  companyEnglishName: string,
+  companyAddress: string,
+  companyRegistration: string,
+  companyTitle: string,
+  companyPhone: string,
+  companyFax: string,
+  companyHotline: string,
+  companySaleEmail: string,
+  companySupportEmail: string,
+  website: string,
+  nameToPrintReport: string,
+  addressToPrintReport: string,
+) {
+  return {
+    id,
+    companyName,
+    companyEnglishName,
+    companyAddress,
+    companyRegistration,
+    companyTitle,
+    companyPhone,
+    companyFax,
+    companyHotline,
+    companySaleEmail,
+    companySupportEmail,
+    website,
+    nameToPrintReport,
+    addressToPrintReport,
+  };
+}
 const CustomTextField = withStyles({
   root: {
     '& .MuiInputBase-input': {
@@ -42,7 +95,7 @@ const CustomTextField = withStyles({
 
     },
     '& .MuiFilledInput-root': {
-      backgroundColor: '#FFF',
+      backgroundColor: '#e5e5e5',
 
     }, '& .MuiFilledInput-underline:before': {
       borderBottomColor: 'white',
@@ -57,6 +110,24 @@ const CustomTextField = withStyles({
 
 
 const useStyles = makeStyles((theme) => createStyles({
+  root: {
+    "& .MuiDropzoneArea-root": {
+      height: '120px'
+    },
+    "& .MuiDataGrid-root": {
+      borderRadius: "25px"
+    },
+    "& .MuiDataGrid-colCellWrapper": {
+      backgroundColor: "#E9F6FF",
+
+    },
+    "& .MuiDataGrid-colCellTitle": {
+      fontWeight: "bold"
+    },
+    "& .MuiDataGrid-window": {
+      backgroundColor: "#FFF"
+    }
+  },
   paper: {
     position: 'absolute',
     width: 400,
@@ -106,6 +177,7 @@ const useStyles = makeStyles((theme) => createStyles({
   formGroup: {
     display: "flex",
     margin: "3px",
+    width: '100%'
   },
   formControl: {
     width: "100%",
@@ -153,10 +225,10 @@ const useStyles = makeStyles((theme) => createStyles({
     display: "flex",
     justifyContent: "center",
     alignItems: 'center',
-    width: "180px",
-    height: "180px",
+    width: "140px",
+    height: "140px",
 
-    background: "#FFFFFF",
+    background: "#e5e5e5",
 
     position: 'relative'
   },
@@ -191,20 +263,44 @@ function Company() {
   const dispatch = useDispatch();
   const [stateCityId, setStateCityId] = useState('');
   const [stateDistrictId, setStateDistrictId] = useState('');
+  const [open, setOpen] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
+  const [companyId, setCompanyId] = useState(null)
 
-  const preparePrinter = async () => {
-    const printer: Array<PrinterProps> = await httpClient.get(`SystemsManagement/Printer/SelectList`)
-    dispatch(setPrinter(printer));
-  }
   useEffect(() => {
     dispatch(getCompanyList())
-    preparePrinter()
-
 
   }, [])
   const company = useSelector((state: AppState) => state.systemsCompanyState.company);
   const [imgUrl, setImgUrl] = useState(company.companyLogo);
 
+  const results = useSelector((state: AppState) => state.systemsCompanyState.companyData);
+  const handleResultClick = (id) => {
+    setCompanyId(id)
+    setOpen(true)
+    console.log(companyId)
+  }
+  const handleYesButtonModal = () => {
+    dispatch(getCompany(companyId));
+    setOpen(false);
+  }
+
+  const rows = results.map(result => createData(
+    result.id,
+    result.companyName,
+    result.companyEnglishName,
+    result.companyAddress,
+    result.companyRegistration,
+    result.companyTitle,
+    result.companyPhone,
+    result.companyFax,
+    result.companyHotline,
+    result.companySaleEmail,
+    result.companySupportEmail,
+    result.website,
+    result.nameToPrintReport,
+    result.addressToPrintReport
+  ))
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -219,17 +315,8 @@ function Company() {
       companyPhone: Yup.string()
         .max(64, 'Must be 64 characters or less')
         .required('Required'),
-      addressToPrintReport: Yup.string()
-        .max(100, 'Must be 100 characters or less')
-        .required('Required'),
-      orderDocPrefix: Yup.string()
-        .max(3, 'Must be 3 characters or less')
-        .required('Required'),
       companySupportEmail: Yup.string()
         .max(64, 'Must be 64 characters or less')
-        .required('Required'),
-      nameToPrintReport: Yup.string()
-        .max(200, 'Must be 200 characters or less')
         .required('Required'),
     }),
 
@@ -247,7 +334,6 @@ function Company() {
 
 
   const parentList = useSelector((state: AppState) => state.systemsCompanyState.companyData);
-  const PrinterList = useSelector((state: AppState) => state.systemsCompanyState.printer);
 
   const handleDeleteButton = () => {
     const name = formik.initialValues.companyName;
@@ -275,412 +361,10 @@ function Company() {
 
   return (
     <div key={company.id}>
-      <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
-        <Typography color="textSecondary">Quản trị hệ thống</Typography>
-        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
-        <Typography color="textPrimary">Công ty / Chi Nhánh</Typography>
-      </Breadcrumbs>
-      <div className="d-flex justify-content-between align-items-center">
-        <p className={classes.title}>Thông Tin Công Ty / Chi Nhánh</p>
-        <div className="d-flex justify-content-end align-items-center w-25 pr-5">
-          <Button
-            variant="outlined"
-            className={classes.buttonSave}
-            type='submit'
-            onClick={() => formik.handleSubmit()}
-          >
-            Lưu
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.buttonCreate}
-            onClick={() => formik.resetForm()}
-          >
-            Tạo mới
-          </Button>
-        </div>
-      </div>
-      <div>
-        <form
-          onSubmit={formik.handleSubmit}
-          className="d-flex flex-column justify-content-center align-items-center w-100"
-        >
-          <div className="row w-100">
-            <div className="col-md-2 d-flex flex-column justify-content-start align-items-center p-0 mt-5">
+      <div className="d-flex justify-content-between align-items-center pl-4">
+        <p className={classes.title}>Công Ty / Chi Nhánh</p>
 
-              <input
-                style={{ display: 'none' }}
-                id="companyLogo"
-                name="companyLogo"
-                type="file"
-                onChange={handleUploadLogo}
-              />
-              <label htmlFor="companyLogo" className={classes.avatar}>
-                {imgUrl ? <img src={imgUrl} alt="avatar" style={{ width: '100%' }} /> :
-                  <div className="d-flex flex-column justify-content-center align-items-center ">
-                    No Image Data
-                    <Button
-                      variant="contained"
-                      className={classes.buttonAbsolute}
-                      component="span"
-                      aria-label="add"
-                    >
-                      <span>Chọn logo</span>
-                    </Button>
-                  </div>
-                }
-
-
-              </label>
-
-              <div className="d-flex align-items-center pt-3 w-100">
-                <Checkbox
-                  checked={formik.values.active}
-                  onChange={formik.handleChange}
-                  name="active"
-                  color="primary"
-                  size="small"
-                />
-
-
-                <Typography className="pl-1">Công ty đang hoạt động</Typography>
-              </div>
-              <div className="d-flex pt-3 w-100">
-                <Switch
-                  name="visiblePOSMobileApp"
-                  color="primary"
-                  size="small"
-                  checked={formik.values.visiblePOSMobileApp}
-                  onChange={formik.handleChange}
-                />
-
-                <Typography>
-                  Dùng cho POS mobile app (đóng mở tab)
-                </Typography>
-
-
-              </div>
-            </div>
-            <div className="col-md-10">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="parentId"
-                      label="Công ty mẹ"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.parentId}
-                    >
-                      <MenuItem key={'Không trục thuộc công ty nào hết !!!'} value={null}>
-                        Không trục thuộc công ty nào hết !!!
-                      </MenuItem>
-                      {parentList.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>
-                          {option.companyName}
-                        </MenuItem>
-                      ))}
-                    </CustomTextField>
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyName"
-                      label="Tên công ty chi nhánh"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.companyName && formik.errors.companyName ? formik.errors.companyName : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.companyName}
-                    />
-                  </div>
-
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyEnglishName"
-                      label="Tên tiếng anh"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.companyEnglishName}
-
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyTitle"
-                      label="Tên viết tắt"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.companyTitle}
-
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyAddress"
-                      label="Địa Chỉ"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.companyAddress && formik.errors.companyAddress ? formik.errors.companyAddress : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.companyAddress}
-                    />
-                  </div>
-
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="countryId"
-                      label="Quốc gia"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.countryId}
-                    >
-                      {
-                        <MenuItem key={'1'} value={'1'}>
-                          Việt Nam
-                        </MenuItem>
-                      }</CustomTextField>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="provinceId"
-                      label="Thành phố"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.provinceId}
-                    >
-                      {cityLocations.map((city) => (
-                        <MenuItem key={city.id} value={city.id} onClick={() => setStateCityId(city.id)}>
-                          {city.nameWithType}
-                        </MenuItem>
-                      ))}</CustomTextField>
-
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="districtId"
-                      label="Quận/Huyện"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.districtId}
-                    >
-                      {districtLocation.map((district: DistrictProps) => (
-                        <MenuItem key={district.id} value={district.id} onClick={() => setStateDistrictId(district.id)}>
-                          {district.nameWithType}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="wardId"
-                      label="Phường/Xã"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.wardId}
-                    >
-                      {wardLocation.map((ward) => (
-                        <MenuItem key={ward.id} value={ward.id}>
-                          {ward.nameWithType}
-                        </MenuItem>
-                      ))}</CustomTextField>
-
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="addressToPrintReport"
-                      label="Địa Chỉ Để in"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.addressToPrintReport && formik.errors.addressToPrintReport ? formik.errors.addressToPrintReport : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.addressToPrintReport}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyPhone"
-                      label="Điện thoại"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.companyPhone && formik.errors.companyPhone ? 'Should be phone number' : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.companyPhone}
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyFax"
-                      label="Số Fax"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.companyFax}
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyHotline"
-                      label="Đường dây nóng"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.companyHotline}
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="website"
-                      label="Website"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.website}
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companySupportEmail"
-                      label="Email hỗ trợ"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.companySupportEmail && formik.errors.companySupportEmail ? formik.errors.companySupportEmail : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.companySupportEmail}
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companySaleEmail"
-                      label="Email NVKD"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.companySaleEmail}
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="posDefaultPrinter"
-                      label="POS default printer"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.posDefaultPrinter}
-                    >
-                      {PrinterList.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.text}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="stampDefaultPrinter"
-                      label="Stamp default printer"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.stampDefaultPrinter}
-                    >
-                      {PrinterList.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.text}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="companyRegistration"
-                      label="MST/Số ĐKKD"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.companyRegistration}
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="nameToPrintReport"
-                      label="Tên để in"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.nameToPrintReport && formik.errors.nameToPrintReport ? formik.errors.nameToPrintReport : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.nameToPrintReport}
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="orderDocPrefix"
-                      label="Order Doc prefix"
-                      variant="filled"
-                      size="small"
-                      helperText={formik.touched.orderDocPrefix && formik.errors.orderDocPrefix ? formik.errors.orderDocPrefix : null}
-                      onChange={formik.handleChange}
-                      value={formik.values.orderDocPrefix}
-                    />
-                    <div className="d-flex justify-content-start align-items-center w-100 pl-3">
-                      <Typography>Max 3Characters (Ex: CB, ORD...)</Typography>
-                    </div>
-
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      disabled
-                      type="text"
-                      name="companyCode"
-                      label="Company Code"
-                      variant="filled"
-                      size="small"
-                      onChange={formik.handleChange}
-                      value={formik.values.companyCode}
-                    />
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div className="d-flex justify-content-between align-items-center pr-5">
-        <div className="d-flex justify-content-center align-items-center">
-          <p className={classes.title}>Dữ liệu</p>
+        <div className="d-flex justify-content-end align-items-center pr-5">
           <div className={classes.search} style={{ background: "#FFF" }}>
             <div className={classes.searchIcon}>
               <SearchIcon style={{ color: '#2FAAFC' }} />
@@ -694,9 +378,14 @@ function Company() {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-        </div>
 
-        <div>
+          <Button
+            variant="contained"
+            className={classes.buttonCreate}
+            onClick={() => setOpenForm(true)}
+          >
+            Tạo mới
+          </Button>
           <Button
             variant="contained"
             className={classes.buttonDelete}
@@ -706,9 +395,352 @@ function Company() {
           </Button>
         </div>
       </div>
+
+
       <div className="p-2">
-        <CompanyData />
-      </div>
+        <>
+          <div className="d-flex justify-content-center">
+            <div style={{ height: 700, width: '95%' }}>
+              <DataGrid className={classes.root}
+                rows={rows}
+                columns={columns}
+                pageSize={10}
+                checkboxSelection
+                hideFooter
+                disableSelectionOnClick
+                onCellClick={(params) => {
+                  if (params.field === "companyName") { handleResultClick(params.data.id) }
+                }}
+                onSelectionChange={(params) => console.log(params)}
+              />
+            </div>
+          </div>
+          <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Thay đổi thông tin công ty này ?"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Bạn có chắc chắn muốn thay đổi thông tin công ty này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
+          </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleYesButtonModal} color="primary">
+                Đồng ý
+          </Button>
+              <Button onClick={() => setOpen(false)} color="primary" autoFocus>
+                Hủy
+          </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openForm}
+            onClose={() => setOpenForm(false)}
+            maxWidth="lg"
+          >
+
+            <DialogContent>
+
+
+              <div>
+                <form
+                  onSubmit={formik.handleSubmit}
+                  className="d-flex flex-column justify-content-center align-items-center w-100"
+                >
+                  <div style={{ width: "600px" }}>
+                    <div>
+                      <span><img src="/images/settings.png" alt="" /></span>
+                      <span className={classes.title}>Tạo công ty / chi nhánh</span>
+                    </div>
+                    <div className="row mb-3">
+
+                      <div className="col-md-8">
+                        <div className="d-flex align-items-center pt-3 w-100">
+                          <Checkbox
+                            checked={formik.values.active}
+                            onChange={formik.handleChange}
+                            name="active"
+                            color="primary"
+                            size="small"
+                          />
+
+
+                          <Typography className="pl-1">Công ty đang hoạt động</Typography>
+                        </div>
+                        <div className="d-flex pt-3 w-100">
+                          <Switch
+                            name="visiblePOSMobileApp"
+                            color="primary"
+                            size="small"
+                            checked={formik.values.visiblePOSMobileApp}
+                            onChange={formik.handleChange}
+                          />
+
+                          <Typography>
+                            Dùng cho POS mobile app (đóng mở tab)
+                </Typography>
+
+
+                        </div>
+
+                      </div>
+                      <div className="col-md-4 d-flex justify-content-center align-items-center">
+                        <input
+                          style={{ display: 'none' }}
+                          id="companyLogo"
+                          name="companyLogo"
+                          type="file"
+                          onChange={handleUploadLogo}
+                        />
+                        <label htmlFor="companyLogo" className={classes.avatar}>
+                          {imgUrl ? <img src={imgUrl} alt="avatar" style={{ width: '100%' }} /> :
+                            <div className="d-flex flex-column justify-content-center align-items-center ">
+                              No Image Data
+                              <Button
+                                variant="contained"
+                                className={classes.buttonAbsolute}
+                                component="span"
+                                aria-label="add"
+                              >
+                                <span>Chọn logo</span>
+                              </Button>
+                            </div>
+                          }
+
+
+                        </label>
+                      </div>
+
+                    </div>
+
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        select
+                        name="parentId"
+                        label="Công ty mẹ"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.parentId}
+                      >
+                        <MenuItem key={'Không trục thuộc công ty nào hết !!!'} value={null}>
+                          Không trục thuộc công ty nào hết !!!
+                      </MenuItem>
+                        {parentList.map((option) => (
+                          <MenuItem key={option.id} value={option.id}>
+                            {option.companyName}
+                          </MenuItem>
+                        ))}
+                      </CustomTextField>
+                    </div>
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companyName"
+                        label="Tên công ty chi nhánh"
+                        variant="filled"
+                        size="small"
+                        helperText={formik.touched.companyName && formik.errors.companyName ? formik.errors.companyName : null}
+                        onChange={formik.handleChange}
+                        value={formik.values.companyName}
+                      />
+                    </div>
+
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companyEnglishName"
+                        label="Tên tiếng anh"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.companyEnglishName}
+
+                      />
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companyTitle"
+                        label="Tên viết tắt"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.companyTitle}
+
+                      />
+                    </div>
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companyPhone"
+                        label="Điện thoại"
+                        variant="filled"
+                        size="small"
+                        helperText={formik.touched.companyPhone && formik.errors.companyPhone ? 'Should be phone number' : null}
+                        onChange={formik.handleChange}
+                        value={formik.values.companyPhone}
+                      />
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companyFax"
+                        label="Số Fax"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.companyFax}
+                      />
+                    </div>
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companySupportEmail"
+                        label="Email hỗ trợ"
+                        variant="filled"
+                        size="small"
+                        helperText={formik.touched.companySupportEmail && formik.errors.companySupportEmail ? formik.errors.companySupportEmail : null}
+                        onChange={formik.handleChange}
+                        value={formik.values.companySupportEmail}
+                      />
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companySaleEmail"
+                        label="Email NVKD"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.companySaleEmail}
+                      />
+                    </div>
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companyAddress"
+                        label="Địa Chỉ"
+                        variant="filled"
+                        size="small"
+                        helperText={formik.touched.companyAddress && formik.errors.companyAddress ? formik.errors.companyAddress : null}
+                        onChange={formik.handleChange}
+                        value={formik.values.companyAddress}
+                      />
+                    </div>
+
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        select
+                        name="countryId"
+                        label="Quốc gia"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.countryId}
+                      >
+                        {
+                          <MenuItem key={'1'} value={'1'}>
+                            Việt Nam
+                        </MenuItem>
+                        }</CustomTextField>
+                      <CustomTextField
+                        className={classes.formControl}
+                        select
+                        name="provinceId"
+                        label="Thành phố"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.provinceId}
+                      >
+                        {cityLocations.map((city) => (
+                          <MenuItem key={city.id} value={city.id} onClick={() => setStateCityId(city.id)}>
+                            {city.nameWithType}
+                          </MenuItem>
+                        ))}</CustomTextField>
+
+                    </div>
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        select
+                        name="districtId"
+                        label="Quận/Huyện"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.districtId}
+                      >
+                        {districtLocation.map((district: DistrictProps) => (
+                          <MenuItem key={district.id} value={district.id} onClick={() => setStateDistrictId(district.id)}>
+                            {district.nameWithType}
+                          </MenuItem>
+                        ))}</CustomTextField>
+                      <CustomTextField
+                        className={classes.formControl}
+                        select
+                        name="wardId"
+                        label="Phường/Xã"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.wardId}
+                      >
+                        {wardLocation.map((ward) => (
+                          <MenuItem key={ward.id} value={ward.id}>
+                            {ward.nameWithType}
+                          </MenuItem>
+                        ))}</CustomTextField>
+
+                    </div>
+                    <div className={classes.formGroup}>
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="companyRegistration"
+                        label="MST/Số ĐKKD"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.companyRegistration}
+                      />
+                      <CustomTextField
+                        className={classes.formControl}
+                        type="text"
+                        name="website"
+                        label="Website"
+                        variant="filled"
+                        size="small"
+                        onChange={formik.handleChange}
+                        value={formik.values.website}
+                      />
+                    </div>
+
+                  </div>
+                </form>
+              </div></DialogContent>
+            <DialogActions>
+              <Button className={classes.buttonDelete} onClick={() => setOpenForm(false)} autoFocus>
+                Hủy
+          </Button>
+              <Button className={classes.buttonCreate} onClick={() => formik.handleSubmit()} >
+                Thêm
+          </Button>
+
+            </DialogActions>
+
+          </Dialog>
+
+        </>
+      </div >
 
     </div >
   );
