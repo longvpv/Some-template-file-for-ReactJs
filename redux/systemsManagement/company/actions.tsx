@@ -1,3 +1,5 @@
+import { PagedListModel } from "../../../@types/appTypes/baseModel"
+import { CompanySearchModel } from "../../../@types/company/companyModels"
 import createCompanyModal, { CompanyProps, PrinterProps } from "../../../@types/company/createCompany"
 
 export const actionTypes = {
@@ -26,11 +28,12 @@ export function changeCompany(changeCompanyModal: CompanyProps) {
   }
 }
 
-export const getCompanyList = () => ({
+export const getCompanyList = (searchModel?: CompanySearchModel) => ({
   type: actionTypes.GET_COMPANY_LIST,
-})
+  searchModel
+});
 
-export const deleteCompany = (companyId: number) => ({
+export const deleteCompany = (companyId: Array<(number | string)>) => ({
   type: actionTypes.DELETE_COMPANY,
   companyId
 })
@@ -45,10 +48,10 @@ export const setCompany = (company: CompanyProps) => ({
   company
 })
 
-export function setCompanyList(companyData: Array<CompanyProps>) {
+export function setCompanyList(companyDataSource: PagedListModel<CompanyProps>) {
   return {
     type: actionTypes.SET_COMPANY_LIST,
-    companyData,
+    companyDataSource,
   }
 }
 

@@ -1,7 +1,6 @@
-import { CompanyBankProps } from "../../@types/company/companyBank";
 
 export const prepareEmptyStaffModel = () => {
-  const company: CompanyBankProps = {
+  const staff: Object = {
     id: null,
     bankCode: '',
     bankName: '',
@@ -16,5 +15,5 @@ export const prepareEmptyStaffModel = () => {
     companyId: null
   }
 
-  return company;
+  return staff;
 }

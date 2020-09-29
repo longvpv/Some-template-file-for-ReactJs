@@ -1,7 +1,24 @@
-import { fade, makeStyles } from "@material-ui/core";
+import { createStyles, fade, makeStyles } from "@material-ui/core";
 
-const useStyle = makeStyles((theme) => ({
+const useStyle = makeStyles((theme) => createStyles({
+  root: {
+    "& .MuiDropzoneArea-root": {
+      height: '120px'
+    },
+    "& .MuiDataGrid-root": {
+      borderRadius: "25px"
+    },
+    "& .MuiDataGrid-colCellWrapper": {
+      backgroundColor: "#E9F6FF",
 
+    },
+    "& .MuiDataGrid-colCellTitle": {
+      fontWeight: "bold"
+    },
+    "& .MuiDataGrid-window": {
+      backgroundColor: "#FFF"
+    }
+  },
   buttonStyled: {
     borderRadius: "8px",
     width: "200px",
@@ -12,8 +29,8 @@ const useStyle = makeStyles((theme) => ({
 
   avatar: {
     display: "flex",
-    width: "180px",
-    height: "180px",
+    width: "140px",
+    height: "140px",
 
     background: "#FFFFFF",
   },
@@ -114,6 +131,15 @@ const useStyle = makeStyles((theme) => ({
     },
   },
   buttonDefault: {
+    borderRadius: "8px",
+    width: "120px",
+    margin: "12px",
+    backgroundColor: "#2FAAFC",
+    color: "#FFF",
+    borderColor: '#2FAAFC',
+    fontWeight: 'bold',
+  },
+  buttonAbsolute: {
     borderRadius: "8px",
     width: "120px",
     margin: "12px",

@@ -1,3 +1,5 @@
+import { PagedListModel } from "../appTypes/baseModel";
+
 export default interface createCompanyModal {
   companyName: string;
   companyAddress: string;
@@ -79,5 +81,5 @@ export interface SystemsCompanyState {
   createCompanyModal: createCompanyModal;
   company: CompanyProps;
   printer: Array<PrinterProps>;
-  companyData: Array<CompanyProps>
+  companyDataSource: PagedListModel<CompanyProps>
 }

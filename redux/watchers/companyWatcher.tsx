@@ -2,6 +2,8 @@ import { all, takeLatest, put, takeEvery } from 'redux-saga/effects'
 import { actionTypes, setCompany, setCompanyList } from '../systemsManagement/company/actions'
 import httpClient from '../../services/httpService';
 import { CompanyProps } from '../../@types/company/createCompany';
+import { PagedListModel } from '../../@types/appTypes/baseModel';
+import { CompanySearchModel } from '../../@types/company/companyModels';
 
 function* createCompany(action: { type: string, createCompanyModal: CompanyProps }) {
 
@@ -40,11 +42,11 @@ function* uploadLogo(action: { type: string, file }) {
 }
 
 
-function* getCompanyList(action: { type: string }) {
+function* getCompanyList(action: { type: string, searchModel: CompanySearchModel }) {
+  const { searchModel } = action;
   try {
-    const result = yield httpClient.get('SystemsManagement/Company');
-    const companyList: Array<CompanyProps> = result.data;
-    yield put(setCompanyList(companyList))
+    const result: PagedListModel<CompanyProps> = yield httpClient.get('SystemsManagement/Company', { params: searchModel });
+    yield put(setCompanyList(result));
 
   } catch (e) {
 
@@ -64,11 +66,13 @@ function* getCompany(action: { type: string, companyId: number }) {
   }
 }
 
-function* deleteCompany(action: { type: string, companyId: number }) {
-  const companyId = action.companyId
+function* deleteCompany(action: { type: string, companyId: Array<number | string> }) {
+  const companyId = action.companyId;
   console.log(companyId);
   try {
-    const result = yield httpClient.delete(`SystemsManagement/Company/${companyId}`)
+    const result = yield httpClient.delete(`SystemsManagement/Company/All`, {
+      data: companyId
+    })
     yield put(setCompanyList(result))
 
   } catch (error) {

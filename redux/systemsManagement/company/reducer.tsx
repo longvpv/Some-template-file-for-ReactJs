@@ -1,11 +1,12 @@
-import { SystemsCompanyState } from '../../../@types/company/createCompany';
+import { PagedListModel } from '../../../@types/appTypes/baseModel';
+import { CompanyProps, SystemsCompanyState } from '../../../@types/company/createCompany';
 // import DynamicState from "../../@types/dynamic/dynamicState";
 
 import { actionTypes } from './actions'
 
 const initializeState: SystemsCompanyState = {
   createCompanyModal: null,
-  companyData: [],
+  companyDataSource: new PagedListModel<CompanyProps>(),
   company: {
     id: 0,
     companyName: '',
@@ -52,7 +53,7 @@ export default function reducer(state = initializeState, action: any) {
     case actionTypes.SET_COMPANY_LIST:
       return {
         ...state,
-        companyData: action.companyData
+        companyDataSource: action.companyDataSource
       }
     case actionTypes.SET_COMPANY:
       return {

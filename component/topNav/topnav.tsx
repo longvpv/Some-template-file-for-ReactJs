@@ -185,15 +185,7 @@ function TopNav(props) {
               >
                 Account Name
               </Typography>
-              {/* <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="primary"
-              >
-                <AccountCircle style={{ color: '#5A5A5A' }} />
-              </IconButton> */}
+
               <PopupState variant="popover" popupId="demo-popup-popover">
                 {(popupState) => (
                   <div>
@@ -225,11 +217,15 @@ function TopNav(props) {
                         aria-labelledby="nested-list-subheader"
                         className={classes.root}
                       >
+
                         <ListItem button className="d-flex justify-content-between">
                           <Typography>User Information</Typography>
                         </ListItem>
                         <ListItem button className="d-flex justify-content-between">
                           <Typography>Log out</Typography>
+                        </ListItem>
+                        <ListItem button className="d-flex justify-content-between">
+                          <Typography>Version : 0.1</Typography>
                         </ListItem>
 
                       </List>

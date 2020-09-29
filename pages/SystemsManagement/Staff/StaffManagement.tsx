@@ -1,546 +1,175 @@
 import {
-  Breadcrumbs, Button,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
-
-
-  InputBase,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Switch,
-  TextField, Typography
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  InputBase
 } from "@material-ui/core";
-import { withStyles } from '@material-ui/core/styles';
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { ColDef, DataGrid } from "@material-ui/data-grid";
 import SearchIcon from '@material-ui/icons/Search';
-import { useFormik } from 'formik';
+import _ from 'lodash';
 import React, { useState } from 'react';
-import { useSelector } from "react-redux";
-import * as Yup from 'yup';
+import { useDispatch, useSelector } from "react-redux";
 import AppState from "../../../@types/appTypes/appState";
-import { DistrictProps, LocationsProps } from "../../../@types/appTypes/locationState";
 import useStyles from "../../../component/coreUseStyle/useStyle";
-import * as staffFactory from '../../../factories/companies/staffFactory';
-import StaffManagementData from "./StaffManagementData";
+import StaffManagementForm from "./StaffManagementForm";
 
 
-const CustomTextField = withStyles({
-  root: {
-    '&.MuiFormControl-root': {
+const columns: ColDef[] = [
+  // { field: 'id', headerName: 'ID', width: 50 },
+  { field: "fistName", headerName: "Họ", width: 180 },
+  { field: "lastName", headerName: "Tên", width: 180 },
+  { field: "dayOfBirth", headerName: "Ngày sinh", width: 180 },
+  { field: "staffType", headerName: "Loại NV", width: 180 },
+  { field: "phone", headerName: "Số đt", width: 180 },
+  { field: "gender", headerName: "Giới tính", width: 180 },
+  { field: "jobTitle", headerName: "Chức danh", width: 180 },
+  { field: "email", headerName: "Email", width: 180 },
+  { field: "createdate", headerName: "Thời gian bắt đầu làm việc", width: 180 },
+  { field: "planInterviewDate", headerName: "Le Van", width: 180 },
+  { field: "idCardNoPassport", headerName: "CMND/CCCD", width: 180 },
+  { field: "dateOfIssue", headerName: "Ngày cấp", width: 180 },
+  { field: "placeOfIssue", headerName: "Nơi cấp", width: 180 },
+  { field: "ethnic", headerName: "Dân tộc", width: 180 },
+  { field: "searchingSource", headerName: "Nguồn cấp thông tin tìm kiếm", width: 180 },
+  { field: "addressWebsite", headerName: "Địa chỉ website", width: 180 },
+  { field: "educationalLevel", headerName: "Trình độ học vấn", width: 180 },
+  { field: "contact", headerName: "Thông tin liên lạc khác", width: 180 },
+  { field: "phoneContact", headerName: "SĐT liên lạc khác", width: 180 },
+  { field: "description", headerName: "Mô tả", width: 180 },
+  { field: "permanentAddress", headerName: "Địa chỉ thường trú", width: 180 },
+  { field: "permanentCountry", headerName: "Quốc gia thường trú", width: 180 },
+  { field: "permanentDistrict", headerName: "Quận thường trú", width: 180 },
+  { field: "permanentCity", headerName: "Thành phố thường trú", width: 180 },
+  { field: "currentAddress", headerName: "Địa chỉ hiện tại", width: 180 },
+  { field: "currentCountry", headerName: "Quốc gia hiện tại", width: 180 },
+  { field: "currentCity", headerName: "Thành phố hiện tại", width: 180 },
+  { field: "currentDistrict", headerName: "Quận hiện tại", width: 180 },
+  { field: "status", headerName: "Đang hoạt động", width: 180 }
+];
 
-      margin: "3px 3px",
-    },
-    '& label.Mui-focused': {
-      color: '#2FAAFC',
 
-    },
-    '& .MuiFilledInput-root': {
-      backgroundColor: '#FFF',
-
-    }, '& .MuiFilledInput-underline:before': {
-      borderBottomColor: 'white',
-    },
-
-    '& .MuiFilledInput-underline:after': {
-      borderBottomColor: 'white',
-    },
-
-  },
-})(TextField);
-
-
+function createData(
+  id: number,
+  fistName: string,
+  lastName: string,
+  dayOfBirth: string,
+  staffType: string,
+  phone: string,
+  gender: number,
+  jobTitle: string,
+  email: string,
+  createdate: string,
+  planInterviewDate: string,
+  idCardNoPassport: string,
+  dateOfIssue: string,
+  placeOfIssue: string,
+  ethnic: string,
+  searchingSource: string,
+  addressWebsite: string,
+  educationalLevel: string,
+  contact: string,
+  phoneContact: string,
+  description: string,
+  permanentAddress: number,
+  permanentCountry: number,
+  permanentDistrict: number,
+  permanentCity: number,
+  currentAddress: number,
+  currentCountry: number,
+  currentCity: number,
+  currentDistrict: number,
+  status: number,
+) {
+  return {
+    id,
+    fistName,
+    lastName,
+    dayOfBirth,
+    staffType,
+    phone,
+    gender,
+    jobTitle,
+    email,
+    createdate,
+    planInterviewDate,
+    idCardNoPassport,
+    dateOfIssue,
+    placeOfIssue,
+    ethnic,
+    searchingSource,
+    addressWebsite,
+    educationalLevel,
+    contact,
+    phoneContact,
+    description,
+    permanentAddress,
+    permanentCountry,
+    permanentDistrict,
+    permanentCity,
+    currentAddress,
+    currentCountry,
+    currentCity,
+    currentDistrict,
+    status,
+  };
+}
 function StaffManagement() {
   const classes = useStyles();
-  const [stateCityId, setStateCityId] = useState('');
-  const [stateDistrictId, setStateDistrictId] = useState('');
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: staffFactory.prepareEmptyStaffModel(),
-    validationSchema: Yup.object({}),
-    onSubmit: (values) => {
-      // company.id
-      //   ? dispatch(changeCompany(values))
-      //   : dispatch(createCompany(values));
-    },
-  })
-  const [selectedDate, setSelectedDate] = useState<Date | null>(
-    new Date('2014-08-18T21:11:54'),
-  );
+
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
 
 
-  const cityLocations = useSelector((state: AppState) => state.locationState.locations);
-  const districtLocation = Object.values(((cityLocations.filter((location: LocationsProps) => location.id === stateCityId)[0] || {}).district) || {});
-  const wardLocation = Object.values(((districtLocation.filter((location: DistrictProps) => location.id === stateDistrictId)[0] || {}).ward) || {});
-  const currencies = [
-    {
-      value: 'USD',
-      label: '$',
-    },
-    {
-      value: 'EUR',
-      label: '€',
-    },
-    {
-      value: 'BTC',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
+  const companyDataSource = useSelector((state: AppState) => state.systemsCompanyState.companyDataSource);
+  // if (companyDataSource && _.isArray(companyDataSource.data))
+  let rows = [].map(result => createData(
+    result.id,
+    result.fistName,
+    result.lastName,
+    result.dayOfBirth,
+    result.staffType,
+    result.phone,
+    result.gender,
+    result.jobTitle,
+    result.email,
+    result.createdate,
+    result.planInterviewDate,
+    result.idCardNoPassport,
+    result.dateOfIssue,
+    result.placeOfIssue,
+    result.ethnic,
+    result.searchingSource,
+    result.addressWebsite,
+    result.educationalLevel,
+    result.contact,
+    result.phoneContact,
+    result.description,
+    result.permanentAddress,
+    result.permanentCountry,
+    result.permanentDistrict,
+    result.permanentCity,
+    result.currentAddress,
+    result.currentCountry,
+    result.currentCity,
+    result.currentDistrict,
+    result.status,
+  ))
+
+  const handleYesButtonModal = () => {
+    // dispatch(getCompany(companyId));
+    setOpen(false);
+    setOpenForm(true)
+  }
+
   return (
     <div>
-      <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
-        <Typography color="textSecondary">Quản trị hệ thống</Typography>
-        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
-        <Typography color="textPrimary">Quản lý nhân viên</Typography>
-      </Breadcrumbs>
       <div className="d-flex justify-content-between align-items-center">
         <p className={classes.title}>Thông Tin Nhân Viên</p>
-        <div className="d-flex justify-content-end align-items-center w-25 pr-5">
-          <Button
-            variant="outlined"
-            className={classes.buttonSave}
-            onClick={() => formik.handleSubmit()}
-          >
-            Lưu
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.buttonCreate}
-            onClick={() => formik.resetForm()}
-          >
-            Tạo mới
-          </Button>
-        </div>
-      </div>
-      <div>
-
-        <form
-          className="d-flex flex-column justify-content-center align-items-center w-100"
-        >
-          <div className="row w-100">
-            <div className="col-md-2 d-flex flex-column justify-content-start align-items-center p-0 mt-5">
-              <div className={classes.avatar}>
-                <div className="text-center m-auto">
-                  <span className={classes.avatarLabel}>Ảnh đại diện</span>
-                  <Button
-                    variant="contained"
-                    className={classes.buttonCreate}
-                  >
-                    <span>Tải ảnh</span>
-                  </Button>
-                </div>
-              </div>
-              <Button
-                variant="contained"
-                className={classes.buttonCreate}
-                style={{ width: '180px', backgroundColor: "#DBF1FF", color: "#2FAAFC", }}
-              >
-                Xem CV
-          </Button>
-              <Button
-                variant="contained"
-                className={classes.buttonCreate}
-                style={{ width: '180px', backgroundColor: "#E9E9E9", color: "#939393", }}
-              >
-                Cập nhật password
-          </Button>
-
-            </div>
-            <div className="col-md-10">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Họ tên"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      id="date"
-                      label="Ngày sinh"
-                      type="date"
-                      defaultValue="2020-01-20"
-                      className={classes.formControl}
-                      variant="filled"
-                      size="small"
-                      InputProps={{
-
-                      }}
-                    />
-
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="CongTyMe"
-                      label="Dân tộc"
-                      required
-                      variant="filled"
-                      size="small"
-                    >
-                      {currencies.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                    <div className={classes.formControl} style={{ backgroundColor: '#F2F2F2' }}>
-                      <FormControl component="fieldset" size="small" >
-                        <FormLabel className="mb-0 pl-1 pt-1" component="legend">Giới tính</FormLabel>
-                        <RadioGroup row aria-label="gender" name="gender1" >
-                          <FormControlLabel className="pl-3" value="male" control={<Radio color="primary" size="small" />} label="Nam" />
-                          <FormControlLabel value="female" control={<Radio color="primary" size="small" />} label="Nữ" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div>
-
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="ID card/passport"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Ngày cấp"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Nơi cấp"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Trình độ"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Quốc tịch"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Số điện thoại"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Email"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyMe"
-                      label="Địa chỉ"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="CongTyMe"
-                      label="Thành Phố"
-                      required
-                      variant="filled"
-                      size="small"
-                    >
-                      {cityLocations.map((option) => (
-                        <MenuItem key={option.id} value={option.id} onClick={() => setStateCityId(option.id)}>
-                          {option.nameWithType}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="CongTyMe"
-                      label="Quận/Huyện"
-                      required
-                      variant="filled"
-                      size="small"
-                    >
-                      {districtLocation.map((option) => (
-                        <MenuItem key={option.id} value={option.id} onClick={() => setStateDistrictId(option.id)}>
-                          {option.nameWithType}
-                        </MenuItem>
-                      ))}</CustomTextField>
-
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="CongTyMe"
-                      label="Phường/Xã"
-                      required
-                      variant="filled"
-                      size="small"
-                    >
-                      {wardLocation.map((option) => (
-                        <MenuItem key={option.id} value={option.id}>
-                          {option.nameWithType}
-                        </MenuItem>
-                      ))}</CustomTextField>
-
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="DienThoai"
-                      label="Tên người dùng"
-                      required
-                      variant="filled"
-                      size="small"
-
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="SoFax"
-                      label="Mã nhân viên"
-                      variant="filled"
-                      size="small"
-
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="DienThoai"
-                      label="Loại nhân viên"
-                      required
-                      variant="filled"
-                      size="small"
-
-                    >
-                      {currencies.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="SoFax"
-                      label="Mật khẩu"
-                      variant="filled"
-                      size="small"
-
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      select
-                      name="DienThoai"
-                      label="Chức vụ"
-                      required
-                      variant="filled"
-                      size="small"
-
-                    >
-                      {currencies.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}</CustomTextField>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="SoFax"
-                      label="Email công ty"
-                      variant="filled"
-                      size="small"
-
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="DienThoai"
-                      label="Tên ngân hàng"
-                      required
-                      variant="filled"
-                      size="small"
-
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="SoFax"
-                      label="Số tài khoản"
-                      variant="filled"
-                      size="small"
-
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="DienThoai"
-                      label="Số bảo hiểm"
-                      required
-                      variant="filled"
-                      size="small"
-
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="SoFax"
-                      label="Tax Identification no"
-                      variant="filled"
-                      size="small"
-
-                    />
-                  </div>
-                  <div className={classes.formGroup} style={{ backgroundColor: '#F2F2F2' }}>
-
-                    <FormGroup row className="p-3 mt-1 mb-1">
-
-                      <FormControlLabel value="1" control={<Switch color="primary" size="small" />} label="Đã tham gia bảo hiểm" />
-                      <FormControlLabel value="2" control={<Switch color="primary" size="small" />} label="Người dùng hệ thống" />
-                      <FormControlLabel value="3" control={<Switch color="primary" size="small" />} label="Đang hoạt động" />
-
-                    </FormGroup>
-
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="DienThoai"
-                      label="Lần truy cập cuối"
-                      required
-                      variant="filled"
-                      size="small"
-
-                    />
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="SoFax"
-                      label="Ghi chú"
-                      variant="filled"
-                      size="small"
-
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <Button
-              variant="contained"
-              className={classes.buttonStyled}
-              style={{ color: '#fff', backgroundColor: '#FF9D42' }}
-            >
-              Nhóm người dùng
-          </Button>
-            <Button
-              variant="contained"
-              className={classes.buttonStyled}
-              style={{ color: '#fff', backgroundColor: '#FF7294' }}
-            >
-              Thiết lập phòng ban
-          </Button>
-            <Button
-              variant="contained"
-              className={classes.buttonStyled}
-              style={{ color: '#fff', backgroundColor: '#61E2BC' }}
-            >
-              Thiết lập ca
-          </Button>
-            <Button
-              variant="contained"
-              className={classes.buttonStyled}
-              style={{ color: '#fff', backgroundColor: '#F5DB3F' }}
-            >
-              Lương nhân viên
-          </Button>
-            <Button
-              variant="contained"
-              className={classes.buttonStyled}
-              style={{ color: '#fff', backgroundColor: '#404040' }}
-            >
-              NGhỉ việc
-          </Button>
-            <Button
-              variant="contained"
-              className={classes.buttonStyled}
-              style={{ color: '#fff', backgroundColor: '#FF6363' }}
-            >
-              Xem/Tạo hợp đồng
-          </Button>
-            <Button
-              variant="contained"
-              className={classes.buttonStyled}
-              style={{ color: '#fff', backgroundColor: '#B0DF63' }}
-            >
-              Tổng nhân viên
-          </Button>
-
-          </div>
-        </form>
-      </div>
-      <div className="d-flex justify-content-between align-items-center pr-5">
-        <div className="d-flex justify-content-center align-items-center">
-          <p className={classes.title}>Dữ liệu</p>
+        <div className="d-flex justify-content-end align-items-center pr-5">
           <div className={classes.search} style={{ background: "#FFF" }}>
             <div className={classes.searchIcon}>
               <SearchIcon style={{ color: '#2FAAFC' }} />
@@ -554,20 +183,149 @@ function StaffManagement() {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-        </div>
 
-        <div>
+          <Button
+            variant="contained"
+            className={classes.buttonCreate}
+            onClick={() => setOpenForm(true)}
+          >
+            Tạo mới
+          </Button>
           <Button
             variant="contained"
             className={classes.buttonDelete}
+          // onClick={handleDeleteButton}
           >
             Xóa
           </Button>
         </div>
       </div>
-      <div>
-        <StaffManagementData />
+      {/* 
+       */}
+      <div className="d-flex justify-content-around align-items-center p-2">
+        <Button
+          variant="contained"
+          className={classes.buttonStyled}
+          style={{ color: '#fff', backgroundColor: '#FF9D42' }}
+        >
+          Nhóm người dùng
+          </Button>
+        <Button
+          variant="contained"
+          className={classes.buttonStyled}
+          style={{ color: '#fff', backgroundColor: '#FF7294' }}
+        >
+          Thiết lập phòng ban
+          </Button>
+        <Button
+          variant="contained"
+          className={classes.buttonStyled}
+          style={{ color: '#fff', backgroundColor: '#61E2BC' }}
+        >
+          Thiết lập ca
+          </Button>
+        <Button
+          variant="contained"
+          className={classes.buttonStyled}
+          style={{ color: '#fff', backgroundColor: '#F5DB3F' }}
+        >
+          Lương nhân viên
+          </Button>
+        <Button
+          variant="contained"
+          className={classes.buttonStyled}
+          style={{ color: '#fff', backgroundColor: '#404040' }}
+        >
+          NGhỉ việc
+          </Button>
+        <Button
+          variant="contained"
+          className={classes.buttonStyled}
+          style={{ color: '#fff', backgroundColor: '#FF6363' }}
+        >
+          Xem/Tạo hợp đồng
+          </Button>
+        <Button
+          variant="contained"
+          className={classes.buttonStyled}
+          style={{ color: '#fff', backgroundColor: '#B0DF63' }}
+        >
+          Tổng nhân viên
+          </Button>
+
       </div>
+
+      <div className="p-2">
+        <>
+          <div className="d-flex justify-content-center">
+            <div style={{ height: 700, width: '95%' }}>
+              <DataGrid className={classes.root}
+                rows={rows}
+                columns={columns}
+                checkboxSelection
+              //   paginationMode="server"
+              //   pagination
+              //   rowsPerPageOptions={[5, 10]}
+              //   page={companyDataSource.page}
+              //   pageSize={companyDataSource.pageSize}
+              //   rowCount={companyDataSource.total}
+              //   onPageChange={option => {
+              //     const page = option.page - 1;
+
+              //     if (page < 0)
+              //       return;
+              //     if (option.page === companyDataSource.page) return;
+              //     dispatch(getCompanyList({ page, pageSize: option.pageSize }))
+              //   }}
+              //   disableSelectionOnClick
+              //   onCellClick={(params) => {
+              //     if (params.field === "companyName") { handleResultClick(params.data.id) }
+              //   }}
+              //   onSelectionChange={option => {
+              //     return selectItemId = option.rows.map(row => { return row.id });
+              //     // console.log(selectItemId)
+              //     // return selectItemId = selectItemId
+              //   }}
+              // //onSortModelChange={params => console.log(params)}
+
+
+              />
+
+
+            </div>
+          </div>
+          <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">Thay đổi thông tin công ty này ?</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Bạn có chắc chắn muốn thay đổi thông tin công ty này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
+          </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleYesButtonModal} color="primary">
+                Đồng ý
+          </Button>
+              <Button onClick={() => setOpen(false)} color="primary" autoFocus>
+                Hủy
+          </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openForm}
+            onClose={() => setOpenForm(false)}
+            maxWidth="lg"
+          >
+            <StaffManagementForm setOpenForm={() => setOpenForm(false)} />
+
+          </Dialog>
+
+        </>
+      </div >
     </div>
   );
 }
