@@ -1,7 +1,9 @@
 import { all, takeLatest, put, takeEvery } from 'redux-saga/effects'
 import { actionTypes, setCompany, setCompanyList } from '../systemsManagement/company/actions'
+
 import httpClient from '../../services/httpService';
 import { CompanyProps } from '../../@types/company/createCompany';
+
 
 function* createCompany(action: { type: string, createCompanyModal: CompanyProps }) {
 
@@ -32,7 +34,7 @@ function* uploadLogo(action: { type: string, file }) {
   const file = action.file;
   try {
     const result = yield httpClient.post('/api/Upload', file);
-
+    
   } catch (e) {
 
   } finally {
@@ -42,7 +44,7 @@ function* uploadLogo(action: { type: string, file }) {
 
 function* getCompanyList(action: { type: string }) {
   try {
-    const result = yield httpClient.get('SystemsManagement/Company');
+    const result = yield httpClient.get('/SystemsManagement/Company?pageSize=32');
     const companyList: Array<CompanyProps> = result.data;
     yield put(setCompanyList(companyList))
 
@@ -76,7 +78,6 @@ function* deleteCompany(action: { type: string, companyId: number }) {
   }
 }
 
-
 export default function* companyWatcher() {
   yield all([
     takeLatest(actionTypes.CREAT_COMPANY, createCompany),
@@ -84,6 +85,6 @@ export default function* companyWatcher() {
     takeLatest(actionTypes.UPLOAD_LOGO, uploadLogo),
     takeLatest(actionTypes.GET_COMPANY_LIST, getCompanyList),
     takeLatest(actionTypes.GET_COMPANY, getCompany),
-    takeLatest(actionTypes.DELETE_COMPANY, deleteCompany)
+    takeLatest(actionTypes.DELETE_COMPANY, deleteCompany),
   ])
 }
