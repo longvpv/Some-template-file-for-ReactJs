@@ -40,7 +40,7 @@ export const prepareEmptyCompanyModel = () => {
 
 export const prepareEmptyCompanyBankModel = () => {
   const company: CompanyBankProps = {
-    // id: null,
+    id: 0,
     bankCode: '',
     bankName: '',
     bankAddress: '',

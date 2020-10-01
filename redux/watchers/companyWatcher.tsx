@@ -70,7 +70,7 @@ function* deleteCompany(action: { type: string, companyId: Array<number | string
   const companyId = action.companyId;
   console.log(companyId);
   try {
-    const result = yield httpClient.delete(`SystemsManagement/Company/All`, {
+    const result = yield httpClient.delete(`SystemsManagement/Company/Multiple`, {
       data: companyId
     })
     yield put(setCompanyList(result))

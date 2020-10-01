@@ -2,17 +2,19 @@
 import {
   Button,
   CircularProgress,
+  colors,
   InputBase,
   MenuItem,
   TextField
 } from "@material-ui/core";
-import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
+import { createMuiTheme, fade, makeStyles, MuiThemeProvider, withStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 import { useFormik } from "formik";
 import { DropzoneArea } from 'material-ui-dropzone';
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as Yup from 'yup';
+import { AttachFile, CloudUpload } from '@material-ui/icons';
 
 const CustomTextField = withStyles({
   root: {
@@ -43,6 +45,23 @@ const CustomTextField = withStyles({
 
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    '& .MuiDropzoneArea-root': {
+      paddingTop: "20px",
+      width: "150px",
+      height: "150px",
+      minHeight: 0
+    },
+    '& .MuiDropzoneArea-icon': {
+      // display: "none"
+      color: "#B9E3FF",
+      paddingTop: 10
+    }
+  },
+  title1: {
+    fontSize: "14px",
+    margin: '0',
+  },
   title: {
     fontFamily: "Quicksand",
     fontWeight: "bold",
@@ -395,13 +414,18 @@ function HopDongNhanVien() {
             </div>
             <div className="col-md-6">
               <h3>Đính kèm tệp</h3>
-              <DropzoneArea
-                dropzoneText="Chọn tệp"
-                showPreviewsInDropzone={false}
-                showPreviews={true}
-                useChipsForPreview={true}
-                onChange={(files) => console.log('Files:', files)}
-              />
+              <div className={classes.root} style={{ width: "150px", height: "150px", overflow: "hidden" }}>
+                <DropzoneArea
+                  Icon={CloudUpload}
+                  dropzoneClass={classes.root}
+                  dropzoneParagraphClass={classes.title1}
+                  dropzoneText="Kéo hình vào đây"
+                  showPreviewsInDropzone={false}
+                  showPreviews={true}
+                  useChipsForPreview={true}
+                  onChange={(files) => console.log('Files:', files)}
+                />
+              </div>
             </div>
           </div>
         </form>

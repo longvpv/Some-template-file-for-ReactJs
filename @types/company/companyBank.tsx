@@ -1,3 +1,5 @@
+import { PagedListModel, SearchModel } from "../appTypes/baseModel";
+
 export interface CreateCompanyBankProps {
   bankCode: string,
   bankName: string,
@@ -27,8 +29,14 @@ export interface CompanyBankProps {
   companyId: number
 }
 
+
 export interface CompanyBankState {
-  companyBankInfo: Array<CompanyBankProps>,
+  companyBankInfoDataResource: PagedListModel<CompanyBankProps>
   bankInfo: CompanyBankProps,
   bankType: Array<any>
+  accountingCode: Array<any>
+}
+
+export class BankSearchModel extends SearchModel {
+  bankName?: string;
 }

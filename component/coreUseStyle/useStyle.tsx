@@ -2,9 +2,7 @@ import { createStyles, fade, makeStyles } from "@material-ui/core";
 
 const useStyle = makeStyles((theme) => createStyles({
   root: {
-    "& .MuiDropzoneArea-root": {
-      height: '120px'
-    },
+
     "& .MuiDataGrid-root": {
       borderRadius: "25px"
     },
@@ -17,7 +15,20 @@ const useStyle = makeStyles((theme) => createStyles({
     },
     "& .MuiDataGrid-window": {
       backgroundColor: "#FFF"
+    },
+
+    "& .MuiDropzoneArea-icon": {
+      color: "#B9E3FF",
     }
+  },
+  rootDropZone: {
+    "& .MuiDropzoneArea-root": {
+      paddingTop: "20px",
+      width: "140px",
+      height: "140px",
+      minHeight: 0,
+      marginRight: "12px"
+    },
   },
   buttonStyled: {
     borderRadius: "8px",
@@ -147,6 +158,11 @@ const useStyle = makeStyles((theme) => createStyles({
     color: "#FFF",
     borderColor: '#2FAAFC',
     fontWeight: 'bold',
+  },
+  uploadTitle: {
+    fontFamily: "Quicksand",
+    fontSize: "14px",
+    margin: '12px',
   }
 }));
 

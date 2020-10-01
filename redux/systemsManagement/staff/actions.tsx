@@ -1,26 +1,28 @@
 import createCompanyModal, { CompanyProps, PrinterProps } from "../../../@types/company/createCompany"
+import { CreateStaffModal } from "../../../@types/staff/staffState"
 
 export const actionTypes = {
-  CREAT_COMPANY: 'CREAT_COMPANY',
-  GET_COMPANY: 'GET_COMPANY',
-  SET_COMPANY: 'SET_COMPANY',
-  UPLOAD_LOGO: 'UPLOAD_LOGO',
-  GET_COMPANY_LIST: 'GET_COMPANY_LIST',
-  SET_COMPANY_LIST: 'SET_COMPANY_LIST',
-  DELETE_COMPANY: 'DELETE_COMPANY',
-  SET_PRINTER: 'SET_PRINTER'
+  CREATE_STAFF: 'CREATE_STAFF',
+  GET_ALL_STAFF: 'GET_ALL_STAFF',
+  SET_ALL_STAFF: 'SET_ALL_STAFF'
 
 }
 
-export function createCompany(createCompanyModal: createCompanyModal) {
+export function createStaff(createStaffModal: CreateStaffModal) {
   return {
-    type: actionTypes.CREAT_COMPANY,
-    createCompanyModal,
+    type: actionTypes.CREATE_STAFF,
+    createStaffModal,
   }
 }
 
-export const getCompanyList = () => ({
-  type: actionTypes.GET_COMPANY_LIST,
+
+
+export const getAllStaff = () => ({
+  type: actionTypes.GET_ALL_STAFF,
 })
 
 
+export const setAllStaff = (allStaff) => ({
+  type: actionTypes.SET_ALL_STAFF,
+  allStaff
+})

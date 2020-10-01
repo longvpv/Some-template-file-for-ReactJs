@@ -1,418 +1,122 @@
 import {
-  Breadcrumbs, Button,
-  InputBase, MenuItem, TableCell, TextField, Typography
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  InputBase,
+  Popover,
+  Typography
 } from "@material-ui/core";
-import { fade, makeStyles, withStyles } from '@material-ui/core/styles';
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import { ColDef, DataGrid } from "@material-ui/data-grid";
 import SearchIcon from '@material-ui/icons/Search';
-import { useFormik } from "formik";
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import * as Yup from 'yup';
 import AppState from "../../../@types/appTypes/appState";
-import { CompanyProps } from "../../../@types/company/createCompany";
-import * as companyFactory from '../../../factories/companies/companyFactory';
-import { getCompanyList } from "../../../redux/systemsManagement/company/actions";
-import { changeCompanyBank, createCompanyBank, getBankType, getCompanyBankInfo } from "../../../redux/systemsManagement/companyBank/actions";
-import BankData from "./BankData";
-const CustomTextField = withStyles({
-  root: {
-    '& .MuiInputBase-input': {
-      fontSize: "14px",
-    },
+import useStyle from "../../../component/coreUseStyle/useStyle";
+import { deleteCompanyBank, getBankInfo, getCompanyBankInfo } from "../../../redux/systemsManagement/companyBank/actions";
+import BankForm from "./BankForm";
 
-    '& .MuiFormControl-root': {
-      margin: "3px 3px",
-    },
-    '& p.MuiFormHelperText-root': {
-      color: '#dc3545',
-    },
+const columns: ColDef[] = [
+  { field: 'id', headerName: 'ID', width: 50, resizable: true },
+  { field: 'paypalAccount', headerName: 'Loại TK thanh toán', width: 180 },
+  { field: 'paypalNumber', headerName: 'Số TK thanh toán', width: 180 },
+  { field: 'accountingCodeId', headerName: "Accounting Code", width: 120 },
+  { field: 'bankCode', headerName: 'Mã ngân hàng', width: 120 },
+  { field: 'bankName', headerName: 'Tên ngân hàng', width: 180 },
+  { field: 'bankAddress', headerName: 'Địa chỉ ngân hàng', width: 280 },
+  { field: 'bankAccountName', headerName: 'Chủ TK ngân hàng', width: 180 },
+  { field: 'bankAccountNumber', headerName: 'Số TK ngân hàng', width: 180 },
+  { field: 'cifCode', headerName: 'Mã CIF', width: 180 },
+  { field: 'iebCode', headerName: 'Mã IEB', width: 180 },
+];
 
-    '& label.Mui-focused': {
-      color: '#2FAAFC',
+function createData(
+  id: number,
+  paypalAccount: string,
+  paypalNumber: string,
+  accountingCodeId: number,
+  bankCode: string,
+  bankName: string,
+  bankAddress: string,
+  bankAccountName: string,
+  bankAccountNumber: string,
+  cifCode: string,
+  iebCode: string,
 
-    },
-    '& .MuiFilledInput-root': {
-      backgroundColor: '#FFF',
+) {
+  return {
+    id,
+    paypalAccount,
+    paypalNumber,
+    accountingCodeId,
+    bankCode,
+    bankName,
+    bankAddress,
+    bankAccountName,
+    bankAccountNumber,
+    cifCode,
+    iebCode,
 
-    }, '& .MuiFilledInput-underline:before': {
-      borderBottomColor: 'white',
-    },
-
-    '& .MuiFilledInput-underline:after': {
-      borderBottomColor: 'white',
-    },
-
-  },
-})(TextField);
-
-const useStyles = makeStyles((theme) => ({
-  title: {
-    fontFamily: "Quicksand",
-    fontWeight: "bold",
-    fontSize: "24px",
-    padding: '24px',
-    margin: '0',
-  },
-  buttonSave: {
-    borderRadius: "8px",
-    width: "120px",
-    margin: "12px",
-    backgroundColor: "#F2F2F2",
-    color: "#2FAAFC",
-    borderColor: '#2FAAFC',
-    fontWeight: 'bold'
-  },
-  buttonCreate: {
-    borderRadius: "8px",
-    width: "120px",
-    margin: "12px",
-    backgroundColor: "#2FAAFC",
-    color: "#FFF",
-    borderColor: '#2FAAFC',
-    fontWeight: 'bold'
-  },
-  buttonDelete: {
-    borderRadius: "8px",
-    width: "120px",
-    margin: "12px",
-    backgroundColor: "#FDABAB", color: "#FFFFFF",
-    fontWeight: 'bold'
-  },
-
-  formGroup: {
-    display: "flex",
-    margin: "3px",
-  },
-  formControl: {
-    width: "100%",
-    margin: "3px 3px",
-    backgroundColor: "#FFFFFF",
-  },
-
-  search: {
-    position: "relative",
-    borderRadius: "16px",
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(3),
-      width: "auto",
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  inputRoot: {
-    color: '#101010',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
-
+  };
+}
 
 function Bank() {
   const dispatch = useDispatch();
-  const [state, setstate] = useState(0)
-  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [openForm, setOpenForm] = useState(false);
+  const [bankId, setBankId] = useState(0);
+  let bankIdSelected = [];
+  const classes = useStyle();
   useEffect(() => {
-    dispatch(getCompanyList());
     dispatch(getCompanyBankInfo());
-    dispatch(getBankType());
   }, []);
-  const bankInfo = useSelector((state: AppState) => state.companyBankState.bankInfo);
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: bankInfo.id ? bankInfo : companyFactory.prepareEmptyCompanyBankModel(),
-    validationSchema: Yup.object({
-      bankCode: Yup.string()
-        .max(45, 'Must be 45 characters or less')
-        .required('Required'),
-      bankName: Yup.string()
-        .max(100, 'Must be 100 characters or less')
-        .required('Required'),
-      bankAddress: Yup.string()
-        .max(100, 'Must be 100 characters or less')
-        .required('Required'),
-      bankAccountName: Yup.string()
-        .max(50, 'Must be 50 characters or less')
-        .required('Required'),
-      bankAccountNumber: Yup.string()
-        .max(50, 'Must be 50 characters or less')
-        .required('Required'),
-      accountingCodeId: Yup.number()
-        .required('Required'),
-    }),
+  const companyBankInfo = useSelector((state: AppState) => state.companyBankState.companyBankInfoDataResource);
+  const handleResultClick = (id) => {
+    setBankId(id)
+    setOpen(true)
+  }
 
-    onSubmit: (values) => {
-      console.log({ values });
+  const handleDeleteButton = () => {
+    const r = confirm(`Are you sure wanna delete this bank ?`);
 
-      // dispatch(createCompanyBank(values));
-      confirm('Sure wanna change this ?')
-      bankInfo.id
-        ? dispatch(changeCompanyBank(values))
-        : dispatch(createCompanyBank(values));
-      setstate(state + 1)
-    },
-  })
-  const valueText = [
-    {
-      value: '1',
-      label: '1'
-    },
-    {
-      value: '2',
-      label: '2',
-    },
-    {
-      value: '3',
-      label: '3',
-    },
-    {
-      value: '5',
-      label: '5',
-    },
-  ];
-  const companyList = useSelector((state: AppState) => state.systemsCompanyState.companyData);
-  const bankType = useSelector((state: AppState) => state.companyBankState.bankType);
+    if (r) {
+      bankIdSelected.forEach(id => dispatch(deleteCompanyBank(id)))
+    }
+  };
+
+  const handleYesButtonModal = () => {
+    dispatch(getBankInfo(bankId));
+    setOpen(false);
+    setOpenForm(true)
+  }
+
+  let rows = [];
+  if (companyBankInfo && _.isArray(companyBankInfo.data))
+    rows = companyBankInfo.data.map(result => createData(
+      result.id,
+      result.paypalAccount,
+      result.paypalNumber,
+      result.accountingCodeId,
+      result.bankCode,
+      result.bankName,
+      result.bankAddress,
+      result.bankAccountName,
+      result.bankAccountNumber,
+      result.cifCode,
+      result.iebCode,
+    ))
+
   return (
     <div>
 
-      <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
-        <Typography color="textSecondary">Quản trị hệ thống</Typography>
-        <Typography color="textSecondary">Thiết lập hệ thống</Typography>
-        <Typography color="textPrimary">Ngân hàng</Typography>
-      </Breadcrumbs>
+
       <div className="d-flex justify-content-between align-items-center">
         <p className={classes.title}>Thiết Lập Ngân Hàng</p>
-        <div className="d-flex justify-content-end align-items-center w-25 pr-5">
-          <Button
-            variant="outlined"
-            className={classes.buttonSave}
-            type='submit'
-            onClick={() => formik.handleSubmit()}
-          >
-            Lưu
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.buttonCreate}
-            onClick={() => formik.resetForm()}
-          >
-            Tạo mới
-          </Button>
-        </div>
-      </div>
-      <div>
-        <form
-          className="d-flex flex-column justify-content-center align-items-center w-100"
-        >
-          <div className="row w-100">
 
-            <div className="col-md-6">
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  select
-                  name="companyId"
-                  label="Công ty"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.companyId}
-                >
-                  {companyList.map(company => (
-                    <MenuItem key={company.id} value={company.id}>
-                      {company.companyName}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              </div>
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  select
-                  name="accountingCodeId"
-                  label="Loại Ngân Hàng"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.accountingCodeId}
-                >
-                  {bankType.map((option) => (
-                    <MenuItem key={option.id} value={option.id}>
-                      <TableCell align="center" style={{ width: '100%' }}>{option.systemCodeId}</TableCell>
-                      <TableCell align="center" style={{ width: '100%' }}>{option.name}</TableCell>
-                    </MenuItem>
-                  ))}</CustomTextField>
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="bankCode"
-                  label="Mã Ngân Hàng"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.bankCode}
-
-                />
-              </div>
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="bankName"
-                  label="Tên Ngân Hàng"
-                  required
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.bankName}
-                />
-              </div>
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="bankAddress"
-                  label="Địa chỉ"
-                  required
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.bankAddress}
-                />
-              </div>
-
-
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="bankAccountName"
-                  label="Chủ Thẻ"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.bankAccountName}
-                />
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="bankAccountNumber"
-                  label="Số thẻ"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.bankAccountNumber}
-
-                />
-              </div>
-
-
-            </div>
-            <div className="col-md-6">
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="paypalAccount"
-                  label="Tài khoản paypal"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.paypalAccount}
-                />
-              </div>
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="paypalNumber"
-                  label="Số thanh toán paypal"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.paypalNumber}
-                />
-              </div>
-
-
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  disabled
-                  className={classes.formControl}
-                  type="text"
-                  name="CSV"
-                  label="CSV"
-                  variant="filled"
-                  size="small"
-                // onChange={formik.handleChange}
-                // value={formik.values.bankCode}
-                />
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="cifCode"
-                  label="Mã CIF"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.cifCode}
-
-                />
-              </div>
-              <div className={classes.formGroup}>
-                <CustomTextField
-                  className={classes.formControl}
-                  type="text"
-                  name="iebCode"
-                  label="Mã truy cập IEB"
-                  variant="filled"
-                  size="small"
-                  onChange={formik.handleChange}
-                  value={formik.values.iebCode}
-                />
-                <CustomTextField
-                  className={classes.formControl}
-                  disabled
-                  type="text"
-                  name="MaTaiKhoanLienQuan"
-                  label="Mã Tài Khoản Liên Quan"
-                  variant="filled"
-                  size="small"
-                // onChange={formik.handleChange}
-                // value={formik.values.bankCode}
-
-                />
-              </div>
-            </div>
-
-          </div>
-        </form>
-      </div>
-      <div className="d-flex justify-content-between align-items-center pr-5">
-        <div className="d-flex justify-content-center align-items-center">
-          <p className={classes.title}>Dữ liệu</p>
+        <div className="d-flex justify-content-end align-items-center pr-5">
           <div className={classes.search} style={{ background: "#FFF" }}>
             <div className={classes.searchIcon}>
               <SearchIcon style={{ color: '#2FAAFC' }} />
@@ -426,20 +130,90 @@ function Bank() {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-        </div>
 
-        <div>
+          <Button
+            variant="contained"
+            className={classes.buttonCreate}
+            onClick={() => setOpenForm(true)}
+          >
+            Tạo mới
+          </Button>
           <Button
             variant="contained"
             className={classes.buttonDelete}
+            onClick={handleDeleteButton}
           >
             Xóa
           </Button>
         </div>
       </div>
-      <div>
-        <BankData />
+      <div className="d-flex justify-content-center">
+        <div style={{ height: 700, width: '95%' }}>
+          <DataGrid className={classes.root}
+            rows={rows}
+            columns={columns}
+            checkboxSelection
+            paginationMode="server"
+            pagination
+            rowsPerPageOptions={[5, 10]}
+            page={companyBankInfo.page}
+            pageSize={companyBankInfo.pageSize}
+            rowCount={companyBankInfo.total}
+            onPageChange={option => {
+              const page = option.page - 1;
+
+              if (page < 0)
+                return;
+              if (option.page === companyBankInfo.page) return;
+              dispatch(getCompanyBankInfo({ page, pageSize: option.pageSize }))
+            }}
+            disableSelectionOnClick
+            onCellClick={(params) => {
+              if (params.field === "paypalAccount") { handleResultClick(params.data.id) }
+            }}
+            onSelectionChange={option => {
+              return bankIdSelected = option.rows.map(row => { return row.id });
+            }}
+            onCellHover={cell => (
+              console.log(cell.value)
+            )}
+          //onSortModelChange={params => console.log(params)}
+
+          />
+
+        </div>
       </div>
+      <div>
+
+      </div>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Thay đổi thông tin ngân hàng này ?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc chắn muốn thay đổi thông tin ngân hàng này, đổi rồi không quay về cái cũ lại được đâu á nha !!!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleYesButtonModal} color="primary">
+            Đồng ý
+          </Button>
+          <Button onClick={() => setOpen(false)} color="primary" autoFocus>
+            Hủy
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openForm}
+        onClose={() => setOpenForm(false)}
+        maxWidth="lg"
+      >
+        <BankForm setOpenForm={() => setOpenForm(false)} />
+      </Dialog>
     </div>
   )
 }

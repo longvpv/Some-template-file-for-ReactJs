@@ -5,8 +5,16 @@ import { SystemsCompanyState } from '../../../@types/company/createCompany';
 import { actionTypes } from './actions'
 
 const initializeState: CompanyBankState = {
-  //:SystemsCompanyState 
-  companyBankInfo: [],
+  companyBankInfoDataResource: {
+    data: [],
+    hasNextPage: false,
+    page: 0,
+    pageSize: 10,
+    recordsFiltered: 0,
+    recordsTotal: 0,
+    total: 0,
+    totalPages: 0
+  },
   bankInfo: {
     id: null,
     bankCode: '',
@@ -21,7 +29,8 @@ const initializeState: CompanyBankState = {
     iebCode: '',
     companyId: null
   },
-  bankType: []
+  bankType: [],
+  accountingCode: [],
 
 }
 
@@ -31,7 +40,7 @@ export default function reducer(state = initializeState, action: any) {
     case actionTypes.SET_COMPANY_BANK_INFO:
       return {
         ...state,
-        companyBankInfo: action.companyBankInfo
+        companyBankInfoDataResource: action.companyBankInfoDataResource
       };
 
     case actionTypes.SET_BANK_INFO:
@@ -44,6 +53,11 @@ export default function reducer(state = initializeState, action: any) {
         ...state,
         bankType: action.bankType
       };
+    case actionTypes.SET_ACCOUNTING_CODE:
+      return {
+        ...state,
+        accountingCode: action.accountingCode
+      }
 
     default:
       return state;

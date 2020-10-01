@@ -1,8 +1,8 @@
 import { all, put, takeLatest } from 'redux-saga/effects';
-import { CompanyBankProps, CreateCompanyBankProps } from '../../@types/company/companyBank';
+import { BankSearchModel, companyBankInfoDataResourceProps, CompanyBankProps, CreateCompanyBankProps } from '../../@types/company/companyBank';
 import httpClient from '../../services/httpService';
 import { changeCompany } from '../systemsManagement/company/actions';
-import { actionTypes, setBankInfo, setBankType, setCompanyBankInfo } from '../systemsManagement/companyBank/actions';
+import { actionTypes, setAccountingCode, setBankInfo, setBankType, setCompanyBankInfo } from '../systemsManagement/companyBank/actions';
 
 function* createCompanyBank(action: { type: string, createCompanyBankModal: CreateCompanyBankProps }) {
 
@@ -40,11 +40,20 @@ function* getBankType(action: { type: string }) {
   } finally {
   }
 }
-
-function* getCompanyBankInfo(action: { type: string }) {
+function* getAccountingCode(action: { type: string }) {
   try {
-    const result = yield httpClient.get('/SystemsManagement/CompanyBank');
-    yield put(setCompanyBankInfo(result.data))
+    const result = yield httpClient.get('/Accounting/AccountingCode');
+    yield put(setAccountingCode(result.data))
+  } catch (error) {
+
+  }
+}
+
+function* getCompanyBankInfo(action: { type: string, searchModel: BankSearchModel }) {
+  const { searchModel } = action;
+  try {
+    const result: companyBankInfoDataResourceProps = yield httpClient.get('/SystemsManagement/CompanyBank', { params: searchModel });
+    yield put(setCompanyBankInfo(result))
 
   } catch (e) {
 
@@ -62,6 +71,17 @@ function* getBankInfo(action: { type: string, bankId: number }) {
   } finally {
   }
 }
+function* deleteCompanyBank(action: { type: string, bankId: number }) {
+  const { bankId } = action;
+
+  try {
+    const result = yield httpClient.delete(`/SystemsManagement/CompanyBank/${bankId}`);
+    yield put(setCompanyBankInfo(result))
+  } catch (e) {
+
+  } finally {
+  }
+}
 
 export default function* companyBankWatcher() {
   yield all([
@@ -69,6 +89,8 @@ export default function* companyBankWatcher() {
     takeLatest(actionTypes.CHANGE_COMPANY_BANK, changeCompanyBank),
     takeLatest(actionTypes.GET_COMPANY_BANK_INFO, getCompanyBankInfo),
     takeLatest(actionTypes.GET_BANK_INFO, getBankInfo),
-    takeLatest(actionTypes.GET_BANK_TYPE, getBankType)
+    takeLatest(actionTypes.GET_BANK_TYPE, getBankType),
+    takeLatest(actionTypes.GET_ACCOUNTING_CODE, getAccountingCode),
+    takeLatest(actionTypes.DELETE_COMPANY_BANK, deleteCompanyBank)
   ])
 }

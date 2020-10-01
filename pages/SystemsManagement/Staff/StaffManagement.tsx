@@ -10,110 +10,41 @@ import {
 import { ColDef, DataGrid } from "@material-ui/data-grid";
 import SearchIcon from '@material-ui/icons/Search';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import AppState from "../../../@types/appTypes/appState";
 import useStyles from "../../../component/coreUseStyle/useStyle";
+import { getAllStaff } from "../../../redux/systemsManagement/staff/actions";
 import StaffManagementForm from "./StaffManagementForm";
 
 
 const columns: ColDef[] = [
-  // { field: 'id', headerName: 'ID', width: 50 },
-  { field: "fistName", headerName: "Họ", width: 180 },
-  { field: "lastName", headerName: "Tên", width: 180 },
-  { field: "dayOfBirth", headerName: "Ngày sinh", width: 180 },
-  { field: "staffType", headerName: "Loại NV", width: 180 },
-  { field: "phone", headerName: "Số đt", width: 180 },
-  { field: "gender", headerName: "Giới tính", width: 180 },
-  { field: "jobTitle", headerName: "Chức danh", width: 180 },
-  { field: "email", headerName: "Email", width: 180 },
-  { field: "createdate", headerName: "Thời gian bắt đầu làm việc", width: 180 },
-  { field: "planInterviewDate", headerName: "Le Van", width: 180 },
-  { field: "idCardNoPassport", headerName: "CMND/CCCD", width: 180 },
-  { field: "dateOfIssue", headerName: "Ngày cấp", width: 180 },
-  { field: "placeOfIssue", headerName: "Nơi cấp", width: 180 },
-  { field: "ethnic", headerName: "Dân tộc", width: 180 },
-  { field: "searchingSource", headerName: "Nguồn cấp thông tin tìm kiếm", width: 180 },
-  { field: "addressWebsite", headerName: "Địa chỉ website", width: 180 },
-  { field: "educationalLevel", headerName: "Trình độ học vấn", width: 180 },
-  { field: "contact", headerName: "Thông tin liên lạc khác", width: 180 },
-  { field: "phoneContact", headerName: "SĐT liên lạc khác", width: 180 },
-  { field: "description", headerName: "Mô tả", width: 180 },
-  { field: "permanentAddress", headerName: "Địa chỉ thường trú", width: 180 },
-  { field: "permanentCountry", headerName: "Quốc gia thường trú", width: 180 },
-  { field: "permanentDistrict", headerName: "Quận thường trú", width: 180 },
-  { field: "permanentCity", headerName: "Thành phố thường trú", width: 180 },
-  { field: "currentAddress", headerName: "Địa chỉ hiện tại", width: 180 },
-  { field: "currentCountry", headerName: "Quốc gia hiện tại", width: 180 },
-  { field: "currentCity", headerName: "Thành phố hiện tại", width: 180 },
-  { field: "currentDistrict", headerName: "Quận hiện tại", width: 180 },
-  { field: "status", headerName: "Đang hoạt động", width: 180 }
+  { field: "active", headerName: "Trạng thái", width: 200 },
+  { field: "fullName", headerName: "Họ tên", width: 350 },
+  { field: "email", headerName: "Email cá nhân", width: 350 },
+  { field: "genderId", headerName: "Giới tính", width: 150 },
+  { field: "staffTypeId", headerName: "Loại nhân viên", width: 250 },
+
 ];
+
 
 
 function createData(
   id: number,
-  fistName: string,
-  lastName: string,
-  dayOfBirth: string,
-  staffType: string,
-  phone: string,
-  gender: number,
-  jobTitle: string,
+  active: string,
+  fullName: string,
   email: string,
-  createdate: string,
-  planInterviewDate: string,
-  idCardNoPassport: string,
-  dateOfIssue: string,
-  placeOfIssue: string,
-  ethnic: string,
-  searchingSource: string,
-  addressWebsite: string,
-  educationalLevel: string,
-  contact: string,
-  phoneContact: string,
-  description: string,
-  permanentAddress: number,
-  permanentCountry: number,
-  permanentDistrict: number,
-  permanentCity: number,
-  currentAddress: number,
-  currentCountry: number,
-  currentCity: number,
-  currentDistrict: number,
-  status: number,
+  genderId: string,
+  staffTypeId: number,
+
 ) {
   return {
     id,
-    fistName,
-    lastName,
-    dayOfBirth,
-    staffType,
-    phone,
-    gender,
-    jobTitle,
+    active,
+    fullName,
     email,
-    createdate,
-    planInterviewDate,
-    idCardNoPassport,
-    dateOfIssue,
-    placeOfIssue,
-    ethnic,
-    searchingSource,
-    addressWebsite,
-    educationalLevel,
-    contact,
-    phoneContact,
-    description,
-    permanentAddress,
-    permanentCountry,
-    permanentDistrict,
-    permanentCity,
-    currentAddress,
-    currentCountry,
-    currentCity,
-    currentDistrict,
-    status,
+    genderId,
+    staffTypeId,
   };
 }
 function StaffManagement() {
@@ -122,41 +53,24 @@ function StaffManagement() {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [openForm, setOpenForm] = useState(false);
+  useEffect(() => {
+    dispatch(getAllStaff())
+
+  }, [])
 
 
-  const companyDataSource = useSelector((state: AppState) => state.systemsCompanyState.companyDataSource);
-  // if (companyDataSource && _.isArray(companyDataSource.data))
-  let rows = [].map(result => createData(
+  const allStaffInfo = useSelector((state: AppState) => state.staffState.allStaff);
+  console.log(allStaffInfo);
+  if (allStaffInfo && _.isArray(allStaffInfo)) {
+
+  }
+  let rows = allStaffInfo.map(result => createData(
     result.id,
-    result.fistName,
-    result.lastName,
-    result.dayOfBirth,
-    result.staffType,
-    result.phone,
-    result.gender,
-    result.jobTitle,
+    (result.active ? "Đang hoạt động" : "Không hoạt động"),
+    result.fullName,
     result.email,
-    result.createdate,
-    result.planInterviewDate,
-    result.idCardNoPassport,
-    result.dateOfIssue,
-    result.placeOfIssue,
-    result.ethnic,
-    result.searchingSource,
-    result.addressWebsite,
-    result.educationalLevel,
-    result.contact,
-    result.phoneContact,
-    result.description,
-    result.permanentAddress,
-    result.permanentCountry,
-    result.permanentDistrict,
-    result.permanentCity,
-    result.currentAddress,
-    result.currentCountry,
-    result.currentCity,
-    result.currentDistrict,
-    result.status,
+    (result.genderId === 0 ? "Nữ" : "Nam"),
+    result.staffTypeId,
   ))
 
   const handleYesButtonModal = () => {
@@ -168,7 +82,7 @@ function StaffManagement() {
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center">
-        <p className={classes.title}>Thông Tin Nhân Viên</p>
+        <p className={classes.title}>Quản Lý Nhân Viên</p>
         <div className="d-flex justify-content-end align-items-center pr-5">
           <div className={classes.search} style={{ background: "#FFF" }}>
             <div className={classes.searchIcon}>
@@ -186,17 +100,17 @@ function StaffManagement() {
 
           <Button
             variant="contained"
-            className={classes.buttonCreate}
-            onClick={() => setOpenForm(true)}
+            className={classes.buttonDefault}
           >
-            Tạo mới
+            Tất cả
           </Button>
           <Button
             variant="contained"
-            className={classes.buttonDelete}
-          // onClick={handleDeleteButton}
+            className={classes.buttonCreate}
+            style={{ width: "180px" }}
+            onClick={() => setOpenForm(true)}
           >
-            Xóa
+            Thêm nhân viên
           </Button>
         </div>
       </div>
@@ -210,13 +124,7 @@ function StaffManagement() {
         >
           Nhóm người dùng
           </Button>
-        <Button
-          variant="contained"
-          className={classes.buttonStyled}
-          style={{ color: '#fff', backgroundColor: '#FF7294' }}
-        >
-          Thiết lập phòng ban
-          </Button>
+
         <Button
           variant="contained"
           className={classes.buttonStyled}
@@ -245,13 +153,7 @@ function StaffManagement() {
         >
           Xem/Tạo hợp đồng
           </Button>
-        <Button
-          variant="contained"
-          className={classes.buttonStyled}
-          style={{ color: '#fff', backgroundColor: '#B0DF63' }}
-        >
-          Tổng nhân viên
-          </Button>
+
 
       </div>
 
@@ -300,10 +202,10 @@ function StaffManagement() {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
-            <DialogTitle id="alert-dialog-title">Thay đổi thông tin công ty này ?</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Thay đổi thông tin nhân viên này ?</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Bạn có chắc chắn muốn thay đổi thông tin công ty này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
+                Bạn có chắc chắn muốn thay đổi thông tin nhân viên này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
           </DialogContentText>
             </DialogContent>
             <DialogActions>

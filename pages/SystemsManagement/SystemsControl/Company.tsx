@@ -346,7 +346,7 @@ function Company() {
             <DialogTitle id="alert-dialog-title">Thay đổi thông tin công ty này ?</DialogTitle>
             <DialogContent>
               <DialogContentText id="alert-dialog-description">
-                Bạn có chắc chắn muốn thay đổi thông tin công ty này, dổi rồi không quay về cái cũ lại được đâu á nha !!!
+                Bạn có chắc chắn muốn thay đổi thông tin công ty này, đổi rồi không quay về cái cũ lại được đâu á nha !!!
           </DialogContentText>
             </DialogContent>
             <DialogActions>

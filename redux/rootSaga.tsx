@@ -3,6 +3,7 @@ import es6promise from "es6-promise";
 import loginWatcher from "./watchers/loginWatcher";
 import companyWatcher from "./watchers/companyWatcher";
 import companyBankWatcher from "./watchers/bankWatcher";
+import staffWatcher from "./watchers/staffWatcher";
 
 
 es6promise.polyfill();
@@ -12,5 +13,6 @@ export default function* rootSaga() {
     fork(loginWatcher),
     fork(companyWatcher),
     fork(companyBankWatcher),
+    fork(staffWatcher)
   ]);
 }
