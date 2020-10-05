@@ -28,7 +28,7 @@ const CustomTextField = withStyles({
 
     },
     '& .MuiFilledInput-root': {
-      backgroundColor: '#e5e5e5',
+      backgroundColor: '#f9f9f9',
 
     }, '& .MuiFilledInput-underline:before': {
       borderBottomColor: 'white',

@@ -1,15 +1,13 @@
-import { Button, DialogActions, DialogContent, FormControl, FormControlLabel, FormGroup, FormLabel, MenuItem, Radio, RadioGroup, Switch, TextField, withStyles } from '@material-ui/core';
+import { Button, DialogActions, DialogContent, FormControlLabel, FormGroup, MenuItem, Switch, TextField, withStyles } from '@material-ui/core';
+import { CloudUpload, PhotoCamera } from '@material-ui/icons';
 import { useFormik } from 'formik';
-import { DropzoneArea } from 'material-ui-dropzone';
+import { DropzoneArea, DropzoneAreaBase } from 'material-ui-dropzone';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import AppState from '../../../@types/appTypes/appState';
 import { DistrictProps, LocationsProps } from "../../../@types/appTypes/locationState";
 import useStyle from '../../../component/coreUseStyle/useStyle';
-import * as staffFactory from '../../../factories/companies/staffFactory';
-import { CloudUpload, PhotoCamera } from '@material-ui/icons';
-import httpClient from '../../../services/httpService';
 import { createStaff } from '../../../redux/systemsManagement/staff/actions';
 
 const CustomTextField = withStyles({
@@ -30,7 +28,7 @@ const CustomTextField = withStyles({
 
     },
     '& .MuiFilledInput-root': {
-      backgroundColor: '#e5e5e5',
+      backgroundColor: '#f9f9f9',
 
     }, '& .MuiFilledInput-underline:before': {
       borderBottomColor: 'white',
@@ -64,15 +62,15 @@ function StaffManagementForm(props: OwnProps) {
   const wardLocation = Object.values(((districtLocation.filter((location: DistrictProps) => location.id === stateDistrictId)[0] || {}).ward) || {});
   const staffType = [
     {
-      value: '1',
+      value: 1,
       label: 'Loại 1',
     },
     {
-      value: '2',
+      value: 2,
       label: 'Loại 2',
     },
     {
-      value: '3',
+      value: 3,
       label: 'Loại 3',
     },
 
@@ -95,6 +93,8 @@ function StaffManagementForm(props: OwnProps) {
     },
     validationSchema: Yup.object({}),
     onSubmit: (values) => {
+      // if (formik.initialValues.genderId === '1') formik.setFieldValue('genderId', 1);
+      // if (formik.initialValues.genderId === '0') formik.setFieldValue('genderId', 0)
       console.log(values);
       dispatch(createStaff(values))
 
@@ -135,7 +135,7 @@ function StaffManagementForm(props: OwnProps) {
 
             <div className="d-flex justify-content-center align-items-center">
               <div className={classes.rootDropZone} >
-                <DropzoneArea
+                <DropzoneAreaBase
                   Icon={CloudUpload}
                   dropzoneClass={classes.root}
                   dropzoneParagraphClass={classes.uploadTitle}
@@ -193,22 +193,42 @@ function StaffManagementForm(props: OwnProps) {
                       onChange={formik.handleChange}
                       value={formik.values.dob}
                     />
+                    <CustomTextField
+                      className={classes.formControl}
+                      select
+                      name="genderId"
+                      label="Giới tính"
+                      variant="filled"
+                      size="small"
+                      onChange={formik.handleChange}
+                      value={formik.values.genderId}
+                    >
 
-                    <div className={classes.formControl} style={{ backgroundColor: '#FFF' }}>
+                      <MenuItem key={1} value={1}>
+                        Nam
+                        </MenuItem>
+                      <MenuItem key={1} value={0}>
+                        Nữ
+                        </MenuItem>
+                    </CustomTextField>
+
+                    {/* <div className={classes.formControl} style={{ backgroundColor: '#FFF' }}>
                       <FormControl
                         component="fieldset"
                         size="small"
                       >
                         <FormLabel className="mb-0 pl-1 pt-1" component="legend">Giới tính</FormLabel>
-                        <RadioGroup row aria-label="gender"
+                        <RadioGroup
+                          row
                           name="genderId"
                           onChange={formik.handleChange}
-                          value={formik.values.genderId}>
-                          <FormControlLabel value="1" control={<Radio color="primary" size="small" />} label="Nam" />
-                          <FormControlLabel value="0" control={<Radio color="primary" size="small" />} label="Nữ" />
+                          value={formik.values.genderId}
+                        >
+                          <FormControlLabel value='1' control={<Radio color="primary" size="small" />} label="Nam" />
+                          <FormControlLabel value='0' control={<Radio color="primary" size="small" />} label="Nữ" />
                         </RadioGroup>
                       </FormControl>
-                    </div>
+                    </div> */}
 
                   </div>
                   <div className={classes.formGroup}>
@@ -281,9 +301,9 @@ function StaffManagementForm(props: OwnProps) {
                   <div className={classes.formGroup} style={{ backgroundColor: '#FFF' }}>
 
                     <FormGroup row className="mx-1 pl-3">
-                      <FormControlLabel value="2" control={<Switch color="primary" size="small" name="isSystemUser" onChange={formik.handleChange}
+                      <FormControlLabel control={<Switch color="primary" size="small" name="isSystemUser" onChange={formik.handleChange}
                         value={formik.values.isSystemUser} />} label="Người dùng hệ thống" />
-                      <FormControlLabel value="3" control={<Switch color="primary" size="small" name="active" onChange={formik.handleChange}
+                      <FormControlLabel control={<Switch color="primary" size="small" name="active" onChange={formik.handleChange}
                         value={formik.values.active} />} label="Đang hoạt động" />
                     </FormGroup>
 

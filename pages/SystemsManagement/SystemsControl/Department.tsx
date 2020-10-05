@@ -1,10 +1,23 @@
-import { Breadcrumbs, Button, InputBase, TextField, Typography, withStyles } from "@material-ui/core";
-import { fade, makeStyles } from '@material-ui/core/styles';
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import React, { useEffect, useState } from 'react'
 import SearchIcon from '@material-ui/icons/Search';
-import Formsy from "formsy-react";
-import React from 'react';
+import {
+  Button, InputBase, TextField,
+  Typography, withStyles, Breadcrumbs, MenuItem,
+} from "@material-ui/core";
+import { fade, makeStyles } from '@material-ui/core/styles';
+import { useFormik, validateYupSchema } from "formik";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import DepartmentData from "./DepartmentData";
+import Modal from '@material-ui/core/Modal';
+import Checkbox from '@material-ui/core/Checkbox';
+import AppState from "../../../@types/appTypes/appState";
+import { useDispatch, useSelector } from "react-redux";
+import { DistrictProps, LocationsProps } from "../../../@types/appTypes/locationState";
+import * as Yup from 'yup';
+import { getCompanyList } from "../../../redux/systemsManagement/company/actions";
+import { getDepartment, createDepartment, setDepartment } from "../../../redux/systemsManagement/department/actions";
+import { keyBy } from 'lodash';
+
 
 const CustomTextField = withStyles({
   root: {
@@ -110,118 +123,134 @@ const useStyles = makeStyles((theme) => ({
       width: "20ch",
     },
   },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalInput: {
+    width: '366px',
+    paddingBottom: '5px',
+  },
+  paper: {
+    position: 'absolute',
+    height: 600,
+    width: 500,
+    background: '#FFFFFF',
+    borderRadius: '4px',
+    padding: theme.spacing(2, 8,),
+    animation: 'zoomIn',
+    animationDuration: '0.5s',
+  },
 }));
 
 function Department() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCompanyList()),
+      dispatch(getDepartment())
+  }, [])
+
   const classes = useStyles();
-  const handleSubmit = (model) => {
-    console.log(model);
-  };
+  const [open, setOpen] = useState(false);
+  const [statecompanyId, setstatecompanyId] = useState(0);
+  const [stateCityId, setStateCityId] = useState('');
+  const [stateDistrictId, setStateDistrictId] = useState('')
+
+  const companyList = useSelector((state: AppState) => state.systemsCompanyState.companyDataSource.data);
+  const departmentList = useSelector((state: AppState) => state.systemDepartmentState.departmentData);
+
+  const cityLocations = useSelector((state: AppState) => state.locationState.locations);
+  const districtLocation = Object.values(
+    ((cityLocations.filter(
+      (location: LocationsProps) => location.id === stateCityId)[0] || {})
+      .district) || {});
+  const wardLocation = Object.values(
+    ((districtLocation.filter(
+      (location: DistrictProps) => location.id === stateDistrictId)[0] || {})
+      .ward) || {});
+
+  function createData(
+    departmentName: string,
+    companyId: number,
+    departmentAddress: string,
+    description: string,
+    active: boolean,
+    parentId: number
+  ) {
+    return {
+      departmentName,
+      companyId,
+      departmentAddress,
+      description,
+      active,
+      parentId
+    };
+  }
+
+  const formik = useFormik(
+    {
+      initialValues: {
+        companyId: '',
+        departmentName: '',
+        rootDepartment: '',
+        address: '',
+        city: '',
+        district: '',
+        ward: '',
+        country: '',
+        description: '',
+        deptActive: true
+      },
+
+      validationSchema: Yup.object({
+        companyId: Yup.number()
+          .positive('Select company')
+          .required('Required'),
+        departmentName: Yup.string()
+          .max(100, 'Must be 100 characters or less')
+          .required('Required'),
+        rootDepartment: Yup.string()
+          .max(64, 'Must be 64 characters or less'),
+        address: Yup.string()
+          .max(200, 'Must be 200 characters or less'),
+        description: Yup.string()
+          .max(400, 'Must be 400 characters or less'),
+      }),
+
+      onSubmit: (values) => {
+        const data = createData(
+          values.departmentName,
+          parseInt(values.companyId),
+          values.address,
+          values.description,
+          values.deptActive,
+          parseInt(values.rootDepartment))
+
+        dispatch(createDepartment(data))
+        formik.resetForm()
+      }
+    }
+  );
+
+  const handleClose = () => {
+    setOpen(false)
+    formik.resetForm()
+  }
+  const handleOpen = () => {
+    setOpen(true)
+  }
+
   return (
     <div>
-
       <Breadcrumbs aria-label="breadcrumb" separator={<NavigateNextIcon />}>
         <Typography color="textSecondary">Quản trị hệ thống</Typography>
         <Typography color="textSecondary">Thiết lập hệ thống</Typography>
         <Typography color="textPrimary">Phòng ban</Typography>
       </Breadcrumbs>
       <div className="d-flex justify-content-between align-items-center">
-        <p className={classes.title}>Thông Tin Phòng Ban</p>
-        <div className="d-flex justify-content-end align-items-center w-25 pr-5">
-          <Button
-            variant="outlined"
-            className={classes.buttonSave}
-          >
-            Lưu
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.buttonCreate}
-          >
-            Tạo mới
-          </Button>
-        </div>
-      </div>
-      <div>
-        <Formsy
-          onValidSubmit={handleSubmit}
-          className="d-flex flex-column justify-content-center align-items-center w-100"
-        >
-          <div className="row w-100">
-            <div className="col-md-2 d-flex flex-column justify-content-start align-items-center p-0">
-              <div className="d-flex  align-items-center p-3">
-                <img src="/images/icon/Checked.png" className="pr-1"></img>
-                <Typography>Bộ phận đang hoạt động</Typography>
-              </div>
-            </div>
-            <div className="col-md-10">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="CongTyChiNhanh"
-                      label="Công ty chi nhánh"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="TenBoPhan"
-                      label="Tên bộ phận"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="DiaChi"
-                      label="Địa Chỉ"
-                      required
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="BoPhanGoc"
-                      label="Bộ phận gốc"
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                  <div className={classes.formGroup}>
-                    <CustomTextField
-                      className={classes.formControl}
-                      type="text"
-                      name="DienGiai"
-                      label="Diễn giải"
-                      variant="filled"
-                      size="small"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Formsy>
-      </div>
-      <div className="d-flex justify-content-between align-items-center pr-5">
-        <div className="d-flex justify-content-center align-items-center">
-          <p className={classes.title}>Dữ liệu</p>
+        <p className={classes.title}>Phòng Ban</p>
+        <div className="d-flex justify-content-end align-items-center w-30 pr-5">
           <div className={classes.search} style={{ background: "#FFF" }}>
             <div className={classes.searchIcon}>
               <SearchIcon style={{ color: '#2FAAFC' }} />
@@ -235,18 +264,195 @@ function Department() {
               inputProps={{ "aria-label": "search" }}
             />
           </div>
-        </div>
-
-        <div>
           <Button
-            variant="contained"
+            variant="outlined"
             className={classes.buttonDelete}
           >
             Xóa
           </Button>
+          <div>
+            <Button
+              variant="contained"
+              className={classes.buttonCreate}
+              onClick={handleOpen}
+            >
+              Tạo mới
+            </Button>
+            <Modal
+              className={classes.modal}
+              open={open}
+              aria-labelledby="simple-modal-title"
+              aria-describedby="simple-modal-description"
+            >
+              <div className={classes.paper}>
+                <p className={classes.title}>TẠO PHÒNG BAN</p>
+                <div>
+                  <CustomTextField
+                    className={classes.modalInput}
+                    select
+                    name="companyId"
+                    label="Công ty / Chi nhánh"
+                    required
+                    variant="outlined"
+                    size="small"
+                    value={formik.values.companyId}
+                    onChange={formik.handleChange}
+                  >
+                    {companyList.map(company =>
+                      <MenuItem key={company.id} value={company.id} onClick={() => setstatecompanyId(company.id)}>
+                        {company.companyName}
+                      </MenuItem>
+                    )}
+                  </CustomTextField>
+                  <CustomTextField
+                    className={classes.modalInput}
+                    type="text"
+                    name="departmentName"
+                    label="Tên bộ phận"
+                    required
+                    variant="outlined"
+                    size="small"
+                    value={formik.values.departmentName}
+                    onChange={formik.handleChange}
+                  />
+                  <CustomTextField
+                    className={classes.modalInput}
+                    select
+                    name="rootDepartment"
+                    label="Bộ phận gốc"
+                    variant="outlined"
+                    size="small"
+                    value={formik.values.rootDepartment}
+                    onChange={formik.handleChange}
+                  >
+                    {departmentList.map(department => (department.companyId == statecompanyId) ?
+                      <MenuItem key={department.id} value={department.id}>
+                        {department.departmentName}
+                      </MenuItem> : ''
+                    )}
+                  </CustomTextField>
+                  <CustomTextField
+                    className={classes.modalInput}
+                    type="text"
+                    name="address"
+                    label="Địa chỉ"
+                    variant="outlined"
+                    size="small"
+                    value={formik.values.address}
+                    onChange={formik.handleChange}
+                  />
+                  <div className='d-flex col p-0 w-100'>
+                    <CustomTextField
+                      className={classes.modalInput}
+                      select
+                      name="city"
+                      label="Thành phố"
+                      variant="outlined"
+                      size="small"
+                      value={formik.values.city}
+                      onChange={formik.handleChange}
+                    >
+                      {cityLocations.map((option) => (
+                        <MenuItem key={option.id} value={option.id} onClick={() => setStateCityId(option.id)}>
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </CustomTextField>
+                    <CustomTextField
+                      className={classes.modalInput}
+                      select
+                      name="district"
+                      label="Quận huyện"
+                      variant="outlined"
+                      size="small"
+                      value={formik.values.district}
+                      onChange={formik.handleChange}
+                    >
+                      {districtLocation.map((option) => (
+                        <MenuItem key={option.id} value={option.id} onClick={() => setStateDistrictId(option.id)}>
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </CustomTextField>
+                  </div>
+                  <div className='d-flex col justify-content-space-between p-0 w-100'>
+                    <CustomTextField
+                      className={classes.modalInput}
+                      select
+                      name="ward"
+                      label="Phường xã"
+                      variant="outlined"
+                      size="small"
+                      value={formik.values.ward}
+                      onChange={formik.handleChange}
+                    >
+                      {wardLocation.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>
+                          {option.name}
+                        </MenuItem>
+                      ))}
+                    </CustomTextField>
+                    <CustomTextField
+                      className={classes.modalInput}
+                      select
+                      name="country"
+                      label="Quốc gia"
+                      variant="outlined"
+                      size="small"
+                      value={formik.values.country}
+                      onChange={formik.handleChange}
+                    >
+                      <MenuItem value='vn'>
+                        Việt Nam
+                        </MenuItem>
+                    </CustomTextField>
+                  </div>
+                  <CustomTextField
+                    className={classes.modalInput}
+                    type="text"
+                    name="description"
+                    label="Mô tả"
+                    variant="outlined"
+                    size="small"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                  />
+                  <div className="d-flex align-items-center w-100">
+                    <Checkbox
+                      style={{ height: '10px' }}
+                      value={formik.values.deptActive}
+                      onChange={formik.handleChange}
+                      name="deptActive"
+                      color="primary"
+                      size="small"
+                      defaultChecked
+                    />
+                    <Typography className="pl-1">Bộ phận đang hoạt động</Typography>
+                  </div>
+                </div>
+                <div className='d-flex row justify-content-end pr-1'>
+                  <Button
+                    variant="contained"
+                    className={classes.buttonDelete}
+                    onClick={handleClose}
+                  >
+                    Hủy
+                    </Button>
+                  <Button
+                    variant="contained"
+                    className={classes.buttonCreate}
+                    onClick={() => formik.handleSubmit()}
+                  >
+                    Thêm
+                    </Button>
+                </div>
+              </div>
+            </Modal>
+          </div>
         </div>
       </div>
-      <div>
+
+      <div className="p-2">
         <DepartmentData />
       </div>
     </div>
@@ -254,6 +460,3 @@ function Department() {
 }
 
 export default Department
-
-
-

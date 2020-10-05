@@ -1,9 +1,11 @@
 import { all, takeLatest, put, takeEvery } from 'redux-saga/effects'
 import { actionTypes, setCompany, setCompanyList } from '../systemsManagement/company/actions'
+
 import httpClient from '../../services/httpService';
 import { CompanyProps } from '../../@types/company/createCompany';
 import { PagedListModel } from '../../@types/appTypes/baseModel';
 import { CompanySearchModel } from '../../@types/company/companyModels';
+
 
 function* createCompany(action: { type: string, createCompanyModal: CompanyProps }) {
 
@@ -80,7 +82,6 @@ function* deleteCompany(action: { type: string, companyId: Array<number | string
   }
 }
 
-
 export default function* companyWatcher() {
   yield all([
     takeLatest(actionTypes.CREAT_COMPANY, createCompany),
@@ -88,6 +89,6 @@ export default function* companyWatcher() {
     takeLatest(actionTypes.UPLOAD_LOGO, uploadLogo),
     takeLatest(actionTypes.GET_COMPANY_LIST, getCompanyList),
     takeLatest(actionTypes.GET_COMPANY, getCompany),
-    takeLatest(actionTypes.DELETE_COMPANY, deleteCompany)
+    takeLatest(actionTypes.DELETE_COMPANY, deleteCompany),
   ])
 }

@@ -28,7 +28,7 @@ const CustomTextField = withStyles({
 
     },
     '& .MuiFilledInput-root': {
-      backgroundColor: '#e5e5e5',
+      backgroundColor: '#F9F9F9',
 
     }, '& .MuiFilledInput-underline:before': {
       borderBottomColor: 'white',
@@ -49,24 +49,7 @@ function BankForm(props: OwnProps) {
   const { setOpenForm } = props;
   const classes = useStyle();
   const dispatch = useDispatch();
-  const valueText = [
-    {
-      value: '1',
-      label: '1'
-    },
-    {
-      value: '2',
-      label: '2',
-    },
-    {
-      value: '3',
-      label: '3',
-    },
-    {
-      value: '5',
-      label: '5',
-    },
-  ];
+
   const bankInfo = useSelector((state: AppState) => state.companyBankState.bankInfo);
   const companyList = useSelector((state: AppState) => state.systemsCompanyState.companyDataSource.data);
   const accounttingCode = useSelector((state: AppState) => state.companyBankState.accountingCode);
@@ -153,6 +136,7 @@ function BankForm(props: OwnProps) {
                     size="small"
                     onChange={formik.handleChange}
                     value={formik.values.accountingCodeId}
+                    helperText={formik.touched.accountingCodeId && formik.errors.accountingCodeId ? "Required" : null}
                   >
                     {accounttingCode.map((option) => (
                       <MenuItem key={option.id} value={option.id}>
@@ -169,7 +153,7 @@ function BankForm(props: OwnProps) {
                     size="small"
                     onChange={formik.handleChange}
                     value={formik.values.bankCode}
-
+                    helperText={formik.touched.bankCode && formik.errors.bankCode ? formik.errors.bankCode : null}
                   />
                 </div>
                 <div className={classes.formGroup}>
@@ -183,6 +167,7 @@ function BankForm(props: OwnProps) {
                     size="small"
                     onChange={formik.handleChange}
                     value={formik.values.bankName}
+                    helperText={formik.touched.bankName && formik.errors.bankName ? formik.errors.bankName : null}
                   />
                 </div>
                 <div className={classes.formGroup}>
@@ -196,6 +181,7 @@ function BankForm(props: OwnProps) {
                     size="small"
                     onChange={formik.handleChange}
                     value={formik.values.bankAddress}
+                    helperText={formik.touched.bankAddress && formik.errors.bankAddress ? formik.errors.bankAddress : null}
                   />
                 </div>
 
@@ -210,6 +196,7 @@ function BankForm(props: OwnProps) {
                     size="small"
                     onChange={formik.handleChange}
                     value={formik.values.bankAccountName}
+                    helperText={formik.touched.bankAccountName && formik.errors.bankAccountName ? formik.errors.bankAccountName : null}
                   />
                   <CustomTextField
                     className={classes.formControl}
@@ -220,7 +207,7 @@ function BankForm(props: OwnProps) {
                     size="small"
                     onChange={formik.handleChange}
                     value={formik.values.bankAccountNumber}
-
+                    helperText={formik.touched.bankAccountNumber && formik.errors.bankAccountNumber ? formik.errors.bankAccountNumber : null}
                   />
                 </div>
 
