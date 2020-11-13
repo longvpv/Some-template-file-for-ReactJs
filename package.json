@@ -68,6 +68,7 @@
     "react-cookie": "^4.0.1",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^16.13.1",
+    "react-dropzone": "^11.2.0",
     "react-gesture-responder": "^2.1.0",
     "react-hamburger-menu": "^1.2.1",
     "react-html-parser": "^2.0.2",

@@ -1,8 +1,10 @@
 import { Button, DialogActions, DialogContent, FormControlLabel, FormGroup, MenuItem, Switch, TextField, withStyles } from '@material-ui/core';
-import { CloudUpload, PhotoCamera } from '@material-ui/icons';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import { useFormik } from 'formik';
-import { DropzoneArea, DropzoneAreaBase } from 'material-ui-dropzone';
+import { DropzoneArea } from 'material-ui-dropzone';
 import React, { useState } from 'react';
+import Dropzone from 'react-dropzone';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import AppState from '../../../@types/appTypes/appState';
@@ -120,7 +122,7 @@ function StaffManagementForm(props: OwnProps) {
             <div>
               <div className="d-flex justify-content-center align-items-center">
                 <span><img src="/images/settings.png" alt="" /></span>
-                <span className={classes.title}>Thông tin nhân viên</span>
+                <span className={classes.title}>Thêm nhân viên</span>
 
 
               </div>
@@ -134,35 +136,45 @@ function StaffManagementForm(props: OwnProps) {
             </div>
 
             <div className="d-flex justify-content-center align-items-center">
-              <div className={classes.rootDropZone} >
-                <DropzoneAreaBase
-                  Icon={CloudUpload}
-                  dropzoneClass={classes.root}
-                  dropzoneParagraphClass={classes.uploadTitle}
-                  dropzoneText="Tải CV"
-                  showPreviewsInDropzone={false}
-                  showPreviews={true}
-                  useChipsForPreview={true}
-                  onChange={(files) => console.log(files)}
-                />
+              <div  >
+                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                  {({ getRootProps, getInputProps }) => (
+                    <section >
+                      <div {...getRootProps()} className={classes.dropZoneUploadImage}>
+                        <input {...getInputProps()} />
+                        <PhotoCameraIcon style={{ color: '#FFFFFF' }} fontSize="large" />
+                        <p className="mt-1">Tải ảnh</p>
+                      </div>
+                      <aside>
+                        <p></p>
+                      </aside>
+                    </section>
+                  )}
+                </Dropzone>
+
               </div>
-              <div className={classes.rootDropZone} >
-                <DropzoneArea
-                  Icon={PhotoCamera}
-                  dropzoneClass={classes.root}
-                  dropzoneParagraphClass={classes.uploadTitle}
-                  dropzoneText="Hình đại diện"
-                  showPreviewsInDropzone={false}
-                  showPreviews={true}
-                  useChipsForPreview={true}
-                  onChange={(files) => console.log(files)}
-                />
+              <div >
+                <Dropzone onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                  {({ getRootProps, getInputProps }) => (
+                    <section >
+                      <div {...getRootProps()} style={{ width: '140px', height: '50px', borderStyle: 'dashed' }}>
+                        <input {...getInputProps()} />
+                        <CloudUploadIcon />
+                        <p>Tải CV</p>
+
+                      </div>
+                      <aside>
+                        <p></p>
+                      </aside>
+                    </section>
+                  )}
+                </Dropzone>
               </div>
             </div>
           </div>
 
 
-          <form
+          {/* <form
             className="d-flex flex-column justify-content-center align-items-center w-100"
           >
             <div className="row w-100">
@@ -212,23 +224,6 @@ function StaffManagementForm(props: OwnProps) {
                         </MenuItem>
                     </CustomTextField>
 
-                    {/* <div className={classes.formControl} style={{ backgroundColor: '#FFF' }}>
-                      <FormControl
-                        component="fieldset"
-                        size="small"
-                      >
-                        <FormLabel className="mb-0 pl-1 pt-1" component="legend">Giới tính</FormLabel>
-                        <RadioGroup
-                          row
-                          name="genderId"
-                          onChange={formik.handleChange}
-                          value={formik.values.genderId}
-                        >
-                          <FormControlLabel value='1' control={<Radio color="primary" size="small" />} label="Nam" />
-                          <FormControlLabel value='0' control={<Radio color="primary" size="small" />} label="Nữ" />
-                        </RadioGroup>
-                      </FormControl>
-                    </div> */}
 
                   </div>
                   <div className={classes.formGroup}>
@@ -324,9 +319,9 @@ function StaffManagementForm(props: OwnProps) {
                 </div>
               </div>
             </div>
-            {/* </div> */}
+            
 
-          </form>
+          </form> */}
         </div>
       </DialogContent>
       <DialogActions>

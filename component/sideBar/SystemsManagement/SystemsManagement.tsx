@@ -7,7 +7,6 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CachedIcon from "@material-ui/icons/Cached";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import HelpIcon from '@material-ui/icons/Help';
 import Link from "next/link";
 import React from "react";
 const useStyles = makeStyles((theme) => ({
